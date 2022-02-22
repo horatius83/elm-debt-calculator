@@ -6,61 +6,57 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Url
 
+
 main : Program () Model Msg
-main = 
-    Browser.application 
+main =
+    Browser.element
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , onUrlChange = UrlChanged
-        , onUrlRequest = LinkClicked
         }
 
-type alias Model = 
-    { key : Nav.Key
-    , url : Url.Url
+
+type alias Loan =
+    { name : String
+    , apr : Float
+    , minimum : Float
+    , principal : Float
     }
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key = ( Model key url, Cmd.none )
 
-type Msg 
-    = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
+defaultLoan : Loan
+defaultLoan =
+    { name = "New Loan", apr = 0.0, minimum = 0.0, principal = 0.0 }
+
+
+type alias Model =
+    { loans : List Loan
+    , newLoan : Loan
+    }
+
+
+init : () -> ( Model, Cmd Msg )
+init key =
+    ( { loans = [], newLoan = defaultLoan }, Cmd.none )
+
+
+type Msg
+    = AddLoan
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model = 
-    case msg of 
-        LinkClicked urlRequest -> 
-            case urlRequest of 
-                Browser.Internal url -> 
-                    ( model, Nav.pushUrl model.key (Url.toString url))
-                Browser.External href -> 
-                    (model, Nav.load href)
-        UrlChanged url -> 
-            ( { model | url = url }, Cmd.none)
-    
+update msg model =
+    case msg of
+        AddLoan ->
+            ( { model | loans = model.newLoan :: model.loans, newLoan = defaultLoan }, Cmd.none )
+
+
 subscriptions : Model -> Sub Msg
-subscriptions _ = Sub.none
-
-view : Model -> Browser.Document Msg
-view model = 
-    { title = "URL Interceptor"
-    , body = 
-        [ text "The current url is: "
-        , b [] [text (Url.toString model.url)]
-        , ul [] 
-            [ viewLink "/home"
-            , viewLink "/profile"
-            , viewLink "/reviews/the-century-of-the-self"
-            , viewLink "/reviews/public-opinion"
-            , viewLink "/reviews/shah-of-shahs"
-            ]
-        ]
-    }
-
-viewLink : String -> Html Msg
-viewLink path = li [] [a [href path] [text path]]
+subscriptions _ =
+    Sub.none
 
 
+view : Model -> Html Msg
+view model =
+    div [] [ h1 [] [ text "Hello World" ] ]
