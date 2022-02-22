@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.K.z === region.Q.z)
+	if (region.Q.B === region.W.B)
 	{
-		return 'on line ' + region.K.z;
+		return 'on line ' + region.Q.B;
 	}
-	return 'on lines ' + region.K.z + ' through ' + region.Q.z;
+	return 'on lines ' + region.Q.B + ' through ' + region.W.B;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.az,
-		impl.aG,
-		impl.aE,
+		impl.aC,
+		impl.aJ,
+		impl.aH,
 		function() { return function() {} }
 	);
 });
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		o: func(record.o),
-		L: record.L,
-		I: record.I
+		p: func(record.p),
+		R: record.R,
+		N: record.N
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.o;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.L;
+		var message = !tag ? value : tag < 3 ? value.a : value.p;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.R;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.I) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.N) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.az,
-		impl.aG,
-		impl.aE,
+		impl.aC,
+		impl.aJ,
+		impl.aH,
 		function(sendToApp, initialModel) {
-			var view = impl.aH;
+			var view = impl.aK;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.az,
-		impl.aG,
-		impl.aE,
+		impl.aC,
+		impl.aJ,
+		impl.aH,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.J && impl.J(sendToApp)
-			var view = impl.aH;
+			var divertHrefToApp = impl.P && impl.P(sendToApp)
+			var view = impl.aK;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.as);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.av);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aF) && (_VirtualDom_doc.title = title = doc.aF);
+				(title !== doc.aI) && (_VirtualDom_doc.title = title = doc.aI);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aA;
-	var onUrlRequest = impl.aB;
+	var onUrlChange = impl.aD;
+	var onUrlRequest = impl.aE;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		J: function(sendToApp)
+		P: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.af === next.af
-							&& curr.U === next.U
-							&& curr.ab.a === next.ab.a
+							&& curr.ai === next.ai
+							&& curr._ === next._
+							&& curr.af.a === next.af.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		az: function(flags)
+		aC: function(flags)
 		{
-			return A3(impl.az, flags, _Browser_getUrl(), key);
+			return A3(impl.aC, flags, _Browser_getUrl(), key);
 		},
-		aH: impl.aH,
-		aG: impl.aG,
-		aE: impl.aE
+		aK: impl.aK,
+		aJ: impl.aJ,
+		aH: impl.aH
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { ax: 'hidden', at: 'visibilitychange' }
+		? { aA: 'hidden', aw: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { ax: 'mozHidden', at: 'mozvisibilitychange' }
+		? { aA: 'mozHidden', aw: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { ax: 'msHidden', at: 'msvisibilitychange' }
+		? { aA: 'msHidden', aw: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { ax: 'webkitHidden', at: 'webkitvisibilitychange' }
-		: { ax: 'hidden', at: 'visibilitychange' };
+		? { aA: 'webkitHidden', aw: 'webkitvisibilitychange' }
+		: { aA: 'hidden', aw: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aj: _Browser_getScene(),
-		am: {
-			ao: _Browser_window.pageXOffset,
-			ap: _Browser_window.pageYOffset,
-			an: _Browser_doc.documentElement.clientWidth,
-			T: _Browser_doc.documentElement.clientHeight
+		am: _Browser_getScene(),
+		ap: {
+			ar: _Browser_window.pageXOffset,
+			as: _Browser_window.pageYOffset,
+			aq: _Browser_doc.documentElement.clientWidth,
+			Z: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		an: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		T: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aq: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		Z: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aj: {
-				an: node.scrollWidth,
-				T: node.scrollHeight
-			},
 			am: {
-				ao: node.scrollLeft,
-				ap: node.scrollTop,
-				an: node.clientWidth,
-				T: node.clientHeight
+				aq: node.scrollWidth,
+				Z: node.scrollHeight
+			},
+			ap: {
+				ar: node.scrollLeft,
+				as: node.scrollTop,
+				aq: node.clientWidth,
+				Z: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aj: _Browser_getScene(),
-			am: {
-				ao: x,
-				ap: y,
-				an: _Browser_doc.documentElement.clientWidth,
-				T: _Browser_doc.documentElement.clientHeight
+			am: _Browser_getScene(),
+			ap: {
+				ar: x,
+				as: y,
+				aq: _Browser_doc.documentElement.clientWidth,
+				Z: _Browser_doc.documentElement.clientHeight
 			},
-			av: {
-				ao: x + rect.left,
-				ap: y + rect.top,
-				an: rect.width,
-				T: rect.height
+			ay: {
+				ar: x + rect.left,
+				as: y + rect.top,
+				aq: rect.width,
+				Z: rect.height
 			}
 		};
 	});
@@ -4859,7 +4859,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {S: fragment, U: host, _: path, ab: port_, af: protocol, ag: query};
+		return {Y: fragment, _: host, ad: path, af: port_, ai: protocol, aj: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5138,12 +5138,12 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$defaultLoan = {N: 0.0, W: 0.0, Y: 'New Loan', ac: 0.0};
+var $author$project$Main$defaultLoan = {H: 0.0, K: 0.0, L: 'New Loan', O: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (key) {
 	return _Utils_Tuple2(
-		{E: _List_Nil, F: $author$project$Main$defaultLoan},
+		{G: _List_Nil, t: _List_Nil, j: $author$project$Main$defaultLoan},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5151,16 +5151,327 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Main$Error = function (a) {
+	return {$: 6, a: a};
+};
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm_community$list_extra$List$Extra$getAt = F2(
+	function (idx, xs) {
+		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
+			A2($elm$core$List$drop, idx, xs));
+	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
+var $elm_community$list_extra$List$Extra$removeAt = F2(
+	function (index, l) {
+		if (index < 0) {
+			return l;
+		} else {
+			var _v0 = A2($elm$core$List$drop, index, l);
+			if (!_v0.b) {
+				return l;
+			} else {
+				var rest = _v0.b;
+				return _Utils_ap(
+					A2($elm$core$List$take, index, l),
+					rest);
+			}
+		}
+	});
+var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		return _Utils_Tuple2(
-			_Utils_update(
-				model,
-				{
-					E: A2($elm$core$List$cons, model.F, model.E),
-					F: $author$project$Main$defaultLoan
-				}),
-			$elm$core$Platform$Cmd$none);
+		update:
+		while (true) {
+			var oldNewLoan = model.j;
+			switch (msg.$) {
+				case 0:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								t: A2($elm$core$List$cons, model.j, model.t),
+								j: $author$project$Main$defaultLoan
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 1:
+					var index = msg.a;
+					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.t);
+					var loan = A2($elm_community$list_extra$List$Extra$getAt, index, model.t);
+					var indexAsString = $elm$core$String$fromInt(index);
+					if (!loan.$) {
+						var ln = loan.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{t: loans, j: ln}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Main$Error('Attempted to update loan ' + indexAsString),
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				case 2:
+					var name = msg.a;
+					var newLoan = _Utils_update(
+						oldNewLoan,
+						{L: name});
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{j: newLoan}),
+						$elm$core$Platform$Cmd$none);
+				case 3:
+					var apr = msg.a;
+					var newLoan = A2(
+						$elm$core$Maybe$map,
+						function (x) {
+							return _Utils_update(
+								oldNewLoan,
+								{H: x});
+						},
+						$elm$core$String$toFloat(apr));
+					var errorMessage = 'Could not parse apr: ' + apr;
+					if (!newLoan.$) {
+						var ln = newLoan.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{j: ln}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Main$Error(errorMessage),
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				case 4:
+					var principal = msg.a;
+					var newLoan = A2(
+						$elm$core$Maybe$map,
+						function (x) {
+							return _Utils_update(
+								oldNewLoan,
+								{O: x});
+						},
+						$elm$core$String$toFloat(principal));
+					var errorMessage = 'Could not parse principal: ' + principal;
+					if (!newLoan.$) {
+						var ln = newLoan.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{j: ln}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Main$Error(errorMessage),
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				case 5:
+					var minimum = msg.a;
+					var newLoan = A2(
+						$elm$core$Maybe$map,
+						function (x) {
+							return _Utils_update(
+								oldNewLoan,
+								{K: x});
+						},
+						$elm$core$String$toFloat(minimum));
+					var errorMessage = 'Could not parse minimum: ' + minimum;
+					if (!newLoan.$) {
+						var ln = newLoan.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{j: ln}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var $temp$msg = $author$project$Main$Error(errorMessage),
+							$temp$model = model;
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					}
+				default:
+					var errorMessage = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								G: A2($elm$core$List$cons, errorMessage, model.G)
+							}),
+						$elm$core$Platform$Cmd$none);
+			}
+		}
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
@@ -5182,6 +5493,6 @@ var $author$project$Main$view = function (model) {
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{az: $author$project$Main$init, aE: $author$project$Main$subscriptions, aG: $author$project$Main$update, aH: $author$project$Main$view});
+	{aC: $author$project$Main$init, aH: $author$project$Main$subscriptions, aJ: $author$project$Main$update, aK: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
