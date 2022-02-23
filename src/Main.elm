@@ -144,4 +144,76 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    div [] [ h1 [] [ text "Hello World" ] ]
+    let
+        title =
+            [ h1 [] [ text "Loans" ] ]
+
+        loans =
+            List.map viewLoan model.loans
+
+        newLoans =
+            [ viewNewLoan model.newLoan ]
+    in
+    div [] (title ++ loans ++ newLoans)
+
+
+viewNewLoan : Loan -> Html Msg
+viewNewLoan loan =
+    div []
+        [ viewTextInput "Name" loan.name "new-loan-name"
+        , viewNumericInput "Principal" loan.principal "new-loan-principal"
+        , viewNumericInput "Minimum" loan.minimum "new-loan-minimum"
+        , viewNumericInput "APR" loan.apr "new-loan-apr"
+        , button [] [ text "Add Loan" ]
+        , button [] [ text "Reset" ]
+        ]
+
+
+viewTextInput : String -> String -> String -> Html Msg
+viewTextInput labelText value id =
+    div []
+        [ label [ attribute "for" id ] [ text labelText ]
+        , input
+            [ attribute "type" "text"
+            , attribute "value" value
+            ]
+            []
+        ]
+
+
+viewNumericInput : String -> Float -> String -> Html Msg
+viewNumericInput labelText value id =
+    let
+        valueAsString =
+            String.fromFloat value
+    in
+    div []
+        [ label [ attribute "for" id ] [ text labelText ]
+        , input
+            [ attribute "type" "numeric"
+            , attribute "value" valueAsString
+            ]
+            []
+        ]
+
+
+viewLoan : Loan -> Html Msg
+viewLoan loan =
+    let
+        principalAsString =
+            String.fromFloat loan.principal
+
+        miniumAsString =
+            String.fromFloat loan.minimum
+
+        aprAsString =
+            String.fromFloat loan.apr
+    in
+    div []
+        [ span []
+            [ text loan.name
+            , text principalAsString
+            , text miniumAsString
+            , text aprAsString
+            ]
+        ]

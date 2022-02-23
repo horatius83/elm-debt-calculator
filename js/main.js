@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.Q.B === region.W.B)
+	if (region.Q.C === region.W.C)
 	{
-		return 'on line ' + region.Q.B;
+		return 'on line ' + region.Q.C;
 	}
-	return 'on lines ' + region.Q.B + ' through ' + region.W.B;
+	return 'on lines ' + region.Q.C + ' through ' + region.W.C;
 }
 
 
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		p: func(record.p),
+		q: func(record.q),
 		R: record.R,
-		N: record.N
+		O: record.O
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.p;
+		var message = !tag ? value : tag < 3 ? value.a : value.q;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.R;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.N) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.O) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -5138,12 +5138,12 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$defaultLoan = {H: 0.0, K: 0.0, L: 'New Loan', O: 0.0};
+var $author$project$Main$defaultLoan = {B: 0.0, D: 0.0, E: 'New Loan', F: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (key) {
 	return _Utils_Tuple2(
-		{G: _List_Nil, t: _List_Nil, j: $author$project$Main$defaultLoan},
+		{K: _List_Nil, p: _List_Nil, j: $author$project$Main$defaultLoan},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5353,21 +5353,21 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								t: A2($elm$core$List$cons, model.j, model.t),
+								p: A2($elm$core$List$cons, model.j, model.p),
 								j: $author$project$Main$defaultLoan
 							}),
 						$elm$core$Platform$Cmd$none);
 				case 1:
 					var index = msg.a;
-					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.t);
-					var loan = A2($elm_community$list_extra$List$Extra$getAt, index, model.t);
+					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.p);
+					var loan = A2($elm_community$list_extra$List$Extra$getAt, index, model.p);
 					var indexAsString = $elm$core$String$fromInt(index);
 					if (!loan.$) {
 						var ln = loan.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{t: loans, j: ln}),
+								{p: loans, j: ln}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$Main$Error('Attempted to update loan ' + indexAsString),
@@ -5380,7 +5380,7 @@ var $author$project$Main$update = F2(
 					var name = msg.a;
 					var newLoan = _Utils_update(
 						oldNewLoan,
-						{L: name});
+						{E: name});
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -5393,7 +5393,7 @@ var $author$project$Main$update = F2(
 						function (x) {
 							return _Utils_update(
 								oldNewLoan,
-								{H: x});
+								{B: x});
 						},
 						$elm$core$String$toFloat(apr));
 					var errorMessage = 'Could not parse apr: ' + apr;
@@ -5418,7 +5418,7 @@ var $author$project$Main$update = F2(
 						function (x) {
 							return _Utils_update(
 								oldNewLoan,
-								{O: x});
+								{F: x});
 						},
 						$elm$core$String$toFloat(principal));
 					var errorMessage = 'Could not parse principal: ' + principal;
@@ -5443,7 +5443,7 @@ var $author$project$Main$update = F2(
 						function (x) {
 							return _Utils_update(
 								oldNewLoan,
-								{K: x});
+								{D: x});
 						},
 						$elm$core$String$toFloat(minimum));
 					var errorMessage = 'Could not parse minimum: ' + minimum;
@@ -5467,7 +5467,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								G: A2($elm$core$List$cons, errorMessage, model.G)
+								K: A2($elm$core$List$cons, errorMessage, model.K)
 							}),
 						$elm$core$Platform$Cmd$none);
 			}
@@ -5477,20 +5477,143 @@ var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$view = function (model) {
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $author$project$Main$viewLoan = function (loan) {
+	var principalAsString = $elm$core$String$fromFloat(loan.F);
+	var miniumAsString = $elm$core$String$fromFloat(loan.D);
+	var aprAsString = $elm$core$String$fromFloat(loan.B);
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$h1,
+				$elm$html$Html$span,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Hello World')
+						$elm$html$Html$text(loan.E),
+						$elm$html$Html$text(principalAsString),
+						$elm$html$Html$text(miniumAsString),
+						$elm$html$Html$text(aprAsString)
 					]))
 			]));
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $author$project$Main$viewNumericInput = F3(
+	function (labelText, value, id) {
+		var valueAsString = $elm$core$String$fromFloat(value);
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$label,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'for', id)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(labelText)
+						])),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'type', 'numeric'),
+							A2($elm$html$Html$Attributes$attribute, 'value', valueAsString)
+						]),
+					_List_Nil)
+				]));
+	});
+var $author$project$Main$viewTextInput = F3(
+	function (labelText, value, id) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$label,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'for', id)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(labelText)
+						])),
+					A2(
+					$elm$html$Html$input,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'type', 'text'),
+							A2($elm$html$Html$Attributes$attribute, 'value', value)
+						]),
+					_List_Nil)
+				]));
+	});
+var $author$project$Main$viewNewLoan = function (loan) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A3($author$project$Main$viewTextInput, 'Name', loan.E, 'new-loan-name'),
+				A3($author$project$Main$viewNumericInput, 'Principal', loan.F, 'new-loan-principal'),
+				A3($author$project$Main$viewNumericInput, 'Minimum', loan.D, 'new-loan-minimum'),
+				A3($author$project$Main$viewNumericInput, 'APR', loan.B, 'new-loan-apr'),
+				A2(
+				$elm$html$Html$button,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Add Loan')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Reset')
+					]))
+			]));
+};
+var $author$project$Main$view = function (model) {
+	var title = _List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Loans')
+				]))
+		]);
+	var newLoans = _List_fromArray(
+		[
+			$author$project$Main$viewNewLoan(model.j)
+		]);
+	var loans = A2($elm$core$List$map, $author$project$Main$viewLoan, model.p);
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_Utils_ap(
+			title,
+			_Utils_ap(loans, newLoans)));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{aC: $author$project$Main$init, aH: $author$project$Main$subscriptions, aJ: $author$project$Main$update, aK: $author$project$Main$view});
