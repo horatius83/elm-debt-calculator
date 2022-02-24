@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick, onInput)
 import List.Extra exposing (getAt, removeAt)
 import Url
 
@@ -149,7 +150,24 @@ view model =
             [ h1 [] [ text "Loans" ] ]
 
         loans =
-            List.map viewLoan model.loans
+            case model.loans of
+                ln :: lns ->
+                    [ table []
+                        ([ thead []
+                            [ tr []
+                                [ th [] []
+                                , th [] [ text "Principal" ]
+                                , th [] [ text "Minimum" ]
+                                , th [] [ text "APR" ]
+                                ]
+                            ]
+                         ]
+                            ++ List.map viewLoan model.loans
+                        )
+                    ]
+
+                _ ->
+                    []
 
         newLoans =
             [ viewNewLoan model.newLoan ]
@@ -164,21 +182,14 @@ viewNewLoan loan =
         , viewNumericInput "Principal" loan.principal "new-loan-principal"
         , viewNumericInput "Minimum" loan.minimum "new-loan-minimum"
         , viewNumericInput "APR" loan.apr "new-loan-apr"
-        , button [] [ text "Add Loan" ]
+        , button [ onClick AddLoan ] [ text "Add Loan" ]
         , button [] [ text "Reset" ]
         ]
 
 
 viewTextInput : String -> String -> String -> Html Msg
 viewTextInput labelText value id =
-    div []
-        [ label [ attribute "for" id ] [ text labelText ]
-        , input
-            [ attribute "type" "text"
-            , attribute "value" value
-            ]
-            []
-        ]
+    viewInput "text" labelText value id
 
 
 viewNumericInput : String -> Float -> String -> Html Msg
@@ -187,11 +198,16 @@ viewNumericInput labelText value id =
         valueAsString =
             String.fromFloat value
     in
+    viewInput "numeric" labelText valueAsString id
+
+
+viewInput : String -> String -> String -> String -> Html Msg
+viewInput inputType labelText value id =
     div []
         [ label [ attribute "for" id ] [ text labelText ]
         , input
-            [ attribute "type" "numeric"
-            , attribute "value" valueAsString
+            [ attribute "type" inputType
+            , attribute "value" value
             ]
             []
         ]
@@ -200,20 +216,17 @@ viewNumericInput labelText value id =
 viewLoan : Loan -> Html Msg
 viewLoan loan =
     let
-        principalAsString =
-            String.fromFloat loan.principal
+        toCash value =
+            String.fromFloat value
+                |> (\v -> "$" ++ v)
 
-        miniumAsString =
-            String.fromFloat loan.minimum
-
-        aprAsString =
-            String.fromFloat loan.apr
+        toPercent value =
+            String.fromFloat value
+                |> (\v -> v ++ "%")
     in
-    div []
-        [ span []
-            [ text loan.name
-            , text principalAsString
-            , text miniumAsString
-            , text aprAsString
-            ]
+    tr []
+        [ td [] [ text loan.name ]
+        , td [] [ text <| toCash loan.principal ]
+        , td [] [ text <| toCash loan.minimum ]
+        , td [] [ text <| toPercent loan.apr ]
         ]
