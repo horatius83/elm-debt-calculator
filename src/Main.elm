@@ -5,6 +5,8 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, placeholder, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
+import NewLoan exposing (defaultLoan)
+import State exposing (Loan, Model, Msg(..))
 
 
 main : Program () Model Msg
@@ -17,41 +19,9 @@ main =
         }
 
 
-type alias Loan =
-    { name : String
-    , apr : Float
-    , minimum : Float
-    , principal : Float
-    }
-
-
-defaultLoan : Loan
-defaultLoan =
-    { name = "New Loan", apr = 0.0, minimum = 0.0, principal = 0.0 }
-
-
-type alias Model =
-    { loans : List Loan
-    , newLoan : Loan
-    , errors : List String
-    }
-
-
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { loans = [], newLoan = defaultLoan, errors = [] }, Cmd.none )
-
-
-type Msg
-    = AddLoan
-    | ResetNewLoan
-    | DeleteLoan Int
-    | UpdateLoanName String
-    | UpdateLoanApr String
-    | UpdateLoanPrincipal String
-    | UpdateLoanMinimum String
-    | Error String
-    | DoNothing
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
