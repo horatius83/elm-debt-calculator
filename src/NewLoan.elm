@@ -41,20 +41,56 @@ updateLoanName name model =
 updateLoanPrincipal : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
 updateLoanPrincipal principalAsString model update =
     let
-        currentNewLoan =
-            model.newLoan
+        updatePrincipal loan principal =
+            { loan | principal = principal }
 
         errorMessage =
             "Could not parse principal: " ++ principalAsString
+    in
+    updateFloat principalAsString model errorMessage updatePrincipal update
 
-        r =
-            String.toFloat principalAsString
-                |> Maybe.map (\p -> { currentNewLoan | principal = p })
+
+updateLoanMinimum : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
+updateLoanMinimum minimumAsString model update =
+    let
+        updateMinimum loan minimum =
+            { loan | minimum = minimum }
+
+        errorMessage =
+            "Could not parse minimum: " ++ minimumAsString
+    in
+    updateFloat minimumAsString model errorMessage updateMinimum update
+
+
+updateLoanApr : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
+updateLoanApr aprAsString model update =
+    let
+        updateApr loan apr =
+            { loan | apr = apr }
+
+        errorMessage =
+            "Could not parse APR: " ++ aprAsString
+    in
+    updateFloat aprAsString model errorMessage updateApr update
+
+
+updateFloat : String -> Model -> String -> (Loan -> Float -> Loan) -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
+updateFloat valueAsString model errorMessage updateValue updateModel =
+    let
+        currentNewLoan =
+            model.newLoan
+
+        uv =
+            updateValue currentNewLoan
+
+        result =
+            String.toFloat valueAsString
+                |> Maybe.map uv
                 |> Result.fromMaybe errorMessage
     in
-    case r of
+    case result of
         Ok ln ->
             toUpdateTuple { model | newLoan = ln }
 
         Err msg ->
-            update (Error msg) model
+            updateModel (Error msg) model

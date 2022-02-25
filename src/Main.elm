@@ -32,7 +32,7 @@ update msg model =
     in
     case msg of
         AddLoan ->
-            ( { model | loans = model.newLoan :: model.loans, newLoan = defaultLoan }, Cmd.none )
+            NewLoan.addLoan model
 
         DeleteLoan index ->
             let
@@ -42,59 +42,19 @@ update msg model =
             ( { model | loans = loans, newLoan = defaultLoan }, Cmd.none )
 
         ResetNewLoan ->
-            ( { model | newLoan = defaultLoan }, Cmd.none )
+            NewLoan.resetLoan model
 
         UpdateLoanName name ->
-            let
-                newLoan =
-                    { oldNewLoan | name = name }
-            in
-            ( { model | newLoan = newLoan }, Cmd.none )
-
-        UpdateLoanApr apr ->
-            let
-                newLoan =
-                    Maybe.map (\x -> { oldNewLoan | apr = x }) <| String.toFloat apr
-
-                errorMessage =
-                    "Could not parse apr: " ++ apr
-            in
-            case newLoan of
-                Just ln ->
-                    ( { model | newLoan = ln }, Cmd.none )
-
-                Nothing ->
-                    update (Error errorMessage) model
+            NewLoan.updateLoanName name model
 
         UpdateLoanPrincipal principal ->
-            let
-                newLoan =
-                    Maybe.map (\x -> { oldNewLoan | principal = x }) <| String.toFloat principal
-
-                errorMessage =
-                    "Could not parse principal: " ++ principal
-            in
-            case newLoan of
-                Just ln ->
-                    ( { model | newLoan = ln }, Cmd.none )
-
-                Nothing ->
-                    update (Error errorMessage) model
+            NewLoan.updateLoanPrincipal principal model update
 
         UpdateLoanMinimum minimum ->
-            let
-                newLoan =
-                    Maybe.map (\x -> { oldNewLoan | minimum = x }) <| String.toFloat minimum
+            NewLoan.updateLoanMinimum minimum model update
 
-                errorMessage =
-                    "Could not parse minimum: " ++ minimum
-            in
-            case newLoan of
-                Just ln ->
-                    ( { model | newLoan = ln }, Cmd.none )
-
-                Nothing ->
-                    update (Error errorMessage) model
+        UpdateLoanApr apr ->
+            NewLoan.updateLoanApr apr model update
 
         Error errorMessage ->
             ( { model | errors = errorMessage :: model.errors }, Cmd.none )
