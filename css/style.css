@@ -70,3 +70,7 @@ button {
         --text: #edf2f4;
     }
 }
+
+.align-right {
+    text-align: right;
+}

@@ -1,12 +1,10 @@
 module Main exposing (..)
 
 import Browser
-import Browser.Navigation as Nav
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
-import List.Extra exposing (getAt, removeAt)
-import Url
+import Html.Attributes exposing (attribute, class, placeholder, value)
+import Html.Events exposing (onClick, onInput, onSubmit)
+import List.Extra exposing (removeAt)
 
 
 main : Program () Model Msg
@@ -40,18 +38,20 @@ type alias Model =
 
 
 init : () -> ( Model, Cmd Msg )
-init key =
+init _ =
     ( { loans = [], newLoan = defaultLoan, errors = [] }, Cmd.none )
 
 
 type Msg
     = AddLoan
-    | UpdateLoan Int
+    | ResetNewLoan
+    | DeleteLoan Int
     | UpdateLoanName String
     | UpdateLoanApr String
     | UpdateLoanPrincipal String
     | UpdateLoanMinimum String
     | Error String
+    | DoNothing
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -64,23 +64,15 @@ update msg model =
         AddLoan ->
             ( { model | loans = model.newLoan :: model.loans, newLoan = defaultLoan }, Cmd.none )
 
-        UpdateLoan index ->
+        DeleteLoan index ->
             let
-                loan =
-                    getAt index model.loans
-
                 loans =
                     removeAt index model.loans
-
-                indexAsString =
-                    String.fromInt index
             in
-            case loan of
-                Just ln ->
-                    ( { model | loans = loans, newLoan = ln }, Cmd.none )
+            ( { model | loans = loans, newLoan = defaultLoan }, Cmd.none )
 
-                _ ->
-                    update (Error <| "Attempted to update loan " ++ indexAsString) model
+        ResetNewLoan ->
+            ( { model | newLoan = defaultLoan }, Cmd.none )
 
         UpdateLoanName name ->
             let
@@ -137,6 +129,9 @@ update msg model =
         Error errorMessage ->
             ( { model | errors = errorMessage :: model.errors }, Cmd.none )
 
+        DoNothing ->
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -149,25 +144,27 @@ view model =
         title =
             [ h1 [] [ text "Loans" ] ]
 
-        loans =
-            case model.loans of
-                ln :: lns ->
-                    [ table []
-                        ([ thead []
-                            [ tr []
-                                [ th [] []
-                                , th [] [ text "Principal" ]
-                                , th [] [ text "Minimum" ]
-                                , th [] [ text "APR" ]
-                                ]
-                            ]
-                         ]
-                            ++ List.map viewLoan model.loans
-                        )
+        headRow =
+            thead []
+                [ tr []
+                    [ th [] []
+                    , th [] [ text "Principal" ]
+                    , th [] [ text "Minimum" ]
+                    , th [] [ text "APR" ]
+                    , th [] []
                     ]
+                ]
 
-                _ ->
-                    []
+        tableRows =
+            List.indexedMap viewLoan model.loans
+
+        loans =
+            if List.isEmpty model.loans then
+                []
+
+            else
+                [ table [] <| headRow :: tableRows
+                ]
 
         newLoans =
             [ viewNewLoan model.newLoan ]
@@ -177,44 +174,48 @@ view model =
 
 viewNewLoan : Loan -> Html Msg
 viewNewLoan loan =
-    div []
-        [ viewTextInput "Name" loan.name "new-loan-name"
-        , viewNumericInput "Principal" loan.principal "new-loan-principal"
-        , viewNumericInput "Minimum" loan.minimum "new-loan-minimum"
-        , viewNumericInput "APR" loan.apr "new-loan-apr"
-        , button [ onClick AddLoan ] [ text "Add Loan" ]
-        , button [] [ text "Reset" ]
+    form [ onSubmit DoNothing ]
+        [ fieldset []
+            [ viewTextInput "Name" loan.name "new-loan-name" UpdateLoanName
+            , viewNumericInput "Principal" loan.principal "new-loan-principal" UpdateLoanPrincipal
+            , viewNumericInput "Minimum" loan.minimum "new-loan-minimum" UpdateLoanMinimum
+            , viewNumericInput "APR" loan.apr "new-loan-apr" UpdateLoanApr
+            , button [ onClick AddLoan ] [ text "Add Loan" ]
+            , button [ onClick ResetNewLoan ] [ text "Reset" ]
+            ]
         ]
 
 
-viewTextInput : String -> String -> String -> Html Msg
-viewTextInput labelText value id =
-    viewInput "text" labelText value id
+viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
+viewTextInput labelText value id callback =
+    viewInput "text" labelText value id callback
 
 
-viewNumericInput : String -> Float -> String -> Html Msg
-viewNumericInput labelText value id =
+viewNumericInput : String -> Float -> String -> (String -> Msg) -> Html Msg
+viewNumericInput labelText value id callback =
     let
         valueAsString =
             String.fromFloat value
     in
-    viewInput "numeric" labelText valueAsString id
+    viewInput "numeric" labelText valueAsString id callback
 
 
-viewInput : String -> String -> String -> String -> Html Msg
-viewInput inputType labelText value id =
+viewInput : String -> String -> String -> String -> (String -> Msg) -> Html Msg
+viewInput inputType labelText val id callback =
     div []
         [ label [ attribute "for" id ] [ text labelText ]
         , input
             [ attribute "type" inputType
-            , attribute "value" value
+            , value val
+            , placeholder val
+            , onInput callback
             ]
             []
         ]
 
 
-viewLoan : Loan -> Html Msg
-viewLoan loan =
+viewLoan : Int -> Loan -> Html Msg
+viewLoan index loan =
     let
         toCash value =
             String.fromFloat value
@@ -226,7 +227,8 @@ viewLoan loan =
     in
     tr []
         [ td [] [ text loan.name ]
-        , td [] [ text <| toCash loan.principal ]
-        , td [] [ text <| toCash loan.minimum ]
-        , td [] [ text <| toPercent loan.apr ]
+        , td [ class "align-right" ] [ text <| toCash loan.principal ]
+        , td [ class "align-right" ] [ text <| toCash loan.minimum ]
+        , td [ class "align-right" ] [ text <| toPercent loan.apr ]
+        , td [] [ button [ onClick (DeleteLoan index) ] [ text "Delete" ] ]
         ]

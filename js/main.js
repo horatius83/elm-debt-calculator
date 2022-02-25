@@ -5141,9 +5141,9 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Main$defaultLoan = {B: 0.0, D: 0.0, E: 'New Loan', F: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$init = function (key) {
+var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{K: _List_Nil, m: _List_Nil, j: $author$project$Main$defaultLoan},
+		{K: _List_Nil, p: _List_Nil, i: $author$project$Main$defaultLoan},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5152,8 +5152,18 @@ var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Error = function (a) {
-	return {$: 6, a: a};
+	return {$: 7, a: a};
 };
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -5173,30 +5183,6 @@ var $elm$core$List$drop = F2(
 					continue drop;
 				}
 			}
-		}
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $elm_community$list_extra$List$Extra$getAt = F2(
-	function (idx, xs) {
-		return (idx < 0) ? $elm$core$Maybe$Nothing : $elm$core$List$head(
-			A2($elm$core$List$drop, idx, xs));
-	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
 		}
 	});
 var $elm$core$List$takeReverse = F3(
@@ -5346,37 +5332,32 @@ var $author$project$Main$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var oldNewLoan = model.j;
+			var oldNewLoan = model.i;
 			switch (msg.$) {
 				case 0:
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								m: A2($elm$core$List$cons, model.j, model.m),
-								j: $author$project$Main$defaultLoan
+								p: A2($elm$core$List$cons, model.i, model.p),
+								i: $author$project$Main$defaultLoan
 							}),
 						$elm$core$Platform$Cmd$none);
-				case 1:
-					var index = msg.a;
-					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.m);
-					var loan = A2($elm_community$list_extra$List$Extra$getAt, index, model.m);
-					var indexAsString = $elm$core$String$fromInt(index);
-					if (!loan.$) {
-						var ln = loan.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{m: loans, j: ln}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var $temp$msg = $author$project$Main$Error('Attempted to update loan ' + indexAsString),
-							$temp$model = model;
-						msg = $temp$msg;
-						model = $temp$model;
-						continue update;
-					}
 				case 2:
+					var index = msg.a;
+					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.p);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{p: loans, i: $author$project$Main$defaultLoan}),
+						$elm$core$Platform$Cmd$none);
+				case 1:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{i: $author$project$Main$defaultLoan}),
+						$elm$core$Platform$Cmd$none);
+				case 3:
 					var name = msg.a;
 					var newLoan = _Utils_update(
 						oldNewLoan,
@@ -5384,9 +5365,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{j: newLoan}),
+							{i: newLoan}),
 						$elm$core$Platform$Cmd$none);
-				case 3:
+				case 4:
 					var apr = msg.a;
 					var newLoan = A2(
 						$elm$core$Maybe$map,
@@ -5402,7 +5383,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{j: ln}),
+								{i: ln}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$Main$Error(errorMessage),
@@ -5411,7 +5392,7 @@ var $author$project$Main$update = F2(
 						model = $temp$model;
 						continue update;
 					}
-				case 4:
+				case 5:
 					var principal = msg.a;
 					var newLoan = A2(
 						$elm$core$Maybe$map,
@@ -5427,7 +5408,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{j: ln}),
+								{i: ln}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$Main$Error(errorMessage),
@@ -5436,7 +5417,7 @@ var $author$project$Main$update = F2(
 						model = $temp$model;
 						continue update;
 					}
-				case 5:
+				case 6:
 					var minimum = msg.a;
 					var newLoan = A2(
 						$elm$core$Maybe$map,
@@ -5452,7 +5433,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{j: ln}),
+								{i: ln}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$Main$Error(errorMessage),
@@ -5461,7 +5442,7 @@ var $author$project$Main$update = F2(
 						model = $temp$model;
 						continue update;
 					}
-				default:
+				case 7:
 					var errorMessage = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -5470,72 +5451,40 @@ var $author$project$Main$update = F2(
 								K: A2($elm$core$List$cons, errorMessage, model.K)
 							}),
 						$elm$core$Platform$Cmd$none);
+				default:
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			}
 		}
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $author$project$Main$viewLoan = function (loan) {
-	var toPercent = function (value) {
-		return function (v) {
-			return v + '%';
-		}(
-			$elm$core$String$fromFloat(value));
-	};
-	var toCash = function (value) {
-		return function (v) {
-			return '$' + v;
-		}(
-			$elm$core$String$fromFloat(value));
-	};
-	return A2(
-		$elm$html$Html$tr,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(loan.E)
-					])),
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						toCash(loan.F))
-					])),
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						toCash(loan.D))
-					])),
-				A2(
-				$elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						toPercent(loan.B))
-					]))
-			]));
+var $author$project$Main$DeleteLoan = function (a) {
+	return {$: 2, a: a};
 };
-var $author$project$Main$AddLoan = {$: 0};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -5553,6 +5502,124 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $author$project$Main$viewLoan = F2(
+	function (index, loan) {
+		var toPercent = function (value) {
+			return function (v) {
+				return v + '%';
+			}(
+				$elm$core$String$fromFloat(value));
+		};
+		var toCash = function (value) {
+			return function (v) {
+				return '$' + v;
+			}(
+				$elm$core$String$fromFloat(value));
+		};
+		return A2(
+			$elm$html$Html$tr,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(loan.E)
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('align-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							toCash(loan.F))
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('align-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							toCash(loan.D))
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('align-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							toPercent(loan.B))
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$DeleteLoan(index))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Delete')
+								]))
+						]))
+				]));
+	});
+var $author$project$Main$AddLoan = {$: 0};
+var $author$project$Main$DoNothing = {$: 8};
+var $author$project$Main$ResetNewLoan = {$: 1};
+var $author$project$Main$UpdateLoanApr = function (a) {
+	return {$: 4, a: a};
+};
+var $author$project$Main$UpdateLoanMinimum = function (a) {
+	return {$: 6, a: a};
+};
+var $author$project$Main$UpdateLoanName = function (a) {
+	return {$: 3, a: a};
+};
+var $author$project$Main$UpdateLoanPrincipal = function (a) {
+	return {$: 5, a: a};
+};
+var $elm$html$Html$fieldset = _VirtualDom_node('fieldset');
+var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$Events$alwaysPreventDefault = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 2, a: a};
+};
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $elm$html$Html$Events$onSubmit = function (msg) {
+	return A2(
+		$elm$html$Html$Events$preventDefaultOn,
+		'submit',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysPreventDefault,
+			$elm$json$Json$Decode$succeed(msg)));
+};
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -5563,8 +5630,43 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
-var $author$project$Main$viewInput = F4(
-	function (inputType, labelText, value, id) {
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$viewInput = F5(
+	function (inputType, labelText, val, id, callback) {
 		return A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -5585,46 +5687,60 @@ var $author$project$Main$viewInput = F4(
 					_List_fromArray(
 						[
 							A2($elm$html$Html$Attributes$attribute, 'type', inputType),
-							A2($elm$html$Html$Attributes$attribute, 'value', value)
+							$elm$html$Html$Attributes$value(val),
+							$elm$html$Html$Attributes$placeholder(val),
+							$elm$html$Html$Events$onInput(callback)
 						]),
 					_List_Nil)
 				]));
 	});
-var $author$project$Main$viewNumericInput = F3(
-	function (labelText, value, id) {
+var $author$project$Main$viewNumericInput = F4(
+	function (labelText, value, id, callback) {
 		var valueAsString = $elm$core$String$fromFloat(value);
-		return A4($author$project$Main$viewInput, 'numeric', labelText, valueAsString, id);
+		return A5($author$project$Main$viewInput, 'numeric', labelText, valueAsString, id, callback);
 	});
-var $author$project$Main$viewTextInput = F3(
-	function (labelText, value, id) {
-		return A4($author$project$Main$viewInput, 'text', labelText, value, id);
+var $author$project$Main$viewTextInput = F4(
+	function (labelText, value, id, callback) {
+		return A5($author$project$Main$viewInput, 'text', labelText, value, id, callback);
 	});
 var $author$project$Main$viewNewLoan = function (loan) {
 	return A2(
-		$elm$html$Html$div,
-		_List_Nil,
+		$elm$html$Html$form,
 		_List_fromArray(
 			[
-				A3($author$project$Main$viewTextInput, 'Name', loan.E, 'new-loan-name'),
-				A3($author$project$Main$viewNumericInput, 'Principal', loan.F, 'new-loan-principal'),
-				A3($author$project$Main$viewNumericInput, 'Minimum', loan.D, 'new-loan-minimum'),
-				A3($author$project$Main$viewNumericInput, 'APR', loan.B, 'new-loan-apr'),
+				$elm$html$Html$Events$onSubmit($author$project$Main$DoNothing)
+			]),
+		_List_fromArray(
+			[
 				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Main$AddLoan)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Add Loan')
-					])),
-				A2(
-				$elm$html$Html$button,
+				$elm$html$Html$fieldset,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Reset')
+						A4($author$project$Main$viewTextInput, 'Name', loan.E, 'new-loan-name', $author$project$Main$UpdateLoanName),
+						A4($author$project$Main$viewNumericInput, 'Principal', loan.F, 'new-loan-principal', $author$project$Main$UpdateLoanPrincipal),
+						A4($author$project$Main$viewNumericInput, 'Minimum', loan.D, 'new-loan-minimum', $author$project$Main$UpdateLoanMinimum),
+						A4($author$project$Main$viewNumericInput, 'APR', loan.B, 'new-loan-apr', $author$project$Main$UpdateLoanApr),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Main$AddLoan)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Add Loan')
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Main$ResetNewLoan)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Reset')
+							]))
 					]))
 			]));
 };
@@ -5639,64 +5755,53 @@ var $author$project$Main$view = function (model) {
 					$elm$html$Html$text('Loans')
 				]))
 		]);
+	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.p);
 	var newLoans = _List_fromArray(
 		[
-			$author$project$Main$viewNewLoan(model.j)
+			$author$project$Main$viewNewLoan(model.i)
 		]);
-	var loans = function () {
-		var _v0 = model.m;
-		if (_v0.b) {
-			var ln = _v0.a;
-			var lns = _v0.b;
-			return _List_fromArray(
-				[
-					A2(
-					$elm$html$Html$table,
-					_List_Nil,
-					_Utils_ap(
+	var headRow = A2(
+		$elm$html$Html$thead,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$th, _List_Nil, _List_Nil),
+						A2(
+						$elm$html$Html$th,
+						_List_Nil,
 						_List_fromArray(
 							[
-								A2(
-								$elm$html$Html$thead,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$tr,
-										_List_Nil,
-										_List_fromArray(
-											[
-												A2($elm$html$Html$th, _List_Nil, _List_Nil),
-												A2(
-												$elm$html$Html$th,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Principal')
-													])),
-												A2(
-												$elm$html$Html$th,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Minimum')
-													])),
-												A2(
-												$elm$html$Html$th,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text('APR')
-													]))
-											]))
-									]))
-							]),
-						A2($elm$core$List$map, $author$project$Main$viewLoan, model.m)))
-				]);
-		} else {
-			return _List_Nil;
-		}
-	}();
+								$elm$html$Html$text('Principal')
+							])),
+						A2(
+						$elm$html$Html$th,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Minimum')
+							])),
+						A2(
+						$elm$html$Html$th,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('APR')
+							])),
+						A2($elm$html$Html$th, _List_Nil, _List_Nil)
+					]))
+			]));
+	var loans = $elm$core$List$isEmpty(model.p) ? _List_Nil : _List_fromArray(
+		[
+			A2(
+			$elm$html$Html$table,
+			_List_Nil,
+			A2($elm$core$List$cons, headRow, tableRows))
+		]);
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
