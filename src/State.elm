@@ -1,12 +1,6 @@
 module State exposing (..)
 
-
-type alias Loan =
-    { name : String
-    , apr : Float
-    , minimum : Float
-    , principal : Float
-    }
+import Loan exposing (Loan)
 
 
 type alias Model =

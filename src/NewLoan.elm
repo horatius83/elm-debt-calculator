@@ -1,6 +1,7 @@
 module NewLoan exposing (..)
 
-import State exposing (Loan, Model, Msg(..))
+import Loan exposing (Loan)
+import State exposing (Model, Msg(..))
 
 
 defaultLoan : Loan
@@ -15,7 +16,7 @@ toUpdateTuple model =
 
 addLoan : Model -> ( Model, Cmd Msg )
 addLoan model =
-    { model | loans = model.newLoan :: model.loans, newLoan = defaultLoan }
+    { model | loans = model.loans ++ [ model.newLoan ], newLoan = defaultLoan }
         |> toUpdateTuple
 
 

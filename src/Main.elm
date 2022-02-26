@@ -5,8 +5,9 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, placeholder, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
+import Loan exposing (Loan)
 import NewLoan exposing (defaultLoan)
-import State exposing (Loan, Model, Msg(..))
+import State exposing (Model, Msg(..))
 
 
 main : Program () Model Msg
