@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.O.z === region.W.z)
+	if (region.P.z === region.W.z)
 	{
-		return 'on line ' + region.O.z;
+		return 'on line ' + region.P.z;
 	}
-	return 'on lines ' + region.O.z + ' through ' + region.W.z;
+	return 'on lines ' + region.P.z + ' through ' + region.W.z;
 }
 
 
@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		o: func(record.o),
-		P: record.P,
-		L: record.L
+		Q: record.Q,
+		M: record.M
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.o;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.P;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.L) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.M) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3968,7 +3968,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.aM,
 		impl.aK,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.N && impl.N(sendToApp)
+			var divertHrefToApp = impl.O && impl.O(sendToApp)
 			var view = impl.aN;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4043,7 +4043,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		N: function(sendToApp)
+		O: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -5138,12 +5138,12 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$NewLoan$defaultLoan = {T: 0.0, J: 0.0, aF: 'New Loan', M: 0.0};
+var $author$project$NewLoan$defaultLoan = {T: 0.0, K: 0.0, aF: 'New Loan', N: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{G: _List_Nil, A: _List_Nil, F: $author$project$NewLoan$defaultLoan},
+		{H: _List_Nil, A: _List_Nil, F: $author$project$NewLoan$defaultLoan},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5400,7 +5400,7 @@ var $author$project$NewLoan$updateLoanMinimum = F3(
 			function (loan, minimum) {
 				return _Utils_update(
 					loan,
-					{J: minimum});
+					{K: minimum});
 			});
 		var errorMessage = 'Could not parse minimum: ' + minimumAsString;
 		return A5($author$project$NewLoan$updateFloat, minimumAsString, model, errorMessage, updateMinimum, update);
@@ -5422,7 +5422,7 @@ var $author$project$NewLoan$updateLoanPrincipal = F3(
 			function (loan, principal) {
 				return _Utils_update(
 					loan,
-					{M: principal});
+					{N: principal});
 			});
 		var errorMessage = 'Could not parse principal: ' + principalAsString;
 		return A5($author$project$NewLoan$updateFloat, principalAsString, model, errorMessage, updatePrincipal, update);
@@ -5461,7 +5461,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							G: A2($elm$core$List$cons, errorMessage, model.G)
+							H: A2($elm$core$List$cons, errorMessage, model.H)
 						}),
 					$elm$core$Platform$Cmd$none);
 			default:
@@ -5550,7 +5550,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.M))
+							toCash(loan.N))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5561,7 +5561,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.J))
+							toCash(loan.K))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5730,8 +5730,8 @@ var $author$project$Main$viewNewLoan = function (loan) {
 				_List_fromArray(
 					[
 						A4($author$project$Main$viewTextInput, 'Name', loan.aF, 'new-loan-name', $author$project$State$UpdateLoanName),
-						A4($author$project$Main$viewNumericInput, 'Principal', loan.M, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
-						A4($author$project$Main$viewNumericInput, 'Minimum', loan.J, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
+						A4($author$project$Main$viewNumericInput, 'Principal', loan.N, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
+						A4($author$project$Main$viewNumericInput, 'Minimum', loan.K, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
 						A4($author$project$Main$viewNumericInput, 'APR', loan.T, 'new-loan-apr', $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,

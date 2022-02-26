@@ -85,6 +85,11 @@ createAnotherMonthlyPaymentPlan paymentPlan =
     List.map (\{ loan, actualMinimum, payments } -> PaymentSequence loan actualMinimum (payments ++ [ createNewPayment loan actualMinimum payments ])) paymentPlan
 
 
+getMinimumTotalAmount : PaymentPlan -> Float
+getMinimumTotalAmount =
+    List.foldl (\ps totalAmount -> totalAmount + ps.actualMinimum) 0
+
+
 
 -- Strategies
 --  Avalanche
