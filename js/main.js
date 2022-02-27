@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.P.z === region.W.z)
+	if (region.R.z === region.X.z)
 	{
-		return 'on line ' + region.P.z;
+		return 'on line ' + region.R.z;
 	}
-	return 'on lines ' + region.P.z + ' through ' + region.W.z;
+	return 'on lines ' + region.R.z + ' through ' + region.X.z;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aM,
-		impl.aK,
+		impl.aF,
+		impl.aN,
+		impl.aL,
 		function() { return function() {} }
 	);
 });
@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		o: func(record.o),
-		Q: record.Q,
-		M: record.M
+		S: record.S,
+		P: record.P
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.o;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.S;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.M) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.P) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aM,
-		impl.aK,
+		impl.aF,
+		impl.aN,
+		impl.aL,
 		function(sendToApp, initialModel) {
-			var view = impl.aN;
+			var view = impl.aO;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aE,
-		impl.aM,
-		impl.aK,
+		impl.aF,
+		impl.aN,
+		impl.aL,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.O && impl.O(sendToApp)
-			var view = impl.aN;
+			var divertHrefToApp = impl.Q && impl.Q(sendToApp)
+			var view = impl.aO;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ax);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.ay);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aL) && (_VirtualDom_doc.title = title = doc.aL);
+				(title !== doc.aM) && (_VirtualDom_doc.title = title = doc.aM);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aG;
-	var onUrlRequest = impl.aH;
+	var onUrlChange = impl.aH;
+	var onUrlRequest = impl.aI;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		O: function(sendToApp)
+		Q: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.ak === next.ak
-							&& curr._ === next._
-							&& curr.ah.a === next.ah.a
+							&& curr.al === next.al
+							&& curr.aa === next.aa
+							&& curr.ai.a === next.ai.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aE: function(flags)
+		aF: function(flags)
 		{
-			return A3(impl.aE, flags, _Browser_getUrl(), key);
+			return A3(impl.aF, flags, _Browser_getUrl(), key);
 		},
+		aO: impl.aO,
 		aN: impl.aN,
-		aM: impl.aM,
-		aK: impl.aK
+		aL: impl.aL
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aC: 'hidden', ay: 'visibilitychange' }
+		? { aD: 'hidden', az: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aC: 'mozHidden', ay: 'mozvisibilitychange' }
+		? { aD: 'mozHidden', az: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aC: 'msHidden', ay: 'msvisibilitychange' }
+		? { aD: 'msHidden', az: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aC: 'webkitHidden', ay: 'webkitvisibilitychange' }
-		: { aC: 'hidden', ay: 'visibilitychange' };
+		? { aD: 'webkitHidden', az: 'webkitvisibilitychange' }
+		: { aD: 'hidden', az: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ao: _Browser_getScene(),
-		ar: {
-			at: _Browser_window.pageXOffset,
-			au: _Browser_window.pageYOffset,
-			as: _Browser_doc.documentElement.clientWidth,
-			Z: _Browser_doc.documentElement.clientHeight
+		ap: _Browser_getScene(),
+		as: {
+			au: _Browser_window.pageXOffset,
+			av: _Browser_window.pageYOffset,
+			at: _Browser_doc.documentElement.clientWidth,
+			_: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		as: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		Z: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		at: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		_: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ao: {
-				as: node.scrollWidth,
-				Z: node.scrollHeight
+			ap: {
+				at: node.scrollWidth,
+				_: node.scrollHeight
 			},
-			ar: {
-				at: node.scrollLeft,
-				au: node.scrollTop,
-				as: node.clientWidth,
-				Z: node.clientHeight
+			as: {
+				au: node.scrollLeft,
+				av: node.scrollTop,
+				at: node.clientWidth,
+				_: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ao: _Browser_getScene(),
-			ar: {
-				at: x,
-				au: y,
-				as: _Browser_doc.documentElement.clientWidth,
-				Z: _Browser_doc.documentElement.clientHeight
+			ap: _Browser_getScene(),
+			as: {
+				au: x,
+				av: y,
+				at: _Browser_doc.documentElement.clientWidth,
+				_: _Browser_doc.documentElement.clientHeight
 			},
-			aA: {
-				at: x + rect.left,
-				au: y + rect.top,
-				as: rect.width,
-				Z: rect.height
+			aB: {
+				au: x + rect.left,
+				av: y + rect.top,
+				at: rect.width,
+				_: rect.height
 			}
 		};
 	});
@@ -4859,7 +4859,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {Y: fragment, _: host, ae: path, ah: port_, ak: protocol, al: query};
+		return {Z: fragment, aa: host, af: path, ai: port_, al: protocol, am: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5138,12 +5138,12 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$NewLoan$defaultLoan = {T: 0.0, K: 0.0, aF: 'New Loan', N: 0.0};
+var $author$project$NewLoan$defaultLoan = {J: 0.0, N: 0.0, aG: 'New Loan', H: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{H: _List_Nil, A: _List_Nil, F: $author$project$NewLoan$defaultLoan},
+		{K: _List_Nil, A: _List_Nil, G: $author$project$NewLoan$defaultLoan},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5162,8 +5162,8 @@ var $author$project$NewLoan$addLoan = function (model) {
 				A: _Utils_ap(
 					model.A,
 					_List_fromArray(
-						[model.F])),
-				F: $author$project$NewLoan$defaultLoan
+						[model.G])),
+				G: $author$project$NewLoan$defaultLoan
 			}));
 };
 var $elm$core$List$drop = F2(
@@ -5333,7 +5333,7 @@ var $author$project$NewLoan$resetLoan = function (model) {
 	return $author$project$NewLoan$toUpdateTuple(
 		_Utils_update(
 			model,
-			{F: $author$project$NewLoan$defaultLoan}));
+			{G: $author$project$NewLoan$defaultLoan}));
 };
 var $author$project$State$Error = function (a) {
 	return {$: 7, a: a};
@@ -5360,7 +5360,7 @@ var $elm$core$Maybe$map = F2(
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NewLoan$updateFloat = F5(
 	function (valueAsString, model, errorMessage, updateValue, updateModel) {
-		var currentNewLoan = model.F;
+		var currentNewLoan = model.G;
 		var uv = updateValue(currentNewLoan);
 		var result = A2(
 			$elm$core$Result$fromMaybe,
@@ -5374,7 +5374,7 @@ var $author$project$NewLoan$updateFloat = F5(
 			return $author$project$NewLoan$toUpdateTuple(
 				_Utils_update(
 					model,
-					{F: ln}));
+					{G: ln}));
 		} else {
 			var msg = result.a;
 			return A2(
@@ -5389,7 +5389,7 @@ var $author$project$NewLoan$updateLoanApr = F3(
 			function (loan, apr) {
 				return _Utils_update(
 					loan,
-					{T: apr});
+					{J: apr});
 			});
 		var errorMessage = 'Could not parse APR: ' + aprAsString;
 		return A5($author$project$NewLoan$updateFloat, aprAsString, model, errorMessage, updateApr, update);
@@ -5400,21 +5400,21 @@ var $author$project$NewLoan$updateLoanMinimum = F3(
 			function (loan, minimum) {
 				return _Utils_update(
 					loan,
-					{K: minimum});
+					{N: minimum});
 			});
 		var errorMessage = 'Could not parse minimum: ' + minimumAsString;
 		return A5($author$project$NewLoan$updateFloat, minimumAsString, model, errorMessage, updateMinimum, update);
 	});
 var $author$project$NewLoan$updateLoanName = F2(
 	function (name, model) {
-		var oldNewLoan = model.F;
+		var oldNewLoan = model.G;
 		var newLoan = _Utils_update(
 			oldNewLoan,
-			{aF: name});
+			{aG: name});
 		return $author$project$NewLoan$toUpdateTuple(
 			_Utils_update(
 				model,
-				{F: newLoan}));
+				{G: newLoan}));
 	});
 var $author$project$NewLoan$updateLoanPrincipal = F3(
 	function (principalAsString, model, update) {
@@ -5422,14 +5422,14 @@ var $author$project$NewLoan$updateLoanPrincipal = F3(
 			function (loan, principal) {
 				return _Utils_update(
 					loan,
-					{N: principal});
+					{H: principal});
 			});
 		var errorMessage = 'Could not parse principal: ' + principalAsString;
 		return A5($author$project$NewLoan$updateFloat, principalAsString, model, errorMessage, updatePrincipal, update);
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var oldNewLoan = model.F;
+		var oldNewLoan = model.G;
 		switch (msg.$) {
 			case 0:
 				return $author$project$NewLoan$addLoan(model);
@@ -5439,7 +5439,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{A: loans, F: $author$project$NewLoan$defaultLoan}),
+						{A: loans, G: $author$project$NewLoan$defaultLoan}),
 					$elm$core$Platform$Cmd$none);
 			case 1:
 				return $author$project$NewLoan$resetLoan(model);
@@ -5461,7 +5461,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							H: A2($elm$core$List$cons, errorMessage, model.H)
+							K: A2($elm$core$List$cons, errorMessage, model.K)
 						}),
 					$elm$core$Platform$Cmd$none);
 			default:
@@ -5539,7 +5539,18 @@ var $author$project$Main$viewLoan = F2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(loan.aF)
+							$elm$html$Html$text(loan.aG)
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('align-right')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							toCash(loan.H))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5561,18 +5572,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.K))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('align-right')
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							toPercent(loan.T))
+							toPercent(loan.J))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5729,10 +5729,10 @@ var $author$project$Main$viewNewLoan = function (loan) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A4($author$project$Main$viewTextInput, 'Name', loan.aF, 'new-loan-name', $author$project$State$UpdateLoanName),
-						A4($author$project$Main$viewNumericInput, 'Principal', loan.N, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
-						A4($author$project$Main$viewNumericInput, 'Minimum', loan.K, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
-						A4($author$project$Main$viewNumericInput, 'APR', loan.T, 'new-loan-apr', $author$project$State$UpdateLoanApr),
+						A4($author$project$Main$viewTextInput, 'Name', loan.aG, 'new-loan-name', $author$project$State$UpdateLoanName),
+						A4($author$project$Main$viewNumericInput, 'Principal', loan.H, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
+						A4($author$project$Main$viewNumericInput, 'Minimum', loan.N, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
+						A4($author$project$Main$viewNumericInput, 'APR', loan.J, 'new-loan-apr', $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,
 						_List_fromArray(
@@ -5770,7 +5770,7 @@ var $author$project$Main$view = function (model) {
 	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.A);
 	var newLoans = _List_fromArray(
 		[
-			$author$project$Main$viewNewLoan(model.F)
+			$author$project$Main$viewNewLoan(model.G)
 		]);
 	var headRow = A2(
 		$elm$html$Html$thead,
@@ -5822,6 +5822,6 @@ var $author$project$Main$view = function (model) {
 			_Utils_ap(loans, newLoans)));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{aE: $author$project$Main$init, aK: $author$project$Main$subscriptions, aM: $author$project$Main$update, aN: $author$project$Main$view});
+	{aF: $author$project$Main$init, aL: $author$project$Main$subscriptions, aN: $author$project$Main$update, aO: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
