@@ -25,6 +25,12 @@ type alias PaymentPlan =
     List PaymentSequence
 
 
+type PaymentPlanResult
+    = MaximumTotalAmountTooLow Float
+    | NoFurtherPaymentsToBeMade PaymentPlan
+    | PaymentsRemaining PaymentPlan
+
+
 getMinimumPaymentAmount : Float -> Float -> Int -> Float
 getMinimumPaymentAmount principal apr maxNumberOfYears =
     let
@@ -93,7 +99,7 @@ calculateNewPayment { loan, actualMinimum, payments, isPaidOff } ( bonus, newPay
         ( 0, newPaymentSequence ++ [ PaymentSequence loan actualMinimum (payments ++ [ minimumAndBonus ]) False ] )
 
 
-strategy : (PaymentSequence -> comparable) -> PaymentPlan -> Float -> Result String PaymentPlan
+strategy : (PaymentSequence -> comparable) -> PaymentPlan -> Float -> PaymentPlanResult
 strategy sortFunction paymentPlan maximumAmount =
     let
         sortedPaymentPlan =
@@ -105,22 +111,25 @@ strategy sortFunction paymentPlan maximumAmount =
         bonusAmount =
             maximumAmount - minimumTotalPayment
 
-        minimumTotalPaymentAsString =
-            String.fromFloat minimumTotalPayment
+        ( leftoverBonus, newPaymentPlan ) =
+            List.foldl calculateNewPayment ( bonusAmount, [] ) sortedPaymentPlan
     in
     if minimumTotalPayment < maximumAmount then
-        Err <| "Need at least $" ++ minimumTotalPaymentAsString ++ " to calculate payment plan"
+        MaximumTotalAmountTooLow minimumTotalPayment
+
+    else if leftoverBonus < 0.001 then
+        NoFurtherPaymentsToBeMade newPaymentPlan
 
     else
-        Ok <| Tuple.second <| List.foldl calculateNewPayment ( bonusAmount, [] ) sortedPaymentPlan
+        PaymentsRemaining newPaymentPlan
 
 
-avalanche : PaymentPlan -> Float -> Result String PaymentPlan
+avalanche : PaymentPlan -> Float -> PaymentPlanResult
 avalanche =
     strategy (\paymentSequence -> paymentSequence.loan.apr)
 
 
-snowball : PaymentPlan -> Float -> Result String PaymentPlan
+snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
     strategy (\paymentSequence -> paymentSequence.loan.principal)
 
