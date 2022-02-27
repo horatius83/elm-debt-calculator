@@ -133,9 +133,9 @@ snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
     strategy (\paymentSequence -> paymentSequence.loan.principal)
 
-
-
 -- Strategies
 --  Avalanche
 --  Snowball
---  Double Double
+--  Double Double - pick payments to double, triple, etc. in a given month and apply that
+--  Savvy Investor - pick an interest rate, anything under that, pay the minimum and invest the rest in ETFs
+--  Emergency Fund - prioritize saving into an emergency fund before paying off debt
