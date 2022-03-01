@@ -27,10 +27,6 @@ init _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        oldNewLoan =
-            model.newLoan
-    in
     case msg of
         AddLoan ->
             NewLoan.addLoan model

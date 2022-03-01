@@ -111,13 +111,15 @@ strategy sortFunction paymentPlan maximumAmount =
         bonusAmount =
             maximumAmount - minimumTotalPayment
 
-        ( leftoverBonus, newPaymentPlan ) =
+        ( _, newPaymentPlan ) =
             List.foldl calculateNewPayment ( bonusAmount, [] ) sortedPaymentPlan
+
+        areThereAnyFurtherPayments = List.any (\ps -> not ps.isPaidOff) newPaymentPlan
     in
     if minimumTotalPayment < maximumAmount then
         MaximumTotalAmountTooLow minimumTotalPayment
 
-    else if leftoverBonus < 0.001 then
+    else if areThereAnyFurtherPayments then
         NoFurtherPaymentsToBeMade newPaymentPlan
 
     else
