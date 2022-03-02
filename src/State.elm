@@ -3,10 +3,18 @@ module State exposing (..)
 import Loan exposing (Loan)
 
 
+type PaymentStrategy
+    = Avalanche
+    | Snowball
+
+
 type alias Model =
     { loans : List Loan
     , newLoan : Loan
     , errors : List String
+    , yearsToPayoff : Int
+    , paymentStrategy : PaymentStrategy
+    , totalMonthlyPayment : Float
     }
 
 
@@ -20,3 +28,6 @@ type Msg
     | UpdateLoanMinimum String
     | Error String
     | DoNothing
+    | UpdateYearsToPayoff String
+    | ChoosePaymentStrategy PaymentStrategy
+    | UpdateMaximumTotalPayment String

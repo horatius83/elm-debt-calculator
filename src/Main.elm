@@ -5,9 +5,9 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, placeholder, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan)
+import Loan exposing (Loan, getMinimumTotalAmount, toPaymentPlan)
 import NewLoan exposing (defaultLoan)
-import State exposing (Model, Msg(..))
+import State exposing (Model, Msg(..), PaymentStrategy(..))
 
 
 main : Program () Model Msg
@@ -22,7 +22,15 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { loans = [], newLoan = defaultLoan, errors = [] }, Cmd.none )
+    ( { loans = []
+      , newLoan = defaultLoan
+      , errors = []
+      , yearsToPayoff = 20
+      , paymentStrategy = Avalanche
+      , totalMonthlyPayment = 0
+      }
+    , Cmd.none
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -58,6 +66,39 @@ update msg model =
 
         DoNothing ->
             ( model, Cmd.none )
+
+        UpdateYearsToPayoff yearsAsString ->
+            let
+                maybeYears =
+                    String.toInt yearsAsString
+
+                errorMessage =
+                    "Could not parse " ++ yearsAsString ++ " as Years to Payoff"
+            in
+            case maybeYears of
+                Just years ->
+                    ( { model | yearsToPayoff = years }, Cmd.none )
+
+                _ ->
+                    update (Error errorMessage) model
+
+        ChoosePaymentStrategy paymentStrategy ->
+            ( { model | paymentStrategy = paymentStrategy }, Cmd.none )
+
+        UpdateMaximumTotalPayment paymentAsString ->
+            let
+                maybePayment =
+                    String.toFloat paymentAsString
+
+                errorMessage =
+                    "Could not parse " ++ paymentAsString ++ " as a Total Monthly Payment"
+            in
+            case maybePayment of
+                Just payment ->
+                    ( { model | totalMonthlyPayment = payment }, Cmd.none )
+
+                _ ->
+                    update (Error errorMessage) model
 
 
 subscriptions : Model -> Sub Msg
@@ -113,6 +154,37 @@ viewNewLoan loan =
         ]
 
 
+viewPaymentStrategy : Int -> List Loan -> Html Msg
+viewPaymentStrategy yearsToPayoff loans =
+    let
+        paymentPlan =
+            toPaymentPlan yearsToPayoff loans
+
+        totalMinimumAmount =
+            getMinimumTotalAmount paymentPlan
+
+        paymentStrategyOptions =
+            [ "Highest Interest First"
+            , "Lowest Principal First"
+            ]
+
+        optionToStrategy option =
+            case option of
+                "Lowest Principal First" ->
+                    ChoosePaymentStrategy Snowball
+
+                _ ->
+                    ChoosePaymentStrategy Avalanche
+    in
+    form [ onSubmit DoNothing ]
+        [ fieldset []
+            [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
+            , viewNumericInput "Maximum total monthly payment" totalMinimumAmount "total-minimum-amount" UpdateMaximumTotalPayment
+            , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
+            ]
+        ]
+
+
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
 viewTextInput labelText value id callback =
     viewInput "text" labelText value id callback
@@ -123,6 +195,15 @@ viewNumericInput labelText value id callback =
     let
         valueAsString =
             String.fromFloat value
+    in
+    viewInput "numeric" labelText valueAsString id callback
+
+
+viewIntInput : String -> Int -> String -> (String -> Msg) -> Html Msg
+viewIntInput labelText value id callback =
+    let
+        valueAsString =
+            String.fromInt value
     in
     viewInput "numeric" labelText valueAsString id callback
 
@@ -158,4 +239,24 @@ viewLoan index loan =
         , td [ class "align-right" ] [ text <| toCash loan.minimum ]
         , td [ class "align-right" ] [ text <| toPercent loan.apr ]
         , td [] [ button [ onClick (DeleteLoan index) ] [ text "Delete" ] ]
+        ]
+
+
+viewSelect : String -> String -> List String -> (String -> Msg) -> Html Msg
+viewSelect labelText id options stringToMsg =
+    let
+        viewOption txt =
+            option [ attribute "value" txt ] [ text txt ]
+
+        optionsAsHtml =
+            List.map viewOption options
+    in
+    div []
+        [ label [ attribute "for" id ] [ text labelText ]
+        , select
+            [ attribute "name" id
+            , attribute "id" id
+            , onInput stringToMsg
+            ]
+            optionsAsHtml
         ]

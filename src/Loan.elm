@@ -114,7 +114,8 @@ strategy sortFunction paymentPlan maximumAmount =
         ( _, newPaymentPlan ) =
             List.foldl calculateNewPayment ( bonusAmount, [] ) sortedPaymentPlan
 
-        areThereAnyFurtherPayments = List.any (\ps -> not ps.isPaidOff) newPaymentPlan
+        areThereAnyFurtherPayments =
+            List.any (\ps -> not ps.isPaidOff) newPaymentPlan
     in
     if minimumTotalPayment < maximumAmount then
         MaximumTotalAmountTooLow minimumTotalPayment
@@ -134,6 +135,8 @@ avalanche =
 snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
     strategy (\paymentSequence -> paymentSequence.loan.principal)
+
+
 
 -- Strategies
 --  Avalanche
