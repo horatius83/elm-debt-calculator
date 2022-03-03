@@ -136,8 +136,17 @@ view model =
 
         newLoans =
             [ viewNewLoan model.newLoan ]
+
+        paymentStrategyTitle =
+            h1 [] [ text "Payment Strategy" ]
+
+        paymentStrategy =
+            div []
+                [ paymentStrategyTitle
+                , viewPaymentStrategy model.yearsToPayoff model.loans
+                ]
     in
-    div [] (title ++ loans ++ newLoans)
+    div [] (title ++ loans ++ newLoans ++ [ paymentStrategy ])
 
 
 viewNewLoan : Loan -> Html Msg
@@ -145,9 +154,9 @@ viewNewLoan loan =
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewTextInput "Name" loan.name "new-loan-name" UpdateLoanName
-            , viewNumericInput "Principal" loan.principal "new-loan-principal" UpdateLoanPrincipal
-            , viewNumericInput "Minimum" loan.minimum "new-loan-minimum" UpdateLoanMinimum
-            , viewNumericInput "APR" loan.apr "new-loan-apr" UpdateLoanApr
+            , viewFloatInput "Principal" loan.principal "new-loan-principal" Nothing UpdateLoanPrincipal
+            , viewFloatInput "Minimum" loan.minimum "new-loan-minimum" Nothing UpdateLoanMinimum
+            , viewFloatInput "APR" loan.apr "new-loan-apr" Nothing UpdateLoanApr
             , button [ onClick AddLoan ] [ text "Add Loan" ]
             , button [ onClick ResetNewLoan ] [ text "Reset" ]
             ]
@@ -179,24 +188,45 @@ viewPaymentStrategy yearsToPayoff loans =
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
-            , viewNumericInput "Maximum total monthly payment" totalMinimumAmount "total-minimum-amount" UpdateMaximumTotalPayment
+            , viewFloatInput "Maximum total monthly payment" totalMinimumAmount "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             ]
         ]
 
 
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
-viewTextInput labelText value id callback =
-    viewInput "text" labelText value id callback
+viewTextInput labelText val id callback =
+    div []
+        [ label [ attribute "for" id ] [ text labelText ]
+        , br [] []
+        , input
+            [ value val
+            , onInput callback
+            , attribute "name" id
+            , attribute "type" "text"
+            ]
+            []
+        ]
 
 
-viewNumericInput : String -> Float -> String -> (String -> Msg) -> Html Msg
-viewNumericInput labelText value id callback =
+viewFloatInput : String -> Float -> String -> Maybe Float -> (String -> Msg) -> Html Msg
+viewFloatInput labelText value id minimum callback =
     let
         valueAsString =
             String.fromFloat value
+
+        minimumAsString =
+            Maybe.map String.fromFloat minimum
+
+        attributes =
+            case minimumAsString of
+                Just m ->
+                    [ attribute "minimum" m ]
+
+                _ ->
+                    []
     in
-    viewInput "numeric" labelText valueAsString id callback
+    viewNumericInput labelText valueAsString id callback attributes
 
 
 viewIntInput : String -> Int -> String -> (String -> Msg) -> Html Msg
@@ -205,19 +235,44 @@ viewIntInput labelText value id callback =
         valueAsString =
             String.fromInt value
     in
-    viewInput "numeric" labelText valueAsString id callback
+    viewNumericInput labelText valueAsString id callback []
 
 
-viewInput : String -> String -> String -> String -> (String -> Msg) -> Html Msg
-viewInput inputType labelText val id callback =
+
+{-
+   viewInput : String -> String -> String -> String -> (String -> Msg) -> Html Msg
+   viewInput inputType labelText val id callback =
+       div []
+           [ label [ attribute "for" id ] [ text labelText ]
+           , br [] []
+           , input
+               [ attribute "type" inputType
+               , value val
+               , placeholder val
+               , onInput callback
+               , attribute "name" id
+               ]
+               []
+           ]
+-}
+
+
+viewNumericInput : String -> String -> String -> (String -> Msg) -> List (Attribute Msg) -> Html Msg
+viewNumericInput labelText val id callback otherAttributes =
+    let
+        attributeList =
+            [ value val
+            , onInput callback
+            , attribute "name" id
+            , attribute "type" "numeric"
+            ]
+                ++ otherAttributes
+    in
     div []
         [ label [ attribute "for" id ] [ text labelText ]
+        , br [] []
         , input
-            [ attribute "type" inputType
-            , value val
-            , placeholder val
-            , onInput callback
-            ]
+            attributeList
             []
         ]
 
@@ -253,6 +308,7 @@ viewSelect labelText id options stringToMsg =
     in
     div []
         [ label [ attribute "for" id ] [ text labelText ]
+        , br [] []
         , select
             [ attribute "name" id
             , attribute "id" id
