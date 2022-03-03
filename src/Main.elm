@@ -145,8 +145,11 @@ view model =
                 [ paymentStrategyTitle
                 , viewPaymentStrategy model.yearsToPayoff model.loans
                 ]
+
+        errors =
+            div [] <| List.map text model.errors
     in
-    div [] (title ++ loans ++ newLoans ++ [ paymentStrategy ])
+    div [] (title ++ loans ++ newLoans ++ [ paymentStrategy, errors ])
 
 
 viewNewLoan : Loan -> Html Msg
@@ -221,7 +224,7 @@ viewFloatInput labelText value id minimum callback =
         attributes =
             case minimumAsString of
                 Just m ->
-                    [ attribute "minimum" m ]
+                    [ Html.Attributes.min m ]
 
                 _ ->
                     []
@@ -236,25 +239,6 @@ viewIntInput labelText value id callback =
             String.fromInt value
     in
     viewNumericInput labelText valueAsString id callback []
-
-
-
-{-
-   viewInput : String -> String -> String -> String -> (String -> Msg) -> Html Msg
-   viewInput inputType labelText val id callback =
-       div []
-           [ label [ attribute "for" id ] [ text labelText ]
-           , br [] []
-           , input
-               [ attribute "type" inputType
-               , value val
-               , placeholder val
-               , onInput callback
-               , attribute "name" id
-               ]
-               []
-           ]
--}
 
 
 viewNumericInput : String -> String -> String -> (String -> Msg) -> List (Attribute Msg) -> Html Msg

@@ -5139,12 +5139,12 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$State$Avalanche = 0;
-var $author$project$NewLoan$defaultLoan = {I: 0.0, N: 0.0, aJ: 'New Loan', G: 0.0};
+var $author$project$NewLoan$defaultLoan = {J: 0.0, N: 0.0, aJ: 'New Loan', H: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{J: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, ah: 0, au: 0, V: 20},
+		{F: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, ah: 0, au: 0, V: 20},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5390,7 +5390,7 @@ var $author$project$NewLoan$updateLoanApr = F3(
 			function (loan, apr) {
 				return _Utils_update(
 					loan,
-					{I: apr});
+					{J: apr});
 			});
 		var errorMessage = 'Could not parse APR: ' + aprAsString;
 		return A5($author$project$NewLoan$updateFloat, aprAsString, model, errorMessage, updateApr, update);
@@ -5423,7 +5423,7 @@ var $author$project$NewLoan$updateLoanPrincipal = F3(
 			function (loan, principal) {
 				return _Utils_update(
 					loan,
-					{G: principal});
+					{H: principal});
 			});
 		var errorMessage = 'Could not parse principal: ' + principalAsString;
 		return A5($author$project$NewLoan$updateFloat, principalAsString, model, errorMessage, updatePrincipal, update);
@@ -5463,7 +5463,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								J: A2($elm$core$List$cons, errorMessage, model.J)
+								F: A2($elm$core$List$cons, errorMessage, model.F)
 							}),
 						$elm$core$Platform$Cmd$none);
 				case 8:
@@ -5596,7 +5596,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.G))
+							toCash(loan.H))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5618,7 +5618,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toPercent(loan.I))
+							toPercent(loan.J))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -5678,6 +5678,7 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$html$Html$Events$alwaysPreventDefault,
 			$elm$json$Json$Decode$succeed(msg)));
 };
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -5762,7 +5763,7 @@ var $author$project$Main$viewFloatInput = F5(
 				var m = minimumAsString.a;
 				return _List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$attribute, 'minimum', m)
+						$elm$html$Html$Attributes$min(m)
 					]);
 			} else {
 				return _List_Nil;
@@ -5815,9 +5816,9 @@ var $author$project$Main$viewNewLoan = function (loan) {
 				_List_fromArray(
 					[
 						A4($author$project$Main$viewTextInput, 'Name', loan.aJ, 'new-loan-name', $author$project$State$UpdateLoanName),
-						A5($author$project$Main$viewFloatInput, 'Principal', loan.G, 'new-loan-principal', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanPrincipal),
+						A5($author$project$Main$viewFloatInput, 'Principal', loan.H, 'new-loan-principal', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanPrincipal),
 						A5($author$project$Main$viewFloatInput, 'Minimum', loan.N, 'new-loan-minimum', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanMinimum),
-						A5($author$project$Main$viewFloatInput, 'APR', loan.I, 'new-loan-apr', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanApr),
+						A5($author$project$Main$viewFloatInput, 'APR', loan.J, 'new-loan-apr', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,
 						_List_fromArray(
@@ -5855,12 +5856,12 @@ var $author$project$Loan$getMinimumTotalAmount = A2(
 	$elm$core$List$foldl,
 	F2(
 		function (ps, totalAmount) {
-			return totalAmount + ps.H;
+			return totalAmount + ps.I;
 		}),
 	0);
 var $author$project$Loan$PaymentSequence = F4(
 	function (loan, actualMinimum, payments, isPaidOff) {
-		return {H: actualMinimum, L: isPaidOff, F: loan, ai: payments};
+		return {I: actualMinimum, L: isPaidOff, G: loan, ai: payments};
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5877,7 +5878,7 @@ var $author$project$Loan$getMinimumPaymentAmount = F3(
 var $author$project$Loan$toPaymentPlan = F2(
 	function (maxNumberOfYears, loans) {
 		var calculatedMinimum = function (loan) {
-			return A3($author$project$Loan$getMinimumPaymentAmount, loan.G, loan.I, maxNumberOfYears);
+			return A3($author$project$Loan$getMinimumPaymentAmount, loan.H, loan.J, maxNumberOfYears);
 		};
 		var getActualMinimum = function (loan) {
 			var cm = calculatedMinimum(loan);
@@ -6055,6 +6056,10 @@ var $author$project$Main$view = function (model) {
 			_List_Nil,
 			A2($elm$core$List$cons, headRow, tableRows))
 		]);
+	var errors = A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		A2($elm$core$List$map, $elm$html$Html$text, model.F));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -6065,7 +6070,7 @@ var $author$project$Main$view = function (model) {
 				_Utils_ap(
 					newLoans,
 					_List_fromArray(
-						[paymentStrategy])))));
+						[paymentStrategy, errors])))));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{aI: $author$project$Main$init, aO: $author$project$Main$subscriptions, aQ: $author$project$Main$update, aR: $author$project$Main$view});
