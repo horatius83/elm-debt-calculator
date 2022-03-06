@@ -5514,25 +5514,6 @@ var $author$project$Main$update = F2(
 			}
 		}
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $elm$html$Html$thead = _VirtualDom_node('thead');
-var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $author$project$State$DeleteLoan = function (a) {
-	return {$: 2, a: a};
-};
-var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5542,6 +5523,27 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $elm$html$Html$thead = _VirtualDom_node('thead');
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$State$DeleteLoan = function (a) {
+	return {$: 2, a: a};
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
@@ -6056,10 +6058,22 @@ var $author$project$Main$view = function (model) {
 			_List_Nil,
 			A2($elm$core$List$cons, headRow, tableRows))
 		]);
+	var errorListItem = function (txt) {
+		return A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('red')
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(txt)
+				]));
+	};
 	var errors = A2(
-		$elm$html$Html$div,
+		$elm$html$Html$ul,
 		_List_Nil,
-		A2($elm$core$List$map, $elm$html$Html$text, model.F));
+		A2($elm$core$List$map, errorListItem, model.F));
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,

@@ -146,8 +146,10 @@ view model =
                 , viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
                 ]
 
+        errorListItem txt = 
+            li [class "red"] [text txt]
         errors =
-            div [] <| List.map text model.errors
+            ul [] <| List.map errorListItem model.errors
     in
     div [] (title ++ loans ++ newLoans ++ [ paymentStrategy, errors ])
 
