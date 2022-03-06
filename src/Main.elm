@@ -143,7 +143,7 @@ view model =
         paymentStrategy =
             div []
                 [ paymentStrategyTitle
-                , viewPaymentStrategy model.yearsToPayoff model.loans
+                , viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
                 ]
 
         errors =
@@ -166,8 +166,8 @@ viewNewLoan loan =
         ]
 
 
-viewPaymentStrategy : Int -> List Loan -> Html Msg
-viewPaymentStrategy yearsToPayoff loans =
+viewPaymentStrategy : Int -> Float -> List Loan -> Html Msg
+viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
     let
         paymentPlan =
             toPaymentPlan yearsToPayoff loans
@@ -191,7 +191,7 @@ viewPaymentStrategy yearsToPayoff loans =
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
-            , viewFloatInput "Maximum total monthly payment" totalMinimumAmount "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
+            , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             ]
         ]

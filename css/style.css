@@ -74,3 +74,8 @@ button {
 .align-right {
     text-align: right;
 }
+
+input:invalid {
+    border-color: #ef233c;
+    background-color: #ef233c;
+}

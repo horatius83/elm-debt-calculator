@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.S.A === region.Z.A)
+	if (region.S.A === region._.A)
 	{
 		return 'on line ' + region.S.A;
 	}
-	return 'on lines ' + region.S.A + ' through ' + region.Z.A;
+	return 'on lines ' + region.S.A + ' through ' + region._.A;
 }
 
 
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.an === next.an
-							&& curr.ac === next.ac
-							&& curr.ak.a === next.ak.a
+							&& curr.ao === next.ao
+							&& curr.ad === next.ad
+							&& curr.al.a === next.al.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		ar: _Browser_getScene(),
+		as: _Browser_getScene(),
 		av: {
 			ax: _Browser_window.pageXOffset,
 			ay: _Browser_window.pageYOffset,
 			aw: _Browser_doc.documentElement.clientWidth,
-			ab: _Browser_doc.documentElement.clientHeight
+			ac: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4248,7 +4248,7 @@ function _Browser_getScene()
 	var elem = _Browser_doc.documentElement;
 	return {
 		aw: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		ab: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		ac: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			ar: {
+			as: {
 				aw: node.scrollWidth,
-				ab: node.scrollHeight
+				ac: node.scrollHeight
 			},
 			av: {
 				ax: node.scrollLeft,
 				ay: node.scrollTop,
 				aw: node.clientWidth,
-				ab: node.clientHeight
+				ac: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			ar: _Browser_getScene(),
+			as: _Browser_getScene(),
 			av: {
 				ax: x,
 				ay: y,
 				aw: _Browser_doc.documentElement.clientWidth,
-				ab: _Browser_doc.documentElement.clientHeight
+				ac: _Browser_doc.documentElement.clientHeight
 			},
 			aE: {
 				ax: x + rect.left,
 				ay: y + rect.top,
 				aw: rect.width,
-				ab: rect.height
+				ac: rect.height
 			}
 		};
 	});
@@ -4859,7 +4859,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aa: fragment, ac: host, ag: path, ak: port_, an: protocol, ao: query};
+		return {ab: fragment, ad: host, ah: path, al: port_, ao: protocol, ap: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5144,7 +5144,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{F: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, ah: 0, au: 0, V: 20},
+		{F: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, ai: 0, U: 0, W: 20},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5477,7 +5477,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{V: years}),
+								{W: years}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$State$Error(errorMessage),
@@ -5491,7 +5491,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{ah: paymentStrategy}),
+							{ai: paymentStrategy}),
 						$elm$core$Platform$Cmd$none);
 				default:
 					var paymentAsString = msg.a;
@@ -5502,7 +5502,7 @@ var $author$project$Main$update = F2(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{au: payment}),
+								{U: payment}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var $temp$msg = $author$project$State$Error(errorMessage),
@@ -5861,7 +5861,7 @@ var $author$project$Loan$getMinimumTotalAmount = A2(
 	0);
 var $author$project$Loan$PaymentSequence = F4(
 	function (loan, actualMinimum, payments, isPaidOff) {
-		return {I: actualMinimum, L: isPaidOff, G: loan, ai: payments};
+		return {I: actualMinimum, L: isPaidOff, G: loan, aj: payments};
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5945,8 +5945,8 @@ var $author$project$Main$viewSelect = F4(
 					optionsAsHtml)
 				]));
 	});
-var $author$project$Main$viewPaymentStrategy = F2(
-	function (yearsToPayoff, loans) {
+var $author$project$Main$viewPaymentStrategy = F3(
+	function (yearsToPayoff, totalMaximumMonthlyPayment, loans) {
 		var paymentStrategyOptions = _List_fromArray(
 			['Highest Interest First', 'Lowest Principal First']);
 		var paymentPlan = A2($author$project$Loan$toPaymentPlan, yearsToPayoff, loans);
@@ -5975,7 +5975,7 @@ var $author$project$Main$viewPaymentStrategy = F2(
 							A5(
 							$author$project$Main$viewFloatInput,
 							'Maximum total monthly payment',
-							totalMinimumAmount,
+							totalMaximumMonthlyPayment,
 							'total-minimum-amount',
 							$elm$core$Maybe$Just(totalMinimumAmount),
 							$author$project$State$UpdateMaximumTotalPayment),
@@ -6008,7 +6008,7 @@ var $author$project$Main$view = function (model) {
 		_List_fromArray(
 			[
 				paymentStrategyTitle,
-				A2($author$project$Main$viewPaymentStrategy, model.V, model.w)
+				A3($author$project$Main$viewPaymentStrategy, model.W, model.U, model.w)
 			]));
 	var newLoans = _List_fromArray(
 		[
