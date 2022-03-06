@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, placeholder, value)
+import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
 import Loan exposing (Loan, getMinimumTotalAmount, toPaymentPlan)
@@ -195,9 +195,14 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
             , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
+            , button 
+                [ disabled (isCalculatePaymentPlanButtonDisabled loans)
+                ] [ text "Calculate Payment Plan"]
             ]
         ]
 
+isCalculatePaymentPlanButtonDisabled : List Loan -> Bool
+isCalculatePaymentPlanButtonDisabled loans = (List.length loans) == 0
 
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
 viewTextInput labelText val id callback =

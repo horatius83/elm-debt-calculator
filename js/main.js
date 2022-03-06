@@ -5854,6 +5854,15 @@ var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 var $author$project$State$UpdateYearsToPayoff = function (a) {
 	return {$: 9, a: a};
 };
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $author$project$Loan$getMinimumTotalAmount = A2(
 	$elm$core$List$foldl,
 	F2(
@@ -5861,6 +5870,9 @@ var $author$project$Loan$getMinimumTotalAmount = A2(
 			return totalAmount + ps.I;
 		}),
 	0);
+var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (loans) {
+	return !$elm$core$List$length(loans);
+};
 var $author$project$Loan$PaymentSequence = F4(
 	function (loan, actualMinimum, payments, isPaidOff) {
 		return {I: actualMinimum, L: isPaidOff, G: loan, aj: payments};
@@ -5981,7 +5993,18 @@ var $author$project$Main$viewPaymentStrategy = F3(
 							'total-minimum-amount',
 							$elm$core$Maybe$Just(totalMinimumAmount),
 							$author$project$State$UpdateMaximumTotalPayment),
-							A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy)
+							A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$disabled(
+									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Calculate Payment Plan')
+								]))
 						]))
 				]));
 	});
