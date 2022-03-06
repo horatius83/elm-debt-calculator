@@ -28,6 +28,7 @@ init _ =
       , yearsToPayoff = 20
       , paymentStrategy = Avalanche
       , totalMonthlyPayment = 0
+      , paymentPlan = Nothing
       }
     , Cmd.none
     )
@@ -100,6 +101,14 @@ update msg model =
                 _ ->
                     update (Error errorMessage) model
 
+        GeneratePaymentPlan ->
+            generatePaymentPlan model
+
+
+generatePaymentPlan : Model -> ( Model, Cmd Msg )
+generatePaymentPlan model =
+    ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -146,8 +155,9 @@ view model =
                 , viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
                 ]
 
-        errorListItem txt = 
-            li [class "red"] [text txt]
+        errorListItem txt =
+            li [ class "red" ] [ text txt ]
+
         errors =
             ul [] <| List.map errorListItem model.errors
     in
@@ -195,14 +205,19 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
             , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
-            , button 
+            , button
                 [ disabled (isCalculatePaymentPlanButtonDisabled loans)
-                ] [ text "Calculate Payment Plan"]
+                , onClick GeneratePaymentPlan
+                ]
+                [ text "Calculate Payment Plan" ]
             ]
         ]
 
+
 isCalculatePaymentPlanButtonDisabled : List Loan -> Bool
-isCalculatePaymentPlanButtonDisabled loans = (List.length loans) == 0
+isCalculatePaymentPlanButtonDisabled loans =
+    List.length loans == 0
+
 
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
 viewTextInput labelText val id callback =

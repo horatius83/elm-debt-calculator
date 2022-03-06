@@ -1858,8 +1858,8 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 		flagDecoder,
 		args,
 		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aR,
+		impl.aP,
 		function() { return function() {} }
 	);
 });
@@ -3929,10 +3929,10 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 		flagDecoder,
 		args,
 		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aR,
+		impl.aP,
 		function(sendToApp, initialModel) {
-			var view = impl.aR;
+			var view = impl.aS;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3965,11 +3965,11 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		flagDecoder,
 		args,
 		impl.aI,
-		impl.aQ,
-		impl.aO,
+		impl.aR,
+		impl.aP,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.R && impl.R(sendToApp)
-			var view = impl.aR;
+			var view = impl.aS;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3982,7 +3982,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.aP) && (_VirtualDom_doc.title = title = doc.aP);
+				(title !== doc.aQ) && (_VirtualDom_doc.title = title = doc.aQ);
 			});
 		}
 	);
@@ -4073,9 +4073,9 @@ function _Browser_application(impl)
 		{
 			return A3(impl.aI, flags, _Browser_getUrl(), key);
 		},
+		aS: impl.aS,
 		aR: impl.aR,
-		aQ: impl.aQ,
-		aO: impl.aO
+		aP: impl.aP
 	});
 }
 
@@ -5144,7 +5144,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{F: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, ai: 0, U: 0, W: 20},
+		{F: _List_Nil, w: _List_Nil, O: $author$project$NewLoan$defaultLoan, aN: $elm$core$Maybe$Nothing, ai: 0, U: 0, W: 20},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5169,6 +5169,9 @@ var $author$project$NewLoan$addLoan = function (model) {
 						[model.O])),
 				O: $author$project$NewLoan$defaultLoan
 			}));
+};
+var $author$project$Main$generatePaymentPlan = function (model) {
+	return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 };
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -5493,7 +5496,7 @@ var $author$project$Main$update = F2(
 							model,
 							{ai: paymentStrategy}),
 						$elm$core$Platform$Cmd$none);
-				default:
+				case 11:
 					var paymentAsString = msg.a;
 					var maybePayment = $elm$core$String$toFloat(paymentAsString);
 					var errorMessage = 'Could not parse ' + (paymentAsString + ' as a Total Monthly Payment');
@@ -5511,6 +5514,8 @@ var $author$project$Main$update = F2(
 						model = $temp$model;
 						continue update;
 					}
+				default:
+					return $author$project$Main$generatePaymentPlan(model);
 			}
 		}
 	});
@@ -5847,6 +5852,7 @@ var $author$project$Main$viewNewLoan = function (loan) {
 var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 10, a: a};
 };
+var $author$project$State$GeneratePaymentPlan = {$: 12};
 var $author$project$State$Snowball = 1;
 var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 	return {$: 11, a: a};
@@ -5999,7 +6005,8 @@ var $author$project$Main$viewPaymentStrategy = F3(
 							_List_fromArray(
 								[
 									$elm$html$Html$Attributes$disabled(
-									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans))
+									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans)),
+									$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlan)
 								]),
 							_List_fromArray(
 								[
@@ -6110,6 +6117,6 @@ var $author$project$Main$view = function (model) {
 						[paymentStrategy, errors])))));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{aI: $author$project$Main$init, aO: $author$project$Main$subscriptions, aQ: $author$project$Main$update, aR: $author$project$Main$view});
+	{aI: $author$project$Main$init, aP: $author$project$Main$subscriptions, aR: $author$project$Main$update, aS: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

@@ -1,6 +1,6 @@
 module State exposing (..)
 
-import Loan exposing (Loan)
+import Loan exposing (Loan, PaymentPlan)
 
 
 type PaymentStrategy
@@ -15,6 +15,7 @@ type alias Model =
     , yearsToPayoff : Int
     , paymentStrategy : PaymentStrategy
     , totalMonthlyPayment : Float
+    , paymentPlan : Maybe PaymentPlan
     }
 
 
@@ -31,3 +32,4 @@ type Msg
     | UpdateYearsToPayoff String
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
+    | GeneratePaymentPlan
