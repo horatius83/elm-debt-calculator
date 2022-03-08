@@ -5713,8 +5713,11 @@ var $author$project$Main$update = F2(
 						model = $temp$model;
 						continue update;
 					}
-				default:
+				case 12:
 					return $author$project$Main$generatePaymentPlan(model);
+				default:
+					var time = msg.a;
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			}
 		}
 	});

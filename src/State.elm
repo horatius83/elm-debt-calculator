@@ -1,6 +1,7 @@
 module State exposing (..)
 
 import Loan exposing (Loan, PaymentPlan)
+import Time
 
 
 type PaymentStrategy
@@ -33,3 +34,4 @@ type Msg
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
     | GeneratePaymentPlan
+    | GotCurrentTime Time.Posix
