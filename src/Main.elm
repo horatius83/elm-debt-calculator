@@ -5,9 +5,10 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, getMinimumTotalAmount, toPaymentPlan)
+import Loan exposing (Loan, getMinimumTotalAmount, toPaymentPlan, snowball, avalanche, PaymentPlan)
 import NewLoan exposing (defaultLoan)
 import State exposing (Model, Msg(..), PaymentStrategy(..))
+import Loan exposing (PaymentPlanResult(..))
 
 
 main : Program () Model Msg
@@ -107,13 +108,23 @@ update msg model =
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
 generatePaymentPlan model =
-    ( model, Cmd.none )
+    let
+        newPaymentPlan = toPaymentPlan model.yearsToPayoff model.loans
+        paymentPlanResult = case model.paymentStrategy of
+            Avalanche -> avalanche newPaymentPlan model.totalMonthlyPayment 
+            Snowball -> snowball newPaymentPlan model.totalMonthlyPayment 
+        getErrorMessage minimumAmount = 
+            "Amount " ++ (String.fromFloat minimumAmount) ++ " is too low to calculate payment plan."
 
+    in
+    case paymentPlanResult of
+        MaximumTotalAmountTooLow amount -> update (Error (getErrorMessage amount)) model
+        NoFurtherPaymentsToBeMade paymentPlan -> ( { model | paymentPlan = Just paymentPlan }, Cmd.none )
+        PaymentsRemaining paymentPlan -> ( { model | paymentPlan = Just paymentPlan }, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
-
 
 view : Model -> Html Msg
 view model =
@@ -154,6 +165,10 @@ view model =
                 [ paymentStrategyTitle
                 , viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
                 ]
+        
+        paymentPlan = case model.paymentPlan of
+            Just pp -> [viewPaymentPlan pp]
+            _ -> []
 
         errorListItem txt =
             li [ class "red" ] [ text txt ]
@@ -161,7 +176,7 @@ view model =
         errors =
             ul [] <| List.map errorListItem model.errors
     in
-    div [] (title ++ loans ++ newLoans ++ [ paymentStrategy, errors ])
+    div [] (title ++ loans ++ newLoans ++ (paymentStrategy :: paymentPlan) ++ [errors] )
 
 
 viewNewLoan : Loan -> Html Msg
@@ -213,6 +228,9 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
             ]
         ]
 
+viewPaymentPlan : PaymentPlan -> Html Msg
+viewPaymentPlan paymentplan =
+    h1 [] [text "Payment Plan"]
 
 isCalculatePaymentPlanButtonDisabled : List Loan -> Bool
 isCalculatePaymentPlanButtonDisabled loans =
@@ -322,3 +340,11 @@ viewSelect labelText id options stringToMsg =
             ]
             optionsAsHtml
         ]
+
+
+maybesToList : List (Maybe a) -> List a
+maybesToList list =
+    case list of
+        Just x :: xs -> x :: maybesToList xs
+        Nothing :: xs -> maybesToList xs
+        [] -> []
