@@ -234,11 +234,19 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
 
                 _ ->
                     ChoosePaymentStrategy Avalanche
+
+        totalMinimumAmountAsString =
+            "Total Minimum Amount: " ++ String.fromFloat totalMinimumAmount
+
+        totalMaximumMonthlyPaymentAsString =
+            "Total Maximum Payment: " ++ String.fromFloat totalMaximumMonthlyPayment
     in
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
             , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
+            , p [] [ text totalMinimumAmountAsString ]
+            , p [] [ text totalMaximumMonthlyPaymentAsString ]
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             , button
                 [ disabled (isCalculatePaymentPlanButtonDisabled loans)
@@ -309,8 +317,9 @@ viewNumericInput labelText val id callback otherAttributes =
         attributeList =
             [ value val
             , onInput callback
+            , attribute "step" "0.01"
             , attribute "name" id
-            , attribute "type" "numeric"
+            , attribute "type" "number"
             ]
                 ++ otherAttributes
     in

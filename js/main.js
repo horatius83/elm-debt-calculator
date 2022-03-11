@@ -5287,7 +5287,7 @@ var $author$project$Loan$strategy = F3(
 				return !ps.O;
 			},
 			newPaymentPlan);
-		return (_Utils_cmp(minimumTotalPayment, maximumAmount) < 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : (areThereAnyFurtherPayments ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
+		return (_Utils_cmp(minimumTotalPayment, maximumAmount) > 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : (areThereAnyFurtherPayments ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
 	});
 var $author$project$Loan$avalanche = $author$project$Loan$strategy(
 	function (paymentSequence) {
@@ -5939,8 +5939,9 @@ var $author$project$Main$viewNumericInput = F5(
 				[
 					$elm$html$Html$Attributes$value(val),
 					$elm$html$Html$Events$onInput(callback),
+					A2($elm$html$Html$Attributes$attribute, 'step', '0.01'),
 					A2($elm$html$Html$Attributes$attribute, 'name', id),
-					A2($elm$html$Html$Attributes$attribute, 'type', 'numeric')
+					A2($elm$html$Html$Attributes$attribute, 'type', 'number')
 				]),
 			otherAttributes);
 		return A2(
@@ -6082,6 +6083,7 @@ var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty(
 var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (loans) {
 	return !$elm$core$List$length(loans);
 };
+var $elm$html$Html$p = _VirtualDom_node('p');
 var $author$project$Main$viewIntInput = F4(
 	function (labelText, value, id, callback) {
 		var valueAsString = $elm$core$String$fromInt(value);
@@ -6133,10 +6135,12 @@ var $author$project$Main$viewSelect = F4(
 	});
 var $author$project$Main$viewPaymentStrategy = F3(
 	function (yearsToPayoff, totalMaximumMonthlyPayment, loans) {
+		var totalMaximumMonthlyPaymentAsString = 'Total Maximum Payment: ' + $elm$core$String$fromFloat(totalMaximumMonthlyPayment);
 		var paymentStrategyOptions = _List_fromArray(
 			['Highest Interest First', 'Lowest Principal First']);
 		var paymentPlan = A2($author$project$Loan$toPaymentPlan, yearsToPayoff, loans);
 		var totalMinimumAmount = $author$project$Loan$getMinimumTotalAmount(paymentPlan);
+		var totalMinimumAmountAsString = 'Total Minimum Amount: ' + $elm$core$String$fromFloat(totalMinimumAmount);
 		var optionToStrategy = function (option) {
 			if (option === 'Lowest Principal First') {
 				return $author$project$State$ChoosePaymentStrategy(1);
@@ -6165,6 +6169,20 @@ var $author$project$Main$viewPaymentStrategy = F3(
 							'total-minimum-amount',
 							$elm$core$Maybe$Just(totalMinimumAmount),
 							$author$project$State$UpdateMaximumTotalPayment),
+							A2(
+							$elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(totalMinimumAmountAsString)
+								])),
+							A2(
+							$elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(totalMaximumMonthlyPaymentAsString)
+								])),
 							A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
 							A2(
 							$elm$html$Html$button,
