@@ -5731,7 +5731,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
 		return true;
@@ -6051,14 +6051,35 @@ var $author$project$Main$viewNewLoan = function (loan) {
 					]))
 			]));
 };
-var $author$project$Main$viewPaymentPlan = function (paymentplan) {
-	return A2(
-		$elm$html$Html$h1,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Payment Plan')
-			]));
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
+	var makePayment = function (p) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(p.H.aK)
+						]))
+				]));
+	};
+	var payments = A2($elm$core$List$map, makePayment, paymentPlan);
+	var children = A2(
+		$elm$core$List$cons,
+		A2(
+			$elm$html$Html$h2,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Payment Plan')
+				])),
+		payments);
+	return A2($elm$html$Html$div, _List_Nil, children);
 };
 var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 10, a: a};
@@ -6203,7 +6224,7 @@ var $author$project$Main$view = function (model) {
 	var title = _List_fromArray(
 		[
 			A2(
-			$elm$html$Html$h1,
+			$elm$html$Html$h2,
 			_List_Nil,
 			_List_fromArray(
 				[
@@ -6212,7 +6233,7 @@ var $author$project$Main$view = function (model) {
 		]);
 	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.s);
 	var paymentStrategyTitle = A2(
-		$elm$html$Html$h1,
+		$elm$html$Html$h2,
 		_List_Nil,
 		_List_fromArray(
 			[

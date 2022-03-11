@@ -146,7 +146,7 @@ view : Model -> Html Msg
 view model =
     let
         title =
-            [ h1 [] [ text "Loans" ] ]
+            [ h2 [] [ text "Loans" ] ]
 
         headRow =
             thead []
@@ -174,7 +174,7 @@ view model =
             [ viewNewLoan model.newLoan ]
 
         paymentStrategyTitle =
-            h1 [] [ text "Payment Strategy" ]
+            h2 [] [ text "Payment Strategy" ]
 
         paymentStrategy =
             div []
@@ -258,8 +258,20 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
 
 
 viewPaymentPlan : PaymentPlan -> Html Msg
-viewPaymentPlan paymentplan =
-    h1 [] [ text "Payment Plan" ]
+viewPaymentPlan paymentPlan =
+    let
+        makePayment p =
+            div []
+                [ h3 [] [ text p.loan.name ]
+                ]
+
+        payments =
+            List.map makePayment paymentPlan
+
+        children =
+            h2 [] [ text "Payment Plan" ] :: payments
+    in
+    div [] children
 
 
 isCalculatePaymentPlanButtonDisabled : List Loan -> Bool
