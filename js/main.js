@@ -5222,14 +5222,7 @@ var $author$project$Loan$calculateNewPayment = F2(
 			payments);
 		var principalRemaining = loan.U - totalAmountPaid;
 		var minimumAndBonus = actualMinimum + bonus;
-		return isPaidOff ? _Utils_Tuple2(
-			bonus,
-			_Utils_ap(
-				newPaymentSequence,
-				_List_fromArray(
-					[
-						A4($author$project$Loan$PaymentSequence, loan, actualMinimum, payments, true)
-					]))) : ((_Utils_cmp(principalRemaining, minimumAndBonus) < 0) ? _Utils_Tuple2(
+		return isPaidOff ? _Utils_Tuple2(bonus, newPaymentSequence) : ((_Utils_cmp(principalRemaining, minimumAndBonus) < 0) ? _Utils_Tuple2(
 			minimumAndBonus - principalRemaining,
 			_Utils_ap(
 				newPaymentSequence,

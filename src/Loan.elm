@@ -90,7 +90,7 @@ calculateNewPayment { loan, actualMinimum, payments, isPaidOff } ( bonus, newPay
             actualMinimum + bonus
     in
     if isPaidOff then
-        ( bonus, newPaymentSequence ++ [ PaymentSequence loan actualMinimum payments True ] )
+        ( bonus, newPaymentSequence )
 
     else if principalRemaining < minimumAndBonus then
         ( minimumAndBonus - principalRemaining, newPaymentSequence ++ [ PaymentSequence loan actualMinimum (payments ++ [ principalRemaining ]) True ] )
