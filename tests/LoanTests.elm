@@ -34,5 +34,18 @@ suite =
                     in
                     toPaymentPlan yearsToPayoff [loan] 
                         |> Expect.equal expectedPaymentSequence
+            , test "minimum is not sufficient for payment period" <|
+                \_ -> 
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        expectedPaymentSequence = [PaymentSequence loan actualMinimumPayment [] False]
+                    in
+                    toPaymentPlan yearsToPayoff [loan] 
+                        |> Expect.equal expectedPaymentSequence
             ]
         ]
