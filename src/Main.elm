@@ -134,7 +134,7 @@ generatePaymentPlan model =
             ( { model | paymentPlan = Just paymentPlan }, Cmd.none )
 
         PaymentsRemaining paymentPlan ->
-            ( { model | paymentPlan = Just paymentPlan }, Cmd.none )
+            generatePaymentPlan { model | paymentPlan = Just paymentPlan }
 
 
 subscriptions : Model -> Sub Msg
@@ -221,6 +221,8 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
 
         totalMinimumAmount =
             getMinimumTotalAmount paymentPlan
+                |> ceiling
+                |> toFloat
 
         paymentStrategyOptions =
             [ "Highest Interest First"
