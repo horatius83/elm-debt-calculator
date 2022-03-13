@@ -1,58 +1,5 @@
 /* https://coolors.co/palette/2b2d42-8d99ae-edf2f4-ef233c-d90429 */
 /* https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557 */
-
-.card {
-    font-size: 14em;
-    line-height: 1;
-    margin-bottom: 1.5em;
-}
-
-.player-controls {
-    margin-top: 1em;
-}
-
-.red {
-    color: #d90429;
-}
-
-.play-area {
-    background-color: #8d99ae;
-    padding-bottom: 1em;
-    border-radius: 0.5em;
-    color: #2b2d42;
-    border-color: #2b2d42;
-    border-style: solid;
-    padding: 1em;
-}
-
-.dealer-area {
-    background-color: #8d99ae;
-    padding-bottom: 1em;
-    padding-left: 1.75em;
-    border-radius: 0.5em;
-    color: #2b2d42;
-    border-color: #2b2d42;
-    border-style: solid;
-}
-
-.player-area {
-    background-color: #8d99ae;
-    padding-bottom: 1em;
-    padding-left: 1.75em;
-    border-radius: 0.5em;
-    color: #2b2d42;
-    border-color: #2b2d42;
-    border-style: solid;
-}
-
-.hand-won {
-    color: #edf2f4;
-}
-
-.hand-lost {
-    color: #e63946;
-}
-
 button {
     margin-right: 0.5em;
     font-weight: bold;
