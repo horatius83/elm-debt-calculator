@@ -5,7 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, PaymentPlan, PaymentPlanResult(..), avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
+import Loan exposing (Loan, PaymentSequence, PaymentPlanResult(..), avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (defaultLoan)
 import State exposing (Model, Msg(..), PaymentStrategy(..))
 import Time
@@ -112,8 +112,9 @@ update msg model =
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
 generatePaymentPlan model =
     let
-        newPaymentPlan =
-            toPaymentPlan model.yearsToPayoff model.loans
+        newPaymentPlan = case model.paymentPlan of
+            Nothing -> toPaymentPlan model.yearsToPayoff model.loans
+            Just x -> x
 
         paymentPlanResult =
             case model.paymentStrategy of
@@ -259,12 +260,14 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
         ]
 
 
-viewPaymentPlan : PaymentPlan -> Html Msg
+viewPaymentPlan : List PaymentSequence -> Html Msg
 viewPaymentPlan paymentPlan =
     let
+        makePayment : PaymentSequence -> Html Msg
         makePayment p =
             div []
                 [ h3 [] [ text p.loan.name ]
+                , div [] <| List.map (\x -> text <| String.fromFloat x) p.payments
                 ]
 
         payments =
