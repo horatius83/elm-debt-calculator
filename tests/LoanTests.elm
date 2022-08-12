@@ -1,7 +1,6 @@
 module LoanTests exposing (..)
 
-import Expect exposing (Expectation, FloatingPointTolerance(..))
-import Fuzz exposing (Fuzzer, int, list, string)
+import Expect exposing (FloatingPointTolerance(..))
 import Test exposing (..)
 
 import Loan exposing (..)
@@ -47,5 +46,51 @@ suite =
                     in
                     toPaymentPlan yearsToPayoff [loan] 
                         |> Expect.equal expectedPaymentSequence
+            ]
+        , describe "calculateNewPayment" 
+            [ test "isPaidOff" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentSequence = PaymentSequence loan actualMinimumPayment [] True
+                        bonus = 100
+                        newPaymentSequence = []
+                    in
+                        calculateNewPayment paymentSequence (bonus, newPaymentSequence)
+                        |> Expect.equal (bonus, [])
+            , test "principal remaining less than minimum" <|
+                \_ -> 
+                    let
+                        minimumPayment = 20.0
+                        apr = 20.0
+                        principal = minimumPayment - 1.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        paymentSequence = PaymentSequence loan minimumPayment [] False
+                        bonus = 100
+                        emptyPaymentSequence = []
+                        newPaymentSequence = [ PaymentSequence loan minimumPayment [ principal ] True ]
+                    in
+                        calculateNewPayment paymentSequence (bonus, emptyPaymentSequence)
+                        |> Expect.equal (bonus + (minimumPayment - principal), newPaymentSequence)
+            , test "principal remaining greater than minimum" <|
+                \_ -> 
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentSequence = PaymentSequence loan actualMinimumPayment [] False
+                        bonus = 100
+                        newPaymentSequence = [ PaymentSequence loan actualMinimumPayment [ actualMinimumPayment + bonus ] False ]
+                    in
+                        calculateNewPayment paymentSequence (bonus, [])
+                        |> Expect.equal (0, newPaymentSequence)
             ]
         ]
