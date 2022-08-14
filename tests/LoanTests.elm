@@ -62,7 +62,7 @@ suite =
                         newPaymentSequence = []
                     in
                         calculateNewPayment paymentSequence (bonus, newPaymentSequence)
-                        |> Expect.equal (bonus, [])
+                        |> Expect.equal (bonus, [paymentSequence])
             , test "principal remaining less than minimum" <|
                 \_ -> 
                     let

@@ -116,8 +116,7 @@ strategy sortFunction paymentPlan maximumAmount =
 
         areThereAnyFurtherPayments =
             List.any (\ps -> not ps.isPaidOff) newPaymentPlan
-                || bonusRemaining
-                >= 0
+                || bonusRemaining > 0
     in
     if minimumTotalPayment > maximumAmount then
         MaximumTotalAmountTooLow minimumTotalPayment
