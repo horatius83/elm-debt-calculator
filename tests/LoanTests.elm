@@ -112,7 +112,25 @@ suite =
                         avalanche paymentPlan totalAmount
                         |> isMaximumTotalAmountTooLow
                         |> Expect.equal True
-            , test "NoFurtherPaymentsToBeMade" <|
+            , test "NoFurtherPaymentsToBeMade bonus left over" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        totalAmount = principal
+                        isNoFurtherPaymentsToBeMade x = case x of
+                            NoFurtherPaymentsToBeMade _ -> True
+                            _ -> False
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> isNoFurtherPaymentsToBeMade
+                        |> Expect.equal True
+            , test "NoFurtherPaymentsToBeMade isPaidOff flag" <|
                 \_ ->
                     let
                         minimumPayment = 20.0
@@ -122,7 +140,7 @@ suite =
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
                         paymentPlan = [PaymentSequence loan actualMinimumPayment [] True]
-                        totalAmount = actualMinimumPayment + 10.0
+                        totalAmount = actualMinimumPayment
                         isNoFurtherPaymentsToBeMade x = case x of
                             NoFurtherPaymentsToBeMade _ -> True
                             _ -> False
@@ -130,9 +148,23 @@ suite =
                         avalanche paymentPlan totalAmount
                         |> isNoFurtherPaymentsToBeMade
                         |> Expect.equal True
-                        {-
             , test "PaymentsRemaining" <|
                 \_ ->
--}
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        totalAmount = actualMinimumPayment + 10.0
+                        isPaymentsRemaining x = case x of
+                            PaymentsRemaining _ -> True
+                            _ -> False
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> isPaymentsRemaining
+                        |> Expect.equal True
             ]
         ]

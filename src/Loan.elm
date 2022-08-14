@@ -90,7 +90,7 @@ calculateNewPayment { loan, actualMinimum, payments, isPaidOff } ( bonus, newPay
             actualMinimum + bonus
     in
     if isPaidOff then
-        ( bonus, newPaymentSequence )
+        ( bonus, newPaymentSequence ++ [ PaymentSequence loan actualMinimum payments True ] )
 
     else if principalRemaining < minimumAndBonus then
         ( minimumAndBonus - principalRemaining, newPaymentSequence ++ [ PaymentSequence loan actualMinimum (payments ++ [ principalRemaining ]) True ] )
@@ -116,12 +116,13 @@ strategy sortFunction paymentPlan maximumAmount =
 
         areThereAnyFurtherPayments =
             List.any (\ps -> not ps.isPaidOff) newPaymentPlan
-            || bonusRemaining > 0
+                || bonusRemaining
+                >= 0
     in
     if minimumTotalPayment > maximumAmount then
         MaximumTotalAmountTooLow minimumTotalPayment
 
-    else if areThereAnyFurtherPayments then
+    else if not areThereAnyFurtherPayments then
         NoFurtherPaymentsToBeMade newPaymentPlan
 
     else

@@ -5222,7 +5222,14 @@ var $author$project$Loan$calculateNewPayment = F2(
 			payments);
 		var principalRemaining = loan.U - totalAmountPaid;
 		var minimumAndBonus = actualMinimum + bonus;
-		return isPaidOff ? _Utils_Tuple2(bonus, newPaymentSequence) : ((_Utils_cmp(principalRemaining, minimumAndBonus) < 0) ? _Utils_Tuple2(
+		return isPaidOff ? _Utils_Tuple2(
+			bonus,
+			_Utils_ap(
+				newPaymentSequence,
+				_List_fromArray(
+					[
+						A4($author$project$Loan$PaymentSequence, loan, actualMinimum, payments, true)
+					]))) : ((_Utils_cmp(principalRemaining, minimumAndBonus) < 0) ? _Utils_Tuple2(
 			minimumAndBonus - principalRemaining,
 			_Utils_ap(
 				newPaymentSequence,
@@ -5254,6 +5261,7 @@ var $author$project$Loan$calculateNewPayment = F2(
 						false)
 					]))));
 	});
+var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Loan$getMinimumTotalAmount = A2(
 	$elm$core$List$foldl,
 	F2(
@@ -5273,14 +5281,15 @@ var $author$project$Loan$strategy = F3(
 			$author$project$Loan$calculateNewPayment,
 			_Utils_Tuple2(bonusAmount, _List_Nil),
 			sortedPaymentPlan);
+		var bonusRemaining = _v0.a;
 		var newPaymentPlan = _v0.b;
 		var areThereAnyFurtherPayments = A2(
 			$elm$core$List$any,
 			function (ps) {
 				return !ps.ab;
 			},
-			newPaymentPlan);
-		return (_Utils_cmp(minimumTotalPayment, maximumAmount) > 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : (areThereAnyFurtherPayments ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
+			newPaymentPlan) || (bonusRemaining >= 0);
+		return (_Utils_cmp(minimumTotalPayment, maximumAmount) > 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : ((!areThereAnyFurtherPayments) ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
 	});
 var $author$project$Loan$avalanche = $author$project$Loan$strategy(
 	function (paymentSequence) {

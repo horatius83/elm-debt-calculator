@@ -5,7 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, PaymentSequence, PaymentPlanResult(..), avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
+import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (defaultLoan)
 import State exposing (Model, Msg(..), PaymentStrategy(..))
 import Time
@@ -112,9 +112,13 @@ update msg model =
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
 generatePaymentPlan model =
     let
-        newPaymentPlan = case model.paymentPlan of
-            Nothing -> toPaymentPlan model.yearsToPayoff model.loans
-            Just x -> x
+        newPaymentPlan =
+            case model.paymentPlan of
+                Nothing ->
+                    toPaymentPlan model.yearsToPayoff model.loans
+
+                Just x ->
+                    x
 
         paymentPlanResult =
             case model.paymentStrategy of
