@@ -122,7 +122,7 @@ suite =
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
                         paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
-                        totalAmount = principal
+                        totalAmount = principal + 10.0
                         isNoFurtherPaymentsToBeMade x = case x of
                             NoFurtherPaymentsToBeMade _ -> True
                             _ -> False
