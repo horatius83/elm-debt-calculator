@@ -1,13 +1,11 @@
 module MainTests exposing (..)
 
-import Expect exposing (Expectation, FloatingPointTolerance(..))
-import Fuzz exposing (Fuzzer, int, list, string)
+import Expect exposing (FloatingPointTolerance(..))
 import Test exposing (..)
 
-import State exposing (Model, PaymentStrategy)
+import State exposing (Model, PaymentStrategy(..))
 import Main exposing (generatePaymentPlan)
-import Loan exposing (toPaymentPlan, Loan)
-import State exposing (PaymentStrategy(..))
+import Loan exposing (Loan)
 
 suite : Test
 suite = 
@@ -20,8 +18,7 @@ suite =
                     loan = Loan "Test 1" 10.0 10.0 5000
                     loans = [loan]
                     paymentStrategy = Avalanche
-                    paymentPlan = toPaymentPlan yearsToPayoff loans 
-                    model = Model loans emptyLoan [] yearsToPayoff paymentStrategy 500.0 (Just paymentPlan)
+                    model = Model loans emptyLoan [] yearsToPayoff paymentStrategy 500.0 Nothing
                 in
                 generatePaymentPlan model 
                     |> Tuple.first 

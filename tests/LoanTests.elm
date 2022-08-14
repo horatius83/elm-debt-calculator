@@ -93,4 +93,46 @@ suite =
                         calculateNewPayment paymentSequence (bonus, [])
                         |> Expect.equal (0, newPaymentSequence)
             ]
+        , describe "avalanche"
+            [ test "MaximumTotalAmountTooLow" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        totalAmount = actualMinimumPayment - 10.0
+                        isMaximumTotalAmountTooLow x = case x of
+                            MaximumTotalAmountTooLow _ -> True
+                            _ -> False
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> isMaximumTotalAmountTooLow
+                        |> Expect.equal True
+            , test "NoFurtherPaymentsToBeMade" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] True]
+                        totalAmount = actualMinimumPayment + 10.0
+                        isNoFurtherPaymentsToBeMade x = case x of
+                            NoFurtherPaymentsToBeMade _ -> True
+                            _ -> False
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> isNoFurtherPaymentsToBeMade
+                        |> Expect.equal True
+                        {-
+            , test "PaymentsRemaining" <|
+                \_ ->
+-}
+            ]
         ]

@@ -263,7 +263,6 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
 viewPaymentPlan : List PaymentSequence -> Html Msg
 viewPaymentPlan paymentPlan =
     let
-        makePayment : PaymentSequence -> Html Msg
         makePayment p =
             div []
                 [ h3 [] [ text p.loan.name ]
