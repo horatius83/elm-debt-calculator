@@ -23,7 +23,8 @@ suite =
                 generatePaymentPlan model 
                     |> Tuple.first 
                     |> (\x -> x.paymentPlan)
-                    |> Maybe.map List.length
+                    |> Maybe.map List.head
+                    |> Maybe.map (\x -> Maybe.withDefault 0 (Maybe.map (\y -> List.length y.payments) x))
                     |> Maybe.withDefault 0
                     |> Expect.greaterThan 1
         ]
