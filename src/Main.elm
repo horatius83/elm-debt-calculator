@@ -264,18 +264,28 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
         ]
 
 
+viewMoney : Float -> Html Msg
+viewMoney f =
+    (f * 100.0)
+        |> round
+        |> toFloat
+        |> (\x -> x / 100.0)
+        |> String.fromFloat
+        |> (\x -> "$" ++ x)
+        |> text
+
+
 viewPaymentPlan : List PaymentSequence -> Html Msg
 viewPaymentPlan paymentPlan =
     let
-        roundToTwoDecimals f = (f * 100.0) |> round |> toFloat |> (\x -> x / 100.0)
-        makeIndividualPayment paymentAmount = 
+        makeIndividualPayment paymentAmount =
             div []
-                [ h4 [] [text "Month"]
-                , div [] 
-                    [
-                        roundToTwoDecimals paymentAmount |> String.fromFloat |> (\x -> "$" ++ x) |> text
+                [ h4 [] [ text "Month" ]
+                , div []
+                    [ viewMoney paymentAmount
                     ]
                 ]
+
         makePayment p =
             div []
                 [ h3 [] [ text p.loan.name ]
