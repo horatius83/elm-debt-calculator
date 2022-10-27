@@ -6063,7 +6063,42 @@ var $author$project$Main$viewNewLoan = function (loan) {
 			]));
 };
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$h4 = _VirtualDom_node('h4');
+var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
+	var roundToTwoDecimals = function (f) {
+		return function (x) {
+			return x / 100.0;
+		}(
+			$elm$core$Basics$round(f * 100.0));
+	};
+	var makeIndividualPayment = function (paymentAmount) {
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h4,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Month')
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							function (x) {
+								return '$' + x;
+							}(
+								$elm$core$String$fromFloat(
+									roundToTwoDecimals(paymentAmount))))
+						]))
+				]));
+	};
 	var makePayment = function (p) {
 		return A2(
 			$elm$html$Html$div,
@@ -6080,13 +6115,7 @@ var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
 					A2(
 					$elm$html$Html$div,
 					_List_Nil,
-					A2(
-						$elm$core$List$map,
-						function (x) {
-							return $elm$html$Html$text(
-								$elm$core$String$fromFloat(x));
-						},
-						p.aJ))
+					A2($elm$core$List$map, makeIndividualPayment, p.aJ))
 				]));
 	};
 	var payments = A2($elm$core$List$map, makePayment, paymentPlan);
