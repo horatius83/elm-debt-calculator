@@ -275,30 +275,62 @@ viewMoney f =
         |> text
 
 
+viewPaymentSequence : List PaymentSequence -> List (Html Msg)
+viewPaymentSequence paymentSequence =
+    let
+        getThisMonthsPaymentsAcc ps acc =
+            case ps.payments of
+                [] ->
+                    acc
+
+                x :: _ ->
+                    List.append acc [ ( ps.loan.name, x ) ]
+
+        thisMonthsPayments =
+            List.foldl getThisMonthsPaymentsAcc [] paymentSequence
+
+        nextMonthsPaymentSequenceAcc ps acc =
+            case ps.payments of
+                [] ->
+                    acc
+
+                _ :: xs ->
+                    List.append acc [ PaymentSequence ps.loan ps.actualMinimum xs ps.isPaidOff ]
+
+        nextMonthsPaymentSequence =
+            List.foldl nextMonthsPaymentSequenceAcc [] paymentSequence
+
+        viewMonthlyPayment month loanName amount =
+            tr []
+                [ td [] [ text month ]
+                , td [] [ text loanName ]
+                , td [] [ viewMoney amount ]
+                ]
+    in
+    case thisMonthsPayments of
+        [] ->
+            []
+
+        payments ->
+            (payments |> List.map (\( name, amount ) -> viewMonthlyPayment "Month" name amount)) ++ viewPaymentSequence nextMonthsPaymentSequence
+
+
 viewPaymentPlan : List PaymentSequence -> Html Msg
 viewPaymentPlan paymentPlan =
     let
-        makeIndividualPayment paymentAmount =
-            div []
-                [ h4 [] [ text "Month" ]
-                , div []
-                    [ viewMoney paymentAmount
+        payments =
+            viewPaymentSequence paymentPlan
+
+        headRow =
+            thead []
+                [ tr []
+                    [ td [] [ text "Month" ]
+                    , td [] [ text "Loan" ]
+                    , td [] [ text "Payment" ]
                     ]
                 ]
-
-        makePayment p =
-            div []
-                [ h3 [] [ text p.loan.name ]
-                , div [] <| List.map makeIndividualPayment p.payments
-                ]
-
-        payments =
-            List.map makePayment paymentPlan
-
-        children =
-            h2 [] [ text "Payment Plan" ] :: payments
     in
-    div [] children
+    table [] (headRow :: payments)
 
 
 isCalculatePaymentPlanButtonDisabled : List Loan -> Bool

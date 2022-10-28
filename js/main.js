@@ -6062,8 +6062,14 @@ var $author$project$Main$viewNewLoan = function (loan) {
 					]))
 			]));
 };
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
-var $elm$html$Html$h4 = _VirtualDom_node('h4');
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$viewMoney = function (f) {
 	return $elm$html$Html$text(
@@ -6076,60 +6082,126 @@ var $author$project$Main$viewMoney = function (f) {
 				}(
 					$elm$core$Basics$round(f * 100.0)))));
 };
+var $author$project$Main$viewPaymentSequence = function (paymentSequence) {
+	var viewMonthlyPayment = F3(
+		function (month, loanName, amount) {
+			return A2(
+				$elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(month)
+							])),
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(loanName)
+							])),
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Main$viewMoney(amount)
+							]))
+					]));
+		});
+	var nextMonthsPaymentSequenceAcc = F2(
+		function (ps, acc) {
+			var _v3 = ps.aJ;
+			if (!_v3.b) {
+				return acc;
+			} else {
+				var xs = _v3.b;
+				return A2(
+					$elm$core$List$append,
+					acc,
+					_List_fromArray(
+						[
+							A4($author$project$Loan$PaymentSequence, ps.R, ps.X, xs, ps.ab)
+						]));
+			}
+		});
+	var nextMonthsPaymentSequence = A3($elm$core$List$foldl, nextMonthsPaymentSequenceAcc, _List_Nil, paymentSequence);
+	var getThisMonthsPaymentsAcc = F2(
+		function (ps, acc) {
+			var _v2 = ps.aJ;
+			if (!_v2.b) {
+				return acc;
+			} else {
+				var x = _v2.a;
+				return A2(
+					$elm$core$List$append,
+					acc,
+					_List_fromArray(
+						[
+							_Utils_Tuple2(ps.R.bl, x)
+						]));
+			}
+		});
+	var thisMonthsPayments = A3($elm$core$List$foldl, getThisMonthsPaymentsAcc, _List_Nil, paymentSequence);
+	if (!thisMonthsPayments.b) {
+		return _List_Nil;
+	} else {
+		var payments = thisMonthsPayments;
+		return _Utils_ap(
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var name = _v1.a;
+					var amount = _v1.b;
+					return A3(viewMonthlyPayment, 'Month', name, amount);
+				},
+				payments),
+			$author$project$Main$viewPaymentSequence(nextMonthsPaymentSequence));
+	}
+};
 var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
-	var makeIndividualPayment = function (paymentAmount) {
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$h4,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text('Month')
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Main$viewMoney(paymentAmount)
-						]))
-				]));
-	};
-	var makePayment = function (p) {
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$h3,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$elm$html$Html$text(p.R.bl)
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					A2($elm$core$List$map, makeIndividualPayment, p.aJ))
-				]));
-	};
-	var payments = A2($elm$core$List$map, makePayment, paymentPlan);
-	var children = A2(
-		$elm$core$List$cons,
-		A2(
-			$elm$html$Html$h2,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Payment Plan')
-				])),
-		payments);
-	return A2($elm$html$Html$div, _List_Nil, children);
+	var payments = $author$project$Main$viewPaymentSequence(paymentPlan);
+	var headRow = A2(
+		$elm$html$Html$thead,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$tr,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Month')
+							])),
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Loan')
+							])),
+						A2(
+						$elm$html$Html$td,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Payment')
+							]))
+					]))
+			]));
+	return A2(
+		$elm$html$Html$table,
+		_List_Nil,
+		A2($elm$core$List$cons, headRow, payments));
 };
 var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 10, a: a};
