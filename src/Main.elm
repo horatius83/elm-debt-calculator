@@ -105,6 +105,7 @@ update msg model =
         GeneratePaymentPlan ->
             generatePaymentPlan model
 
+        -- https://stackoverflow.com/questions/38021777/how-do-i-get-the-current-time-in-elm-0-17-0-18
         GotCurrentTime time ->
             ( model, Cmd.none )
 
