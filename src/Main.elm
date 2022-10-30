@@ -306,10 +306,10 @@ viewPaymentSequence paymentSequence =
                 , td [] [ viewMoney amount ]
                 ]
 
-        thisSection = 
+        thisSection =
             section []
-                [ div [] [h2 [] [text "Month"]]
-                , table [] (List.map (\(name, amount) -> viewMonthlyPayment name amount) thisMonthsPayments)
+                [ div [] [ h2 [] [ text "Month" ] ]
+                , table [] (List.map (\( name, amount ) -> viewMonthlyPayment name amount) thisMonthsPayments)
                 ]
     in
     case thisMonthsPayments of
@@ -325,17 +325,8 @@ viewPaymentPlan paymentPlan =
     let
         payments =
             viewPaymentSequence paymentPlan
-
-        headRow =
-            thead []
-                [ tr []
-                    [ td [] [ text "Month" ]
-                    , td [] [ text "Loan" ]
-                    , td [] [ text "Payment" ]
-                    ]
-                ]
     in
-    table [] (headRow :: payments)
+    div [] payments
 
 
 isCalculatePaymentPlanButtonDisabled : List Loan -> Bool

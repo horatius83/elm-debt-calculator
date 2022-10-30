@@ -6182,43 +6182,7 @@ var $author$project$Main$viewPaymentSequence = function (paymentSequence) {
 };
 var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
 	var payments = $author$project$Main$viewPaymentSequence(paymentPlan);
-	var headRow = A2(
-		$elm$html$Html$thead,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Month')
-							])),
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Loan')
-							])),
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Payment')
-							]))
-					]))
-			]));
-	return A2(
-		$elm$html$Html$table,
-		_List_Nil,
-		A2($elm$core$List$cons, headRow, payments));
+	return A2($elm$html$Html$div, _List_Nil, payments);
 };
 var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 10, a: a};
