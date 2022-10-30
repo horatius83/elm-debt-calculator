@@ -300,19 +300,24 @@ viewPaymentSequence paymentSequence =
         nextMonthsPaymentSequence =
             List.foldl nextMonthsPaymentSequenceAcc [] paymentSequence
 
-        viewMonthlyPayment month loanName amount =
+        viewMonthlyPayment loanName amount =
             tr []
-                [ td [] [ text month ]
-                , td [] [ text loanName ]
+                [ td [] [ text loanName ]
                 , td [] [ viewMoney amount ]
+                ]
+
+        thisSection = 
+            section []
+                [ div [] [h2 [] [text "Month"]]
+                , table [] (List.map (\(name, amount) -> viewMonthlyPayment name amount) thisMonthsPayments)
                 ]
     in
     case thisMonthsPayments of
         [] ->
             []
 
-        payments ->
-            (payments |> List.map (\( name, amount ) -> viewMonthlyPayment "Month" name amount)) ++ viewPaymentSequence nextMonthsPaymentSequence
+        _ ->
+            thisSection :: viewPaymentSequence nextMonthsPaymentSequence
 
 
 viewPaymentPlan : List PaymentSequence -> Html Msg

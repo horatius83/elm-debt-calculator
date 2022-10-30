@@ -6070,6 +6070,7 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $elm$html$Html$section = _VirtualDom_node('section');
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$viewMoney = function (f) {
 	return $elm$html$Html$text(
@@ -6083,20 +6084,13 @@ var $author$project$Main$viewMoney = function (f) {
 					$elm$core$Basics$round(f * 100.0)))));
 };
 var $author$project$Main$viewPaymentSequence = function (paymentSequence) {
-	var viewMonthlyPayment = F3(
-		function (month, loanName, amount) {
+	var viewMonthlyPayment = F2(
+		function (loanName, amount) {
 			return A2(
 				$elm$html$Html$tr,
 				_List_Nil,
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text(month)
-							])),
 						A2(
 						$elm$html$Html$td,
 						_List_Nil,
@@ -6147,19 +6141,42 @@ var $author$project$Main$viewPaymentSequence = function (paymentSequence) {
 			}
 		});
 	var thisMonthsPayments = A3($elm$core$List$foldl, getThisMonthsPaymentsAcc, _List_Nil, paymentSequence);
+	var thisSection = A2(
+		$elm$html$Html$section,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h2,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Month')
+							]))
+					])),
+				A2(
+				$elm$html$Html$table,
+				_List_Nil,
+				A2(
+					$elm$core$List$map,
+					function (_v1) {
+						var name = _v1.a;
+						var amount = _v1.b;
+						return A2(viewMonthlyPayment, name, amount);
+					},
+					thisMonthsPayments))
+			]));
 	if (!thisMonthsPayments.b) {
 		return _List_Nil;
 	} else {
-		var payments = thisMonthsPayments;
-		return _Utils_ap(
-			A2(
-				$elm$core$List$map,
-				function (_v1) {
-					var name = _v1.a;
-					var amount = _v1.b;
-					return A3(viewMonthlyPayment, 'Month', name, amount);
-				},
-				payments),
+		return A2(
+			$elm$core$List$cons,
+			thisSection,
 			$author$project$Main$viewPaymentSequence(nextMonthsPaymentSequence));
 	}
 };
