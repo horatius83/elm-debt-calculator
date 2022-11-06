@@ -8,6 +8,7 @@ import List.Extra exposing (removeAt)
 import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (defaultLoan)
 import State exposing (Model, Msg(..), PaymentStrategy(..))
+import Task
 import Time
 
 
@@ -30,6 +31,8 @@ init _ =
       , paymentStrategy = Avalanche
       , totalMonthlyPayment = 0
       , paymentPlan = Nothing
+      , currentTime = Nothing
+      , currentTimeZone = Nothing
       }
     , Cmd.none
     )
@@ -84,6 +87,16 @@ update msg model =
                 _ ->
                     update (Error errorMessage) model
 
+        GeneratePaymentPlan ->
+            ( model, Task.perform UpdateTime Time.now )
+
+        -- https://stackoverflow.com/questions/38021777/how-do-i-get-the-current-time-in-elm-0-17-0-18
+        UpdateTime time ->
+            ( { model | currentTime = Just time }, Task.perform UpdateTimeZone Time.here )
+
+        UpdateTimeZone timeZone ->
+            generatePaymentPlan { model | currentTimeZone = Just timeZone }
+
         ChoosePaymentStrategy paymentStrategy ->
             ( { model | paymentStrategy = paymentStrategy }, Cmd.none )
 
@@ -101,13 +114,6 @@ update msg model =
 
                 _ ->
                     update (Error errorMessage) model
-
-        GeneratePaymentPlan ->
-            generatePaymentPlan model
-
-        -- https://stackoverflow.com/questions/38021777/how-do-i-get-the-current-time-in-elm-0-17-0-18
-        GotCurrentTime time ->
-            ( model, Cmd.none )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )

@@ -17,6 +17,8 @@ type alias Model =
     , paymentStrategy : PaymentStrategy
     , totalMonthlyPayment : Float
     , paymentPlan : Maybe PaymentPlan
+    , currentTime : Maybe Time.Posix
+    , currentTimeZone : Maybe Time.Zone
     }
 
 
@@ -31,7 +33,8 @@ type Msg
     | Error String
     | DoNothing
     | UpdateYearsToPayoff String
+    | UpdateTime Time.Posix
+    | UpdateTimeZone Time.Zone
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
     | GeneratePaymentPlan
-    | GotCurrentTime Time.Posix
