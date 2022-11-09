@@ -9,7 +9,8 @@ import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, g
 import NewLoan exposing (defaultLoan)
 import State exposing (Model, Msg(..), PaymentStrategy(..))
 import Task
-import Time
+import Time exposing (Month(..))
+import TimeUtil exposing (getNextMonth, getNextYear, monthToString)
 
 
 main : Program () Model Msg
@@ -195,9 +196,9 @@ view model =
                 ]
 
         paymentPlan =
-            case model.paymentPlan of
-                Just pp ->
-                    [ viewPaymentPlan pp ]
+            case ( model.currentTime, model.currentTimeZone, model.paymentPlan ) of
+                ( Just time, Just timeZone, Just pp ) ->
+                    [ viewPaymentPlan (Time.toYear timeZone time) (Time.toMonth timeZone time) pp ]
 
                 _ ->
                     []
@@ -282,9 +283,19 @@ viewMoney f =
         |> text
 
 
-viewPaymentSequence : List PaymentSequence -> List (Html Msg)
-viewPaymentSequence paymentSequence =
+viewPaymentSequence : Int -> Month -> List PaymentSequence -> List (Html Msg)
+viewPaymentSequence currentYear currentMonth paymentSequence =
     let
+        viewDate year month =
+            let
+                yearAsText =
+                    String.fromInt year
+
+                monthAsText =
+                    monthToString month
+            in
+            monthAsText ++ " " ++ yearAsText |> text
+
         getThisMonthsPaymentsAcc ps acc =
             case ps.payments of
                 [] ->
@@ -315,7 +326,7 @@ viewPaymentSequence paymentSequence =
 
         thisSection =
             section []
-                [ div [] [ h2 [] [ text "Month" ] ]
+                [ div [] [ h2 [] [ viewDate currentYear currentMonth ] ]
                 , table [] (List.map (\( name, amount ) -> viewMonthlyPayment name amount) thisMonthsPayments)
                 ]
     in
@@ -324,14 +335,14 @@ viewPaymentSequence paymentSequence =
             []
 
         _ ->
-            thisSection :: viewPaymentSequence nextMonthsPaymentSequence
+            thisSection :: viewPaymentSequence (getNextYear currentYear currentMonth) (getNextMonth currentMonth) nextMonthsPaymentSequence
 
 
-viewPaymentPlan : List PaymentSequence -> Html Msg
-viewPaymentPlan paymentPlan =
+viewPaymentPlan : Int -> Month -> List PaymentSequence -> Html Msg
+viewPaymentPlan currentYear currentMonth paymentPlan =
     let
         payments =
-            viewPaymentSequence paymentPlan
+            viewPaymentSequence currentYear currentMonth paymentPlan
     in
     div [] payments
 

@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.ak.H === region.ax.H)
+	if (region.am.H === region.ax.H)
 	{
-		return 'on line ' + region.ak.H;
+		return 'on line ' + region.am.H;
 	}
-	return 'on lines ' + region.ak.H + ' through ' + region.ax.H;
+	return 'on lines ' + region.am.H + ' through ' + region.ax.H;
 }
 
 
@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		v: func(record.v),
-		al: record.al,
-		ai: record.ai
+		an: record.an,
+		ak: record.ak
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.v;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.al;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.an;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ai) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ak) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3968,7 +3968,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.bG,
 		impl.bC,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.aj && impl.aj(sendToApp)
+			var divertHrefToApp = impl.al && impl.al(sendToApp)
 			var view = impl.bH;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4043,7 +4043,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		aj: function(sendToApp)
+		al: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -5185,12 +5185,12 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$State$Avalanche = 0;
-var $author$project$NewLoan$defaultLoan = {Y: 0.0, ad: 0.0, bn: 'New Loan', U: 0.0};
+var $author$project$NewLoan$defaultLoan = {Y: 0.0, af: 0.0, bn: 'New Loan', U: 0.0};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{at: $elm$core$Maybe$Nothing, au: $elm$core$Maybe$Nothing, Q: _List_Nil, z: _List_Nil, af: $author$project$NewLoan$defaultLoan, K: $elm$core$Maybe$Nothing, ah: 0, N: 0, W: 20},
+		{Z: $elm$core$Maybe$Nothing, _: $elm$core$Maybe$Nothing, Q: _List_Nil, z: _List_Nil, ah: $author$project$NewLoan$defaultLoan, K: $elm$core$Maybe$Nothing, aj: 0, N: 0, W: 20},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5218,8 +5218,8 @@ var $author$project$NewLoan$addLoan = function (model) {
 				z: _Utils_ap(
 					model.z,
 					_List_fromArray(
-						[model.af])),
-				af: $author$project$NewLoan$defaultLoan
+						[model.ah])),
+				ah: $author$project$NewLoan$defaultLoan
 			}));
 };
 var $author$project$Loan$MaximumTotalAmountTooLow = function (a) {
@@ -5254,14 +5254,14 @@ var $elm$core$List$any = F2(
 	});
 var $author$project$Loan$PaymentSequence = F4(
 	function (loan, actualMinimum, payments, isPaidOff) {
-		return {X: actualMinimum, ab: isPaidOff, R: loan, aL: payments};
+		return {X: actualMinimum, ad: isPaidOff, R: loan, aL: payments};
 	});
 var $author$project$Loan$calculateNewPayment = F2(
 	function (_v0, _v1) {
 		var loan = _v0.R;
 		var actualMinimum = _v0.X;
 		var payments = _v0.aL;
-		var isPaidOff = _v0.ab;
+		var isPaidOff = _v0.ad;
 		var bonus = _v1.a;
 		var newPaymentSequence = _v1.b;
 		var totalAmountPaid = A3(
@@ -5336,7 +5336,7 @@ var $author$project$Loan$strategy = F3(
 		var areThereAnyFurtherPayments = A2(
 			$elm$core$List$any,
 			function (ps) {
-				return !ps.ab;
+				return !ps.ad;
 			},
 			newPaymentPlan);
 		return (_Utils_cmp(minimumTotalPayment, maximumAmount) > 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : ((!areThereAnyFurtherPayments) ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
@@ -5528,7 +5528,7 @@ var $author$project$NewLoan$resetLoan = function (model) {
 	return $author$project$NewLoan$toUpdateTuple(
 		_Utils_update(
 			model,
-			{af: $author$project$NewLoan$defaultLoan}));
+			{ah: $author$project$NewLoan$defaultLoan}));
 };
 var $author$project$Loan$snowball = $author$project$Loan$strategy(
 	function (paymentSequence) {
@@ -5554,7 +5554,7 @@ var $author$project$Loan$toPaymentPlan = F2(
 		};
 		var getActualMinimum = function (loan) {
 			var cm = calculatedMinimum(loan);
-			return (_Utils_cmp(cm, loan.ad) < 0) ? loan.ad : cm;
+			return (_Utils_cmp(cm, loan.af) < 0) ? loan.af : cm;
 		};
 		return A2(
 			$elm$core$List$map,
@@ -5589,7 +5589,7 @@ var $elm$core$Maybe$map = F2(
 	});
 var $author$project$NewLoan$updateFloat = F5(
 	function (valueAsString, model, errorMessage, updateValue, updateModel) {
-		var currentNewLoan = model.af;
+		var currentNewLoan = model.ah;
 		var uv = updateValue(currentNewLoan);
 		var result = A2(
 			$elm$core$Result$fromMaybe,
@@ -5603,7 +5603,7 @@ var $author$project$NewLoan$updateFloat = F5(
 			return $author$project$NewLoan$toUpdateTuple(
 				_Utils_update(
 					model,
-					{af: ln}));
+					{ah: ln}));
 		} else {
 			var msg = result.a;
 			return A2(
@@ -5629,21 +5629,21 @@ var $author$project$NewLoan$updateLoanMinimum = F3(
 			function (loan, minimum) {
 				return _Utils_update(
 					loan,
-					{ad: minimum});
+					{af: minimum});
 			});
 		var errorMessage = 'Could not parse minimum: ' + minimumAsString;
 		return A5($author$project$NewLoan$updateFloat, minimumAsString, model, errorMessage, updateMinimum, update);
 	});
 var $author$project$NewLoan$updateLoanName = F2(
 	function (name, model) {
-		var oldNewLoan = model.af;
+		var oldNewLoan = model.ah;
 		var newLoan = _Utils_update(
 			oldNewLoan,
 			{bn: name});
 		return $author$project$NewLoan$toUpdateTuple(
 			_Utils_update(
 				model,
-				{af: newLoan}));
+				{ah: newLoan}));
 	});
 var $author$project$NewLoan$updateLoanPrincipal = F3(
 	function (principalAsString, model, update) {
@@ -5669,7 +5669,7 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 			}
 		}();
 		var paymentPlanResult = function () {
-			var _v4 = model.ah;
+			var _v4 = model.aj;
 			if (!_v4) {
 				return A2($author$project$Loan$avalanche, newPaymentPlan, model.N);
 			} else {
@@ -5721,7 +5721,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{z: loans, af: $author$project$NewLoan$defaultLoan}),
+							{z: loans, ah: $author$project$NewLoan$defaultLoan}),
 						$elm$core$Platform$Cmd$none);
 				case 1:
 					return $author$project$NewLoan$resetLoan(model);
@@ -5776,7 +5776,7 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								at: $elm$core$Maybe$Just(time)
+								Z: $elm$core$Maybe$Just(time)
 							}),
 						A2($elm$core$Task$perform, $author$project$State$UpdateTimeZone, $elm$time$Time$here));
 				case 11:
@@ -5785,14 +5785,14 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								au: $elm$core$Maybe$Just(timeZone)
+								_: $elm$core$Maybe$Just(timeZone)
 							}));
 				case 12:
 					var paymentStrategy = msg.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{ah: paymentStrategy}),
+							{aj: paymentStrategy}),
 						$elm$core$Platform$Cmd$none);
 				default:
 					var paymentAsString = msg.a;
@@ -5839,6 +5839,114 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $elm$html$Html$thead = _VirtualDom_node('thead');
+var $elm$time$Time$Apr = 3;
+var $elm$time$Time$Aug = 7;
+var $elm$time$Time$Dec = 11;
+var $elm$time$Time$Feb = 1;
+var $elm$time$Time$Jan = 0;
+var $elm$time$Time$Jul = 6;
+var $elm$time$Time$Jun = 5;
+var $elm$time$Time$Mar = 2;
+var $elm$time$Time$May = 4;
+var $elm$time$Time$Nov = 10;
+var $elm$time$Time$Oct = 9;
+var $elm$time$Time$Sep = 8;
+var $elm$time$Time$flooredDiv = F2(
+	function (numerator, denominator) {
+		return $elm$core$Basics$floor(numerator / denominator);
+	});
+var $elm$time$Time$posixToMillis = function (_v0) {
+	var millis = _v0;
+	return millis;
+};
+var $elm$time$Time$toAdjustedMinutesHelp = F3(
+	function (defaultOffset, posixMinutes, eras) {
+		toAdjustedMinutesHelp:
+		while (true) {
+			if (!eras.b) {
+				return posixMinutes + defaultOffset;
+			} else {
+				var era = eras.a;
+				var olderEras = eras.b;
+				if (_Utils_cmp(era.am, posixMinutes) < 0) {
+					return posixMinutes + era.aJ;
+				} else {
+					var $temp$defaultOffset = defaultOffset,
+						$temp$posixMinutes = posixMinutes,
+						$temp$eras = olderEras;
+					defaultOffset = $temp$defaultOffset;
+					posixMinutes = $temp$posixMinutes;
+					eras = $temp$eras;
+					continue toAdjustedMinutesHelp;
+				}
+			}
+		}
+	});
+var $elm$time$Time$toAdjustedMinutes = F2(
+	function (_v0, time) {
+		var defaultOffset = _v0.a;
+		var eras = _v0.b;
+		return A3(
+			$elm$time$Time$toAdjustedMinutesHelp,
+			defaultOffset,
+			A2(
+				$elm$time$Time$flooredDiv,
+				$elm$time$Time$posixToMillis(time),
+				60000),
+			eras);
+	});
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$time$Time$toCivil = function (minutes) {
+	var rawDay = A2($elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
+	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
+	var dayOfEra = rawDay - (era * 146097);
+	var yearOfEra = ((((dayOfEra - ((dayOfEra / 1460) | 0)) + ((dayOfEra / 36524) | 0)) - ((dayOfEra / 146096) | 0)) / 365) | 0;
+	var dayOfYear = dayOfEra - (((365 * yearOfEra) + ((yearOfEra / 4) | 0)) - ((yearOfEra / 100) | 0));
+	var mp = (((5 * dayOfYear) + 2) / 153) | 0;
+	var month = mp + ((mp < 10) ? 3 : (-9));
+	var year = yearOfEra + (era * 400);
+	return {
+		av: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		aH: month,
+		a4: year + ((month <= 2) ? 1 : 0)
+	};
+};
+var $elm$time$Time$toMonth = F2(
+	function (zone, time) {
+		var _v0 = $elm$time$Time$toCivil(
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aH;
+		switch (_v0) {
+			case 1:
+				return 0;
+			case 2:
+				return 1;
+			case 3:
+				return 2;
+			case 4:
+				return 3;
+			case 5:
+				return 4;
+			case 6:
+				return 5;
+			case 7:
+				return 6;
+			case 8:
+				return 7;
+			case 9:
+				return 8;
+			case 10:
+				return 9;
+			case 11:
+				return 10;
+			default:
+				return 11;
+		}
+	});
+var $elm$time$Time$toYear = F2(
+	function (zone, time) {
+		return $elm$time$Time$toCivil(
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).a4;
+	});
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$State$DeleteLoan = function (a) {
@@ -5909,7 +6017,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.ad))
+							toCash(loan.af))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6120,7 +6228,7 @@ var $author$project$Main$viewNewLoan = function (loan) {
 					[
 						A4($author$project$Main$viewTextInput, 'Name', loan.bn, 'new-loan-name', $author$project$State$UpdateLoanName),
 						A5($author$project$Main$viewFloatInput, 'Principal', loan.U, 'new-loan-principal', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanPrincipal),
-						A5($author$project$Main$viewFloatInput, 'Minimum', loan.ad, 'new-loan-minimum', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanMinimum),
+						A5($author$project$Main$viewFloatInput, 'Minimum', loan.af, 'new-loan-minimum', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanMinimum),
 						A5($author$project$Main$viewFloatInput, 'APR', loan.Y, 'new-loan-apr', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,
@@ -6153,6 +6261,70 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $author$project$TimeUtil$getNextMonth = function (month) {
+	switch (month) {
+		case 0:
+			return 1;
+		case 1:
+			return 2;
+		case 2:
+			return 3;
+		case 3:
+			return 4;
+		case 4:
+			return 5;
+		case 5:
+			return 6;
+		case 6:
+			return 7;
+		case 7:
+			return 8;
+		case 8:
+			return 9;
+		case 9:
+			return 10;
+		case 10:
+			return 11;
+		default:
+			return 0;
+	}
+};
+var $author$project$TimeUtil$getNextYear = F2(
+	function (year, month) {
+		if (month === 11) {
+			return year + 1;
+		} else {
+			return year;
+		}
+	});
+var $author$project$TimeUtil$monthToString = function (month) {
+	switch (month) {
+		case 0:
+			return 'January';
+		case 1:
+			return 'February';
+		case 2:
+			return 'March';
+		case 3:
+			return 'April';
+		case 4:
+			return 'May';
+		case 5:
+			return 'June';
+		case 6:
+			return 'July';
+		case 7:
+			return 'August';
+		case 8:
+			return 'September';
+		case 9:
+			return 'October';
+		case 10:
+			return 'November';
+		default:
+			return 'December';
+	}
+};
 var $elm$html$Html$section = _VirtualDom_node('section');
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$Main$viewMoney = function (f) {
@@ -6166,107 +6338,119 @@ var $author$project$Main$viewMoney = function (f) {
 				}(
 					$elm$core$Basics$round(f * 100.0)))));
 };
-var $author$project$Main$viewPaymentSequence = function (paymentSequence) {
-	var viewMonthlyPayment = F2(
-		function (loanName, amount) {
+var $author$project$Main$viewPaymentSequence = F3(
+	function (currentYear, currentMonth, paymentSequence) {
+		var viewMonthlyPayment = F2(
+			function (loanName, amount) {
+				return A2(
+					$elm$html$Html$tr,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$td,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(loanName)
+								])),
+							A2(
+							$elm$html$Html$td,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$author$project$Main$viewMoney(amount)
+								]))
+						]));
+			});
+		var viewDate = F2(
+			function (year, month) {
+				var yearAsText = $elm$core$String$fromInt(year);
+				var monthAsText = $author$project$TimeUtil$monthToString(month);
+				return $elm$html$Html$text(monthAsText + (' ' + yearAsText));
+			});
+		var nextMonthsPaymentSequenceAcc = F2(
+			function (ps, acc) {
+				var _v3 = ps.aL;
+				if (!_v3.b) {
+					return acc;
+				} else {
+					var xs = _v3.b;
+					return A2(
+						$elm$core$List$append,
+						acc,
+						_List_fromArray(
+							[
+								A4($author$project$Loan$PaymentSequence, ps.R, ps.X, xs, ps.ad)
+							]));
+				}
+			});
+		var nextMonthsPaymentSequence = A3($elm$core$List$foldl, nextMonthsPaymentSequenceAcc, _List_Nil, paymentSequence);
+		var getThisMonthsPaymentsAcc = F2(
+			function (ps, acc) {
+				var _v2 = ps.aL;
+				if (!_v2.b) {
+					return acc;
+				} else {
+					var x = _v2.a;
+					return A2(
+						$elm$core$List$append,
+						acc,
+						_List_fromArray(
+							[
+								_Utils_Tuple2(ps.R.bn, x)
+							]));
+				}
+			});
+		var thisMonthsPayments = A3($elm$core$List$foldl, getThisMonthsPaymentsAcc, _List_Nil, paymentSequence);
+		var thisSection = A2(
+			$elm$html$Html$section,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$h2,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(viewDate, currentYear, currentMonth)
+								]))
+						])),
+					A2(
+					$elm$html$Html$table,
+					_List_Nil,
+					A2(
+						$elm$core$List$map,
+						function (_v1) {
+							var name = _v1.a;
+							var amount = _v1.b;
+							return A2(viewMonthlyPayment, name, amount);
+						},
+						thisMonthsPayments))
+				]));
+		if (!thisMonthsPayments.b) {
+			return _List_Nil;
+		} else {
 			return A2(
-				$elm$html$Html$tr,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text(loanName)
-							])),
-						A2(
-						$elm$html$Html$td,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$author$project$Main$viewMoney(amount)
-							]))
-					]));
-		});
-	var nextMonthsPaymentSequenceAcc = F2(
-		function (ps, acc) {
-			var _v3 = ps.aL;
-			if (!_v3.b) {
-				return acc;
-			} else {
-				var xs = _v3.b;
-				return A2(
-					$elm$core$List$append,
-					acc,
-					_List_fromArray(
-						[
-							A4($author$project$Loan$PaymentSequence, ps.R, ps.X, xs, ps.ab)
-						]));
-			}
-		});
-	var nextMonthsPaymentSequence = A3($elm$core$List$foldl, nextMonthsPaymentSequenceAcc, _List_Nil, paymentSequence);
-	var getThisMonthsPaymentsAcc = F2(
-		function (ps, acc) {
-			var _v2 = ps.aL;
-			if (!_v2.b) {
-				return acc;
-			} else {
-				var x = _v2.a;
-				return A2(
-					$elm$core$List$append,
-					acc,
-					_List_fromArray(
-						[
-							_Utils_Tuple2(ps.R.bn, x)
-						]));
-			}
-		});
-	var thisMonthsPayments = A3($elm$core$List$foldl, getThisMonthsPaymentsAcc, _List_Nil, paymentSequence);
-	var thisSection = A2(
-		$elm$html$Html$section,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Month')
-							]))
-					])),
-				A2(
-				$elm$html$Html$table,
-				_List_Nil,
-				A2(
-					$elm$core$List$map,
-					function (_v1) {
-						var name = _v1.a;
-						var amount = _v1.b;
-						return A2(viewMonthlyPayment, name, amount);
-					},
-					thisMonthsPayments))
-			]));
-	if (!thisMonthsPayments.b) {
-		return _List_Nil;
-	} else {
-		return A2(
-			$elm$core$List$cons,
-			thisSection,
-			$author$project$Main$viewPaymentSequence(nextMonthsPaymentSequence));
-	}
-};
-var $author$project$Main$viewPaymentPlan = function (paymentPlan) {
-	var payments = $author$project$Main$viewPaymentSequence(paymentPlan);
-	return A2($elm$html$Html$div, _List_Nil, payments);
-};
+				$elm$core$List$cons,
+				thisSection,
+				A3(
+					$author$project$Main$viewPaymentSequence,
+					A2($author$project$TimeUtil$getNextYear, currentYear, currentMonth),
+					$author$project$TimeUtil$getNextMonth(currentMonth),
+					nextMonthsPaymentSequence));
+		}
+	});
+var $author$project$Main$viewPaymentPlan = F3(
+	function (currentYear, currentMonth, paymentPlan) {
+		var payments = A3($author$project$Main$viewPaymentSequence, currentYear, currentMonth, paymentPlan);
+		return A2($elm$html$Html$div, _List_Nil, payments);
+	});
 var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 12, a: a};
 };
@@ -6435,12 +6619,18 @@ var $author$project$Main$view = function (model) {
 				A3($author$project$Main$viewPaymentStrategy, model.W, model.N, model.z)
 			]));
 	var paymentPlan = function () {
-		var _v0 = model.K;
-		if (!_v0.$) {
-			var pp = _v0.a;
+		var _v0 = _Utils_Tuple3(model.Z, model._, model.K);
+		if (((!_v0.a.$) && (!_v0.b.$)) && (!_v0.c.$)) {
+			var time = _v0.a.a;
+			var timeZone = _v0.b.a;
+			var pp = _v0.c.a;
 			return _List_fromArray(
 				[
-					$author$project$Main$viewPaymentPlan(pp)
+					A3(
+					$author$project$Main$viewPaymentPlan,
+					A2($elm$time$Time$toYear, timeZone, time),
+					A2($elm$time$Time$toMonth, timeZone, time),
+					pp)
 				]);
 		} else {
 			return _List_Nil;
@@ -6448,7 +6638,7 @@ var $author$project$Main$view = function (model) {
 	}();
 	var newLoans = _List_fromArray(
 		[
-			$author$project$Main$viewNewLoan(model.af)
+			$author$project$Main$viewNewLoan(model.ah)
 		]);
 	var headRow = A2(
 		$elm$html$Html$thead,
