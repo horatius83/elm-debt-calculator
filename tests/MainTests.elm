@@ -6,6 +6,8 @@ import Test exposing (..)
 import State exposing (Model, PaymentStrategy(..))
 import Main exposing (generatePaymentPlan)
 import Loan exposing (Loan)
+import NewLoan exposing (emptyLoanForm)
+import State exposing (FormState(..))
 
 suite : Test
 suite = 
@@ -14,11 +16,10 @@ suite =
             \_ -> 
                 let
                     yearsToPayoff = 20
-                    emptyLoan = Loan "" 0 0 0
                     loan = Loan "Test 1" 10.0 10.0 5000
                     loans = [loan]
                     paymentStrategy = Avalanche
-                    model = Model loans emptyLoan [] yearsToPayoff paymentStrategy 500.0 Nothing
+                    model = Model loans [] yearsToPayoff paymentStrategy 500.0 Nothing Nothing Nothing EnterLoans  emptyLoanForm
                 in
                 generatePaymentPlan model 
                     |> Tuple.first 
