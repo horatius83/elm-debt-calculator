@@ -9,6 +9,12 @@ type PaymentStrategy
     | Snowball
 
 
+type FormState
+    = EnterLoans
+    | EnterPaymentStrategy
+    | ViewPaymentPlan
+
+
 type alias Model =
     { loans : List Loan
     , newLoan : Loan
@@ -19,6 +25,7 @@ type alias Model =
     , paymentPlan : Maybe PaymentPlan
     , currentTime : Maybe Time.Posix
     , currentTimeZone : Maybe Time.Zone
+    , formState : FormState
     }
 
 
@@ -38,3 +45,4 @@ type Msg
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
     | GeneratePaymentPlan
+    | ChangeFormState FormState

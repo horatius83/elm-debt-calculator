@@ -7,7 +7,7 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
 import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (defaultLoan)
-import State exposing (Model, Msg(..), PaymentStrategy(..))
+import State exposing (FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
 import Time exposing (Month(..))
 import TimeUtil exposing (getNextMonth, getNextYear, monthToString)
@@ -34,6 +34,7 @@ init _ =
       , paymentPlan = Nothing
       , currentTime = Nothing
       , currentTimeZone = Nothing
+      , formState = EnterLoans
       }
     , Cmd.none
     )
@@ -96,7 +97,7 @@ update msg model =
             ( { model | currentTime = Just time }, Task.perform UpdateTimeZone Time.here )
 
         UpdateTimeZone timeZone ->
-            generatePaymentPlan { model | currentTimeZone = Just timeZone }
+            generatePaymentPlan { model | currentTimeZone = Just timeZone, formState = ViewPaymentPlan }
 
         ChoosePaymentStrategy paymentStrategy ->
             ( { model | paymentStrategy = paymentStrategy }, Cmd.none )
@@ -115,6 +116,9 @@ update msg model =
 
                 _ ->
                     update (Error errorMessage) model
+
+        ChangeFormState formState ->
+            ( { model | formState = formState }, Cmd.none )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
@@ -159,7 +163,15 @@ view : Model -> Html Msg
 view model =
     let
         title =
-            [ h2 [] [ text "Loans" ] ]
+            case model.formState of
+                EnterLoans ->
+                    [ h2 [] [ text "Loans" ] ]
+
+                EnterPaymentStrategy ->
+                    [ h2 [] [ text "Loans > Payment Strategy" ] ]
+
+                ViewPaymentPlan ->
+                    [ h2 [] [ text "Loans > Payment Strategy > Payment Plan" ] ]
 
         headRow =
             thead []
@@ -186,13 +198,9 @@ view model =
         newLoans =
             [ viewNewLoan model.newLoan ]
 
-        paymentStrategyTitle =
-            h2 [] [ text "Payment Strategy" ]
-
         paymentStrategy =
             div []
-                [ paymentStrategyTitle
-                , viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
+                [ viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
                 ]
 
         paymentPlan =
@@ -208,8 +216,19 @@ view model =
 
         errors =
             ul [] <| List.map errorListItem model.errors
+
+        document =
+            case model.formState of
+                EnterLoans ->
+                    div [] (title ++ loans ++ newLoans ++ [ errors ])
+
+                EnterPaymentStrategy ->
+                    div [] (title ++ [ paymentStrategy, errors ])
+
+                ViewPaymentPlan ->
+                    div [] (title ++ paymentPlan ++ [ errors ])
     in
-    div [] (title ++ loans ++ newLoans ++ (paymentStrategy :: paymentPlan) ++ [ errors ])
+    document
 
 
 viewNewLoan : Loan -> Html Msg
@@ -222,6 +241,7 @@ viewNewLoan loan =
             , viewFloatInput "APR" loan.apr "new-loan-apr" Nothing UpdateLoanApr
             , button [ onClick AddLoan ] [ text "Add Loan" ]
             , button [ onClick ResetNewLoan ] [ text "Reset" ]
+            , button [ onClick (ChangeFormState EnterPaymentStrategy) ] [ text "Next" ]
             ]
         ]
 
