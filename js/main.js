@@ -2704,7 +2704,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		v: func(record.v),
+		w: func(record.w),
 		ao: record.ao,
 		al: record.al
 	}
@@ -2974,7 +2974,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.v;
+		var message = !tag ? value : tag < 3 ? value.a : value.w;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ao;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -5186,12 +5186,12 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$State$Avalanche = 0;
 var $author$project$State$EnterLoans = 0;
-var $author$project$NewLoan$defaultLoan = {Z: 0.0, ag: 0.0, bo: 'New Loan', V: 0.0};
+var $author$project$NewLoan$emptyLoanForm = {Z: '', ag: '', bo: '', V: ''};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{_: $elm$core$Maybe$Nothing, aa: $elm$core$Maybe$Nothing, R: _List_Nil, H: 0, z: _List_Nil, ai: $author$project$NewLoan$defaultLoan, L: $elm$core$Maybe$Nothing, ak: 0, O: 0, X: 20},
+		{_: $elm$core$Maybe$Nothing, aa: $elm$core$Maybe$Nothing, R: _List_Nil, H: 0, v: _List_Nil, ai: $author$project$NewLoan$emptyLoanForm, L: $elm$core$Maybe$Nothing, ak: 0, O: 0, X: 20},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5209,20 +5209,52 @@ var $author$project$State$UpdateTimeZone = function (a) {
 	return {$: 11, a: a};
 };
 var $author$project$State$ViewPaymentPlan = 2;
-var $author$project$NewLoan$toUpdateTuple = function (model) {
-	return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-};
+var $author$project$Loan$Loan = F4(
+	function (name, apr, minimum, principal) {
+		return {Z: apr, ag: minimum, bo: name, V: principal};
+	});
+var $elm$core$Maybe$map3 = F4(
+	function (func, ma, mb, mc) {
+		if (ma.$ === 1) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				if (mc.$ === 1) {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					var c = mc.a;
+					return $elm$core$Maybe$Just(
+						A3(func, a, b, c));
+				}
+			}
+		}
+	});
+var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NewLoan$addLoan = function (model) {
-	return $author$project$NewLoan$toUpdateTuple(
-		_Utils_update(
-			model,
-			{
-				z: _Utils_ap(
-					model.z,
-					_List_fromArray(
-						[model.ai])),
-				ai: $author$project$NewLoan$defaultLoan
-			}));
+	var toLoan = $author$project$Loan$Loan(model.ai.bo);
+	var principal = $elm$core$String$toFloat(model.ai.V);
+	var minimum = $elm$core$String$toFloat(model.ai.ag);
+	var apr = $elm$core$String$toFloat(model.ai.Z);
+	var newLoan = A4($elm$core$Maybe$map3, toLoan, apr, minimum, principal);
+	if (!newLoan.$) {
+		var loan = newLoan.a;
+		return _Utils_Tuple2(
+			_Utils_update(
+				model,
+				{
+					v: _Utils_ap(
+						model.v,
+						_List_fromArray(
+							[loan]))
+				}),
+			$elm$core$Platform$Cmd$none);
+	} else {
+		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+	}
 };
 var $author$project$Loan$MaximumTotalAmountTooLow = function (a) {
 	return {$: 0, a: a};
@@ -5527,16 +5559,16 @@ var $elm_community$list_extra$List$Extra$removeAt = F2(
 		}
 	});
 var $author$project$NewLoan$resetLoan = function (model) {
-	return $author$project$NewLoan$toUpdateTuple(
+	return _Utils_Tuple2(
 		_Utils_update(
 			model,
-			{ai: $author$project$NewLoan$defaultLoan}));
+			{ai: $author$project$NewLoan$emptyLoanForm}),
+		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Loan$snowball = $author$project$Loan$strategy(
 	function (paymentSequence) {
 		return paymentSequence.S.V;
 	});
-var $elm$core$String$toFloat = _String_toFloat;
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5570,93 +5602,59 @@ var $author$project$Loan$toPaymentPlan = F2(
 			},
 			loans);
 	});
-var $elm$core$Result$fromMaybe = F2(
-	function (err, maybe) {
-		if (!maybe.$) {
-			var v = maybe.a;
-			return $elm$core$Result$Ok(v);
-		} else {
-			return $elm$core$Result$Err(err);
-		}
+var $author$project$NewLoan$updateNewLoanForm = F2(
+	function (f, model) {
+		var oldLoanForm = model.ai;
+		var newLoanForm = f(oldLoanForm);
+		return _Utils_Tuple2(
+			_Utils_update(
+				model,
+				{ai: newLoanForm}),
+			$elm$core$Platform$Cmd$none);
 	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $author$project$NewLoan$updateFloat = F5(
-	function (valueAsString, model, errorMessage, updateValue, updateModel) {
-		var currentNewLoan = model.ai;
-		var uv = updateValue(currentNewLoan);
-		var result = A2(
-			$elm$core$Result$fromMaybe,
-			errorMessage,
-			A2(
-				$elm$core$Maybe$map,
-				uv,
-				$elm$core$String$toFloat(valueAsString)));
-		if (!result.$) {
-			var ln = result.a;
-			return $author$project$NewLoan$toUpdateTuple(
-				_Utils_update(
-					model,
-					{ai: ln}));
-		} else {
-			var msg = result.a;
-			return A2(
-				updateModel,
-				$author$project$State$Error(msg),
-				model);
-		}
-	});
-var $author$project$NewLoan$updateLoanApr = F3(
-	function (aprAsString, model, update) {
-		var updateApr = F2(
-			function (loan, apr) {
+var $author$project$NewLoan$updateLoanApr = F2(
+	function (apr, model) {
+		return A2(
+			$author$project$NewLoan$updateNewLoanForm,
+			function (nlf) {
 				return _Utils_update(
-					loan,
+					nlf,
 					{Z: apr});
-			});
-		var errorMessage = 'Could not parse APR: ' + aprAsString;
-		return A5($author$project$NewLoan$updateFloat, aprAsString, model, errorMessage, updateApr, update);
+			},
+			model);
 	});
-var $author$project$NewLoan$updateLoanMinimum = F3(
-	function (minimumAsString, model, update) {
-		var updateMinimum = F2(
-			function (loan, minimum) {
+var $author$project$NewLoan$updateLoanMinimum = F2(
+	function (minimum, model) {
+		return A2(
+			$author$project$NewLoan$updateNewLoanForm,
+			function (nlf) {
 				return _Utils_update(
-					loan,
+					nlf,
 					{ag: minimum});
-			});
-		var errorMessage = 'Could not parse minimum: ' + minimumAsString;
-		return A5($author$project$NewLoan$updateFloat, minimumAsString, model, errorMessage, updateMinimum, update);
+			},
+			model);
 	});
 var $author$project$NewLoan$updateLoanName = F2(
 	function (name, model) {
-		var oldNewLoan = model.ai;
-		var newLoan = _Utils_update(
-			oldNewLoan,
-			{bo: name});
-		return $author$project$NewLoan$toUpdateTuple(
-			_Utils_update(
-				model,
-				{ai: newLoan}));
-	});
-var $author$project$NewLoan$updateLoanPrincipal = F3(
-	function (principalAsString, model, update) {
-		var updatePrincipal = F2(
-			function (loan, principal) {
+		return A2(
+			$author$project$NewLoan$updateNewLoanForm,
+			function (nlf) {
 				return _Utils_update(
-					loan,
+					nlf,
+					{bo: name});
+			},
+			model);
+	});
+var $author$project$NewLoan$updateLoanPrincipal = F2(
+	function (principal, model) {
+		return A2(
+			$author$project$NewLoan$updateNewLoanForm,
+			function (nlf) {
+				return _Utils_update(
+					nlf,
 					{V: principal});
-			});
-		var errorMessage = 'Could not parse principal: ' + principalAsString;
-		return A5($author$project$NewLoan$updateFloat, principalAsString, model, errorMessage, updatePrincipal, update);
+			},
+			model);
 	});
 var $author$project$Main$generatePaymentPlan = function (model) {
 	generatePaymentPlan:
@@ -5664,7 +5662,7 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 		var newPaymentPlan = function () {
 			var _v5 = model.L;
 			if (_v5.$ === 1) {
-				return A2($author$project$Loan$toPaymentPlan, model.X, model.z);
+				return A2($author$project$Loan$toPaymentPlan, model.X, model.v);
 			} else {
 				var x = _v5.a;
 				return x;
@@ -5719,11 +5717,11 @@ var $author$project$Main$update = F2(
 					return $author$project$NewLoan$addLoan(model);
 				case 2:
 					var index = msg.a;
-					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.z);
+					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.v);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{z: loans, ai: $author$project$NewLoan$defaultLoan}),
+							{v: loans, ai: $author$project$NewLoan$emptyLoanForm}),
 						$elm$core$Platform$Cmd$none);
 				case 1:
 					return $author$project$NewLoan$resetLoan(model);
@@ -5732,13 +5730,13 @@ var $author$project$Main$update = F2(
 					return A2($author$project$NewLoan$updateLoanName, name, model);
 				case 5:
 					var principal = msg.a;
-					return A3($author$project$NewLoan$updateLoanPrincipal, principal, model, $author$project$Main$update);
+					return A2($author$project$NewLoan$updateLoanPrincipal, principal, model);
 				case 6:
 					var minimum = msg.a;
-					return A3($author$project$NewLoan$updateLoanMinimum, minimum, model, $author$project$Main$update);
+					return A2($author$project$NewLoan$updateLoanMinimum, minimum, model);
 				case 4:
 					var apr = msg.a;
-					return A3($author$project$NewLoan$updateLoanApr, apr, model, $author$project$Main$update);
+					return A2($author$project$NewLoan$updateLoanApr, apr, model);
 				case 7:
 					var errorMessage = msg.a;
 					return _Utils_Tuple2(
@@ -6078,6 +6076,15 @@ var $author$project$State$UpdateLoanName = function (a) {
 var $author$project$State$UpdateLoanPrincipal = function (a) {
 	return {$: 5, a: a};
 };
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $elm$html$Html$fieldset = _VirtualDom_node('fieldset');
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$Events$alwaysPreventDefault = function (msg) {
@@ -6102,7 +6109,6 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$html$Html$Events$alwaysPreventDefault,
 			$elm$json$Json$Decode$succeed(msg)));
 };
-var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -6148,54 +6154,6 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$viewNumericInput = F5(
-	function (labelText, val, id, callback, otherAttributes) {
-		var attributeList = _Utils_ap(
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value(val),
-					$elm$html$Html$Events$onInput(callback),
-					A2($elm$html$Html$Attributes$attribute, 'step', '0.01'),
-					A2($elm$html$Html$Attributes$attribute, 'name', id),
-					A2($elm$html$Html$Attributes$attribute, 'type', 'number')
-				]),
-			otherAttributes);
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$attribute, 'for', id)
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(labelText)
-						])),
-					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					A2($elm$html$Html$input, attributeList, _List_Nil)
-				]));
-	});
-var $author$project$Main$viewFloatInput = F5(
-	function (labelText, value, id, minimum, callback) {
-		var valueAsString = $elm$core$String$fromFloat(value);
-		var minimumAsString = A2($elm$core$Maybe$map, $elm$core$String$fromFloat, minimum);
-		var attributes = function () {
-			if (!minimumAsString.$) {
-				var m = minimumAsString.a;
-				return _List_fromArray(
-					[
-						$elm$html$Html$Attributes$min(m)
-					]);
-			} else {
-				return _List_Nil;
-			}
-		}();
-		return A5($author$project$Main$viewNumericInput, labelText, valueAsString, id, callback, attributes);
-	});
 var $author$project$Main$viewTextInput = F4(
 	function (labelText, val, id, callback) {
 		return A2(
@@ -6226,7 +6184,16 @@ var $author$project$Main$viewTextInput = F4(
 					_List_Nil)
 				]));
 	});
-var $author$project$Main$viewNewLoan = function (loan) {
+var $author$project$Main$viewNewLoan = function (model) {
+	var loan = model.ai;
+	var canPickPaymentStrategy = function () {
+		var _v0 = model.v;
+		if (!_v0.b) {
+			return true;
+		} else {
+			return false;
+		}
+	}();
 	return A2(
 		$elm$html$Html$form,
 		_List_fromArray(
@@ -6241,9 +6208,9 @@ var $author$project$Main$viewNewLoan = function (loan) {
 				_List_fromArray(
 					[
 						A4($author$project$Main$viewTextInput, 'Name', loan.bo, 'new-loan-name', $author$project$State$UpdateLoanName),
-						A5($author$project$Main$viewFloatInput, 'Principal', loan.V, 'new-loan-principal', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanPrincipal),
-						A5($author$project$Main$viewFloatInput, 'Minimum', loan.ag, 'new-loan-minimum', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanMinimum),
-						A5($author$project$Main$viewFloatInput, 'APR', loan.Z, 'new-loan-apr', $elm$core$Maybe$Nothing, $author$project$State$UpdateLoanApr),
+						A4($author$project$Main$viewTextInput, 'Principal', loan.V, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
+						A4($author$project$Main$viewTextInput, 'Minimum', loan.ag, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
+						A4($author$project$Main$viewTextInput, 'APR', loan.Z, 'new-loan-apr', $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,
 						_List_fromArray(
@@ -6268,6 +6235,7 @@ var $author$project$Main$viewNewLoan = function (loan) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$disabled(canPickPaymentStrategy),
 								$elm$html$Html$Events$onClick(
 								$author$project$State$ChangeFormState(1))
 							]),
@@ -6487,19 +6455,69 @@ var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 var $author$project$State$UpdateYearsToPayoff = function (a) {
 	return {$: 9, a: a};
 };
-var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (loans) {
 	return !$elm$core$List$length(loans);
 };
 var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $author$project$Main$viewNumericInput = F5(
+	function (labelText, val, id, callback, otherAttributes) {
+		var attributeList = _Utils_ap(
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$value(val),
+					$elm$html$Html$Events$onInput(callback),
+					A2($elm$html$Html$Attributes$attribute, 'step', '0.01'),
+					A2($elm$html$Html$Attributes$attribute, 'name', id),
+					A2($elm$html$Html$Attributes$attribute, 'type', 'number')
+				]),
+			otherAttributes);
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$label,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$attribute, 'for', id)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(labelText)
+						])),
+					A2($elm$html$Html$br, _List_Nil, _List_Nil),
+					A2($elm$html$Html$input, attributeList, _List_Nil)
+				]));
+	});
+var $author$project$Main$viewFloatInput = F5(
+	function (labelText, value, id, minimum, callback) {
+		var valueAsString = $elm$core$String$fromFloat(value);
+		var minimumAsString = A2($elm$core$Maybe$map, $elm$core$String$fromFloat, minimum);
+		var attributes = function () {
+			if (!minimumAsString.$) {
+				var m = minimumAsString.a;
+				return _List_fromArray(
+					[
+						$elm$html$Html$Attributes$min(m)
+					]);
+			} else {
+				return _List_Nil;
+			}
+		}();
+		return A5($author$project$Main$viewNumericInput, labelText, valueAsString, id, callback, attributes);
+	});
 var $author$project$Main$viewIntInput = F4(
 	function (labelText, value, id, callback) {
 		var valueAsString = $elm$core$String$fromInt(value);
@@ -6655,13 +6673,13 @@ var $author$project$Main$view = function (model) {
 					]);
 		}
 	}();
-	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.z);
+	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.v);
 	var paymentStrategy = A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				A3($author$project$Main$viewPaymentStrategy, model.X, model.O, model.z)
+				A3($author$project$Main$viewPaymentStrategy, model.X, model.O, model.v)
 			]));
 	var paymentPlan = function () {
 		var _v1 = _Utils_Tuple3(model._, model.aa, model.L);
@@ -6683,7 +6701,7 @@ var $author$project$Main$view = function (model) {
 	}();
 	var newLoans = _List_fromArray(
 		[
-			$author$project$Main$viewNewLoan(model.ai)
+			$author$project$Main$viewNewLoan(model)
 		]);
 	var headRow = A2(
 		$elm$html$Html$thead,
@@ -6720,7 +6738,7 @@ var $author$project$Main$view = function (model) {
 						A2($elm$html$Html$th, _List_Nil, _List_Nil)
 					]))
 			]));
-	var loans = $elm$core$List$isEmpty(model.z) ? _List_Nil : _List_fromArray(
+	var loans = $elm$core$List$isEmpty(model.v) ? _List_Nil : _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$table,

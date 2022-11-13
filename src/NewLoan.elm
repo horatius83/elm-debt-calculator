@@ -1,97 +1,93 @@
 module NewLoan exposing (..)
 
+import List exposing (minimum)
 import Loan exposing (Loan)
-import State exposing (Model, Msg(..))
+import State exposing (Model, Msg(..), NewLoanForm)
 
 
-defaultLoan : Loan
-defaultLoan =
-    { name = "New Loan", apr = 0.0, minimum = 0.0, principal = 0.0 }
-
-
-toUpdateTuple : Model -> ( Model, Cmd Msg )
-toUpdateTuple model =
-    ( model, Cmd.none )
+emptyLoanForm : NewLoanForm
+emptyLoanForm =
+    { name = "", apr = "", minimum = "", principal = "" }
 
 
 addLoan : Model -> ( Model, Cmd Msg )
 addLoan model =
-    { model | loans = model.loans ++ [ model.newLoan ], newLoan = defaultLoan }
-        |> toUpdateTuple
+    let
+        principal =
+            String.toFloat model.newLoanForm.principal
+
+        minimum =
+            String.toFloat model.newLoanForm.minimum
+
+        apr =
+            String.toFloat model.newLoanForm.apr
+
+        toLoan =
+            Loan model.newLoanForm.name
+
+        newLoan =
+            Maybe.map3 toLoan apr minimum principal
+    in
+    case newLoan of
+        Just loan ->
+            ( { model | loans = model.loans ++ [ loan ] }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+canAddLoan : Model -> Bool
+canAddLoan model =
+    let
+        principal =
+            String.toFloat model.newLoanForm.principal
+
+        minimum =
+            String.toFloat model.newLoanForm.minimum
+
+        apr =
+            String.toFloat model.newLoanForm.apr
+    in
+    case ( principal, minimum, apr ) of
+        ( Just p, Just m, Just a ) ->
+            p > 0 && m > 0 && a >= 0
+
+        _ ->
+            False
 
 
 resetLoan : Model -> ( Model, Cmd Msg )
 resetLoan model =
-    { model | newLoan = defaultLoan }
-        |> toUpdateTuple
+    ( { model | newLoanForm = emptyLoanForm }, Cmd.none )
+
+
+updateNewLoanForm : (NewLoanForm -> NewLoanForm) -> Model -> ( Model, Cmd Msg )
+updateNewLoanForm f model =
+    let
+        oldLoanForm =
+            model.newLoanForm
+
+        newLoanForm =
+            f oldLoanForm
+    in
+    ( { model | newLoanForm = newLoanForm }, Cmd.none )
 
 
 updateLoanName : String -> Model -> ( Model, Cmd Msg )
 updateLoanName name model =
-    let
-        oldNewLoan =
-            model.newLoan
-
-        newLoan =
-            { oldNewLoan | name = name }
-    in
-    { model | newLoan = newLoan }
-        |> toUpdateTuple
+    updateNewLoanForm (\nlf -> { nlf | name = name }) model
 
 
-updateLoanPrincipal : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
-updateLoanPrincipal principalAsString model update =
-    let
-        updatePrincipal loan principal =
-            { loan | principal = principal }
-
-        errorMessage =
-            "Could not parse principal: " ++ principalAsString
-    in
-    updateFloat principalAsString model errorMessage updatePrincipal update
+updateLoanPrincipal : String -> Model -> ( Model, Cmd Msg )
+updateLoanPrincipal principal model =
+    updateNewLoanForm (\nlf -> { nlf | principal = principal }) model
 
 
-updateLoanMinimum : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
-updateLoanMinimum minimumAsString model update =
-    let
-        updateMinimum loan minimum =
-            { loan | minimum = minimum }
-
-        errorMessage =
-            "Could not parse minimum: " ++ minimumAsString
-    in
-    updateFloat minimumAsString model errorMessage updateMinimum update
+updateLoanMinimum : String -> Model -> ( Model, Cmd Msg )
+updateLoanMinimum minimum model =
+    updateNewLoanForm (\nlf -> { nlf | minimum = minimum }) model
 
 
-updateLoanApr : String -> Model -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
-updateLoanApr aprAsString model update =
-    let
-        updateApr loan apr =
-            { loan | apr = apr }
-
-        errorMessage =
-            "Could not parse APR: " ++ aprAsString
-    in
-    updateFloat aprAsString model errorMessage updateApr update
-
-
-updateFloat : String -> Model -> String -> (Loan -> Float -> Loan) -> (Msg -> Model -> ( Model, Cmd Msg )) -> ( Model, Cmd Msg )
-updateFloat valueAsString model errorMessage updateValue updateModel =
-    let
-        currentNewLoan =
-            model.newLoan
-
-        uv =
-            updateValue currentNewLoan
-
-        result =
-            String.toFloat valueAsString
-                |> Maybe.map uv
-                |> Result.fromMaybe errorMessage
-    in
-    case result of
-        Ok ln ->
-            toUpdateTuple { model | newLoan = ln }
-
-        Err msg ->
-            updateModel (Error msg) model
+updateLoanApr : String -> Model -> ( Model, Cmd Msg )
+updateLoanApr apr model =
+    updateNewLoanForm (\nlf -> { nlf | apr = apr }) model

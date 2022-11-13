@@ -6,7 +6,7 @@ import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
 import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
-import NewLoan exposing (defaultLoan)
+import NewLoan exposing (emptyLoanForm)
 import State exposing (FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
 import Time exposing (Month(..))
@@ -26,7 +26,6 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { loans = []
-      , newLoan = defaultLoan
       , errors = []
       , yearsToPayoff = 20
       , paymentStrategy = Avalanche
@@ -35,6 +34,7 @@ init _ =
       , currentTime = Nothing
       , currentTimeZone = Nothing
       , formState = EnterLoans
+      , newLoanForm = emptyLoanForm
       }
     , Cmd.none
     )
@@ -51,7 +51,7 @@ update msg model =
                 loans =
                     removeAt index model.loans
             in
-            ( { model | loans = loans, newLoan = defaultLoan }, Cmd.none )
+            ( { model | loans = loans, newLoanForm = emptyLoanForm }, Cmd.none )
 
         ResetNewLoan ->
             NewLoan.resetLoan model
@@ -60,13 +60,13 @@ update msg model =
             NewLoan.updateLoanName name model
 
         UpdateLoanPrincipal principal ->
-            NewLoan.updateLoanPrincipal principal model update
+            NewLoan.updateLoanPrincipal principal model
 
         UpdateLoanMinimum minimum ->
-            NewLoan.updateLoanMinimum minimum model update
+            NewLoan.updateLoanMinimum minimum model
 
         UpdateLoanApr apr ->
-            NewLoan.updateLoanApr apr model update
+            NewLoan.updateLoanApr apr model
 
         Error errorMessage ->
             ( { model | errors = errorMessage :: model.errors }, Cmd.none )
@@ -196,7 +196,7 @@ view model =
                 ]
 
         newLoans =
-            [ viewNewLoan model.newLoan ]
+            [ viewNewLoan model ]
 
         paymentStrategy =
             div []
@@ -231,17 +231,33 @@ view model =
     document
 
 
-viewNewLoan : Loan -> Html Msg
-viewNewLoan loan =
+viewNewLoan : Model -> Html Msg
+viewNewLoan model =
+    let
+        canPickPaymentStrategy =
+            case model.loans of
+                [] ->
+                    True
+
+                _ ->
+                    False
+
+        loan =
+            model.newLoanForm
+    in
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewTextInput "Name" loan.name "new-loan-name" UpdateLoanName
-            , viewFloatInput "Principal" loan.principal "new-loan-principal" Nothing UpdateLoanPrincipal
-            , viewFloatInput "Minimum" loan.minimum "new-loan-minimum" Nothing UpdateLoanMinimum
-            , viewFloatInput "APR" loan.apr "new-loan-apr" Nothing UpdateLoanApr
+            , viewTextInput "Principal" loan.principal "new-loan-principal" UpdateLoanPrincipal
+            , viewTextInput "Minimum" loan.minimum "new-loan-minimum" UpdateLoanMinimum
+            , viewTextInput "APR" loan.apr "new-loan-apr" UpdateLoanApr
             , button [ onClick AddLoan ] [ text "Add Loan" ]
             , button [ onClick ResetNewLoan ] [ text "Reset" ]
-            , button [ onClick (ChangeFormState EnterPaymentStrategy) ] [ text "Next" ]
+            , button
+                [ disabled canPickPaymentStrategy
+                , onClick (ChangeFormState EnterPaymentStrategy)
+                ]
+                [ text "Next" ]
             ]
         ]
 

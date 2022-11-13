@@ -15,9 +15,16 @@ type FormState
     | ViewPaymentPlan
 
 
+type alias NewLoanForm =
+    { name : String
+    , principal : String
+    , minimum : String
+    , apr : String
+    }
+
+
 type alias Model =
     { loans : List Loan
-    , newLoan : Loan
     , errors : List String
     , yearsToPayoff : Int
     , paymentStrategy : PaymentStrategy
@@ -26,6 +33,7 @@ type alias Model =
     , currentTime : Maybe Time.Posix
     , currentTimeZone : Maybe Time.Zone
     , formState : FormState
+    , newLoanForm : NewLoanForm
     }
 
 
