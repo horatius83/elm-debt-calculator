@@ -244,6 +244,23 @@ viewNewLoan model =
 
         loan =
             model.newLoanForm
+
+        isJust x =
+            case x of
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
+
+        cannotAddNewLoan =
+            [ loan.principal
+            , loan.minimum
+            , loan.apr
+            ]
+                |> List.map String.toFloat
+                |> List.all isJust
+                |> not
     in
     form [ onSubmit DoNothing ]
         [ fieldset []
@@ -251,7 +268,11 @@ viewNewLoan model =
             , viewTextInput "Principal" loan.principal "new-loan-principal" UpdateLoanPrincipal
             , viewTextInput "Minimum" loan.minimum "new-loan-minimum" UpdateLoanMinimum
             , viewTextInput "APR" loan.apr "new-loan-apr" UpdateLoanApr
-            , button [ onClick AddLoan ] [ text "Add Loan" ]
+            , button
+                [ onClick AddLoan
+                , disabled cannotAddNewLoan
+                ]
+                [ text "Add Loan" ]
             , button [ onClick ResetNewLoan ] [ text "Reset" ]
             , button
                 [ disabled canPickPaymentStrategy

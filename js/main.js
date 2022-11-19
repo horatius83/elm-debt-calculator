@@ -6076,6 +6076,18 @@ var $author$project$State$UpdateLoanName = function (a) {
 var $author$project$State$UpdateLoanPrincipal = function (a) {
 	return {$: 5, a: a};
 };
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -6186,6 +6198,21 @@ var $author$project$Main$viewTextInput = F4(
 	});
 var $author$project$Main$viewNewLoan = function (model) {
 	var loan = model.ai;
+	var isJust = function (x) {
+		if (!x.$) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+	var cannotAddNewLoan = !A2(
+		$elm$core$List$all,
+		isJust,
+		A2(
+			$elm$core$List$map,
+			$elm$core$String$toFloat,
+			_List_fromArray(
+				[loan.W, loan.ag, loan._])));
 	var canPickPaymentStrategy = function () {
 		var _v0 = model.v;
 		if (!_v0.b) {
@@ -6215,7 +6242,8 @@ var $author$project$Main$viewNewLoan = function (model) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$State$AddLoan)
+								$elm$html$Html$Events$onClick($author$project$State$AddLoan),
+								$elm$html$Html$Attributes$disabled(cannotAddNewLoan)
 							]),
 						_List_fromArray(
 							[
