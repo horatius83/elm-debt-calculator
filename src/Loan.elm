@@ -74,7 +74,15 @@ toPaymentPlan maxNumberOfYears loans =
 
 getMinimumTotalAmount : PaymentPlan -> Float
 getMinimumTotalAmount =
-    List.foldl (\ps totalAmount -> totalAmount + ps.actualMinimum) 0
+    List.foldl
+        (\ps totalAmount ->
+            if ps.isPaidOff then
+                totalAmount
+
+            else
+                totalAmount + ps.actualMinimum
+        )
+        0
 
 
 calculateNewPayment : PaymentSequence -> ( Float, PaymentPlan ) -> ( Float, PaymentPlan )

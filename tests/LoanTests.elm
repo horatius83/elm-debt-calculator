@@ -4,6 +4,7 @@ import Expect exposing (FloatingPointTolerance(..))
 import Test exposing (..)
 
 import Loan exposing (..)
+import State exposing (Msg(..))
 
 suite : Test
 suite = 
@@ -166,5 +167,29 @@ suite =
                         avalanche paymentPlan totalAmount
                         |> isPaymentsRemaining
                         |> Expect.equal True
+            ]
+            , describe "getMinimumTotalAmount"
+            [ test "Gets total amount" <|
+                \_ -> 
+                    let
+                        loans = 
+                            [ Loan "Test Loan 1" 10.0 50.0 5000.0
+                            , Loan "Test Loan 2" 20.0 20.0 2000.0]
+                        paymentPlan = List.map (\{name, apr, minimum, principal} -> 
+                            PaymentSequence (Loan name apr minimum principal) minimum [] False) loans
+                    in
+                    getMinimumTotalAmount paymentPlan
+                    |> Expect.within (Absolute 0.001)  70.0
+            , test "Does not add paid off loans" <|
+                \_ ->
+                    let
+                        loans = 
+                            [ (Loan "Test Loan 1" 10.0 50.0 5000.0, False)
+                            , (Loan "Test Loan 2" 20.0 20.0 2000.0, True)]
+                        paymentPlan = List.map (\({name, apr, minimum, principal}, isPaidOff) -> 
+                            PaymentSequence (Loan name apr minimum principal) minimum [] isPaidOff) loans
+                    in
+                    getMinimumTotalAmount paymentPlan
+                    |> Expect.within (Absolute 0.001)  50.0
             ]
         ]
