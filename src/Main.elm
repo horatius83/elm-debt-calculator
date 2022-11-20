@@ -5,7 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
+import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumPaymentAmount, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (emptyLoanForm)
 import State exposing (FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
@@ -118,7 +118,17 @@ update msg model =
                     update (Error errorMessage) model
 
         ChangeFormState formState ->
-            ( { model | formState = formState }, Cmd.none )
+            let
+                minimumPossibleTotalPayment =
+                    List.map (\ln -> getMinimumPaymentAmount ln.principal ln.apr model.yearsToPayoff) model.loans
+                        |> List.foldl (+) 0
+            in
+            case formState of
+                EnterPaymentStrategy ->
+                    ( { model | formState = formState, totalMonthlyPayment = minimumPossibleTotalPayment }, Cmd.none )
+
+                _ ->
+                    ( { model | formState = formState }, Cmd.none )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
