@@ -7,6 +7,8 @@ import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
 import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (emptyLoanForm)
+import PortConsole exposing (logError)
+import PortPdfMake exposing (showAsPdf)
 import State exposing (FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
 import Time exposing (Month(..))
@@ -69,7 +71,7 @@ update msg model =
             NewLoan.updateLoanApr apr model
 
         Error errorMessage ->
-            ( { model | errors = errorMessage :: model.errors }, Cmd.none )
+            ( { model | errors = errorMessage :: model.errors }, logError errorMessage )
 
         DoNothing ->
             ( model, Cmd.none )

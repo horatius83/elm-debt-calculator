@@ -5393,6 +5393,8 @@ var $elm$time$Time$Zone = F2(
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$here = _Time_here(0);
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$PortConsole$logError = _Platform_outgoingPort('logError', $elm$json$Json$Encode$string);
 var $elm$time$Time$Posix = $elm$core$Basics$identity;
 var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
@@ -5746,7 +5748,7 @@ var $author$project$Main$update = F2(
 							{
 								S: A2($elm$core$List$cons, errorMessage, model.S)
 							}),
-						$elm$core$Platform$Cmd$none);
+						$author$project$PortConsole$logError(errorMessage));
 				case 8:
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				case 9:
@@ -5835,7 +5837,6 @@ var $author$project$Main$update = F2(
 			}
 		}
 	});
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(

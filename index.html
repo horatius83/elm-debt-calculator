@@ -13,9 +13,12 @@
     var app = Elm.Main.init({
       node: document.getElementById("elm")
     });
-    app.ports.showAsPdf.subscribe((data) => {
+    app.ports?.showAsPdf?.subscribe((data) => {
       console.log('Data received');
       console.log(data);
+    });
+    app.ports?.logError?.subscribe((data) => {
+      console.error(data);
     });
   </script>
   <script src="./js/pdfmake/0.2.6/pdfmake.min.js"></script>
