@@ -53,4 +53,5 @@ type Msg
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
     | GeneratePaymentPlan
+    | GeneratePaymentPlanAsPdf
     | ChangeFormState FormState

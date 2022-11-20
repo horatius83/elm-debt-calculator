@@ -98,6 +98,17 @@ update msg model =
             in
             ( model, Task.perform (UpdateTimeAndThen f) Time.now )
 
+        GeneratePaymentPlanAsPdf ->
+            let
+                f time timeZone =
+                    let
+                        ( paymentPlanModel, _ ) =
+                            generatePaymentPlan { model | currentTime = Just time, currentTimeZone = Just timeZone, formState = ViewPaymentPlan }
+                    in
+                    ( paymentPlanModel, showAsPdf "placeholder" )
+            in
+            ( model, Task.perform (UpdateTimeAndThen f) Time.now )
+
         -- https://stackoverflow.com/questions/38021777/how-do-i-get-the-current-time-in-elm-0-17-0-18
         UpdateTimeAndThen f time ->
             let
