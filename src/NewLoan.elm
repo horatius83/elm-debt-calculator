@@ -30,7 +30,7 @@ addLoan model =
     in
     case newLoan of
         Just loan ->
-            ( { model | loans = model.loans ++ [ loan ] }, Cmd.none )
+            ( { model | loans = model.loans ++ [ loan ], newLoanForm = emptyLoanForm }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

@@ -5249,7 +5249,8 @@ var $author$project$NewLoan$addLoan = function (model) {
 					s: _Utils_ap(
 						model.s,
 						_List_fromArray(
-							[loan]))
+							[loan])),
+					ai: $author$project$NewLoan$emptyLoanForm
 				}),
 			$elm$core$Platform$Cmd$none);
 	} else {
@@ -5380,18 +5381,6 @@ var $author$project$Loan$avalanche = $author$project$Loan$strategy(
 		return paymentSequence.U._;
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $elm$core$Basics$pow = _Basics_pow;
-var $author$project$Loan$getMinimumPaymentAmount = F3(
-	function (principal, apr, maxNumberOfYears) {
-		var ratePerPeriod = apr / (12.0 * 100.0);
-		var numerator = ratePerPeriod * principal;
-		var maxNumberOfPayments = maxNumberOfYears * 12;
-		var denominator = 1 - A2($elm$core$Basics$pow, 1 + ratePerPeriod, (-1) * maxNumberOfPayments);
-		return numerator / denominator;
-	});
 var $elm$time$Time$Name = function (a) {
 	return {$: 0, a: a};
 };
@@ -5580,6 +5569,18 @@ var $author$project$NewLoan$resetLoan = function (model) {
 var $author$project$Loan$snowball = $author$project$Loan$strategy(
 	function (paymentSequence) {
 		return paymentSequence.U.X;
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$pow = _Basics_pow;
+var $author$project$Loan$getMinimumPaymentAmount = F3(
+	function (principal, apr, maxNumberOfYears) {
+		var ratePerPeriod = apr / (12.0 * 100.0);
+		var numerator = ratePerPeriod * principal;
+		var maxNumberOfPayments = maxNumberOfYears * 12;
+		var denominator = 1 - A2($elm$core$Basics$pow, 1 + ratePerPeriod, (-1) * maxNumberOfPayments);
+		return numerator / denominator;
 	});
 var $author$project$Loan$toPaymentPlan = F2(
 	function (maxNumberOfYears, loans) {
@@ -5815,21 +5816,14 @@ var $author$project$Main$update = F2(
 					}
 				default:
 					var formState = msg.a;
-					var minimumPossibleTotalPayment = A3(
-						$elm$core$List$foldl,
-						$elm$core$Basics$add,
-						0,
-						A2(
-							$elm$core$List$map,
-							function (ln) {
-								return A3($author$project$Loan$getMinimumPaymentAmount, ln.X, ln._, model.R);
-							},
-							model.s));
+					var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.R, model.s);
+					var totalMinimumAmount = $elm$core$Basics$ceiling(
+						$author$project$Loan$getMinimumTotalAmount(paymentPlan));
 					if (formState === 1) {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{E: formState, G: minimumPossibleTotalPayment}),
+								{E: formState, G: totalMinimumAmount}),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						return _Utils_Tuple2(
@@ -6504,7 +6498,6 @@ var $author$project$State$UpdateYearsToPayoff = function (a) {
 var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (loans) {
 	return !$elm$core$List$length(loans);
 };
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$core$Maybe$map = F2(
 	function (f, maybe) {
 		if (!maybe.$) {
@@ -6615,13 +6608,11 @@ var $author$project$Main$viewSelect = F4(
 	});
 var $author$project$Main$viewPaymentStrategy = F3(
 	function (yearsToPayoff, totalMaximumMonthlyPayment, loans) {
-		var totalMaximumMonthlyPaymentAsString = 'Total Maximum Payment: ' + $elm$core$String$fromFloat(totalMaximumMonthlyPayment);
 		var paymentStrategyOptions = _List_fromArray(
 			['Highest Interest First', 'Lowest Principal First']);
 		var paymentPlan = A2($author$project$Loan$toPaymentPlan, yearsToPayoff, loans);
 		var totalMinimumAmount = $elm$core$Basics$ceiling(
 			$author$project$Loan$getMinimumTotalAmount(paymentPlan));
-		var totalMinimumAmountAsString = 'Total Minimum Amount: ' + $elm$core$String$fromFloat(totalMinimumAmount);
 		var optionToStrategy = function (option) {
 			if (option === 'Lowest Principal First') {
 				return $author$project$State$ChoosePaymentStrategy(1);
@@ -6650,20 +6641,6 @@ var $author$project$Main$viewPaymentStrategy = F3(
 							'total-minimum-amount',
 							$elm$core$Maybe$Just(totalMinimumAmount),
 							$author$project$State$UpdateMaximumTotalPayment),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(totalMinimumAmountAsString)
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text(totalMaximumMonthlyPaymentAsString)
-								])),
 							A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
 							A2(
 							$elm$html$Html$button,

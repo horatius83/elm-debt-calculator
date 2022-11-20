@@ -119,13 +119,17 @@ update msg model =
 
         ChangeFormState formState ->
             let
-                minimumPossibleTotalPayment =
-                    List.map (\ln -> getMinimumPaymentAmount ln.principal ln.apr model.yearsToPayoff) model.loans
-                        |> List.foldl (+) 0
+                paymentPlan =
+                    toPaymentPlan model.yearsToPayoff model.loans
+
+                totalMinimumAmount =
+                    getMinimumTotalAmount paymentPlan
+                        |> ceiling
+                        |> toFloat
             in
             case formState of
                 EnterPaymentStrategy ->
-                    ( { model | formState = formState, totalMonthlyPayment = minimumPossibleTotalPayment }, Cmd.none )
+                    ( { model | formState = formState, totalMonthlyPayment = totalMinimumAmount }, Cmd.none )
 
                 _ ->
                     ( { model | formState = formState }, Cmd.none )
@@ -316,19 +320,11 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
 
                 _ ->
                     ChoosePaymentStrategy Avalanche
-
-        totalMinimumAmountAsString =
-            "Total Minimum Amount: " ++ String.fromFloat totalMinimumAmount
-
-        totalMaximumMonthlyPaymentAsString =
-            "Total Maximum Payment: " ++ String.fromFloat totalMaximumMonthlyPayment
     in
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
             , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
-            , p [] [ text totalMinimumAmountAsString ]
-            , p [] [ text totalMaximumMonthlyPaymentAsString ]
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             , button
                 [ disabled (isCalculatePaymentPlanButtonDisabled loans)
