@@ -5845,7 +5845,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
 		return true;
@@ -6069,12 +6068,80 @@ var $author$project$Main$viewLoan = F2(
 						]))
 				]));
 	});
-var $author$project$State$AddLoan = {$: 0};
 var $author$project$State$ChangeFormState = function (a) {
 	return {$: 15, a: a};
 };
-var $author$project$State$DoNothing = {$: 8};
 var $author$project$State$EnterPaymentStrategy = 1;
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $author$project$Main$viewMenu = function (formState) {
+	var paymentStrategy = function () {
+		if (formState === 1) {
+			return $elm$html$Html$text('Strategy');
+		} else {
+			return A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('#'),
+						$elm$html$Html$Events$onClick(
+						$author$project$State$ChangeFormState(1))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Strategy')
+					]));
+		}
+	}();
+	var paymentPlan = $elm$html$Html$text('Plan');
+	var loans = function () {
+		if (!formState) {
+			return $elm$html$Html$text('Loans');
+		} else {
+			return A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('#'),
+						$elm$html$Html$Events$onClick(
+						$author$project$State$ChangeFormState(0))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Loans')
+					]));
+		}
+	}();
+	var divider = $elm$html$Html$text(' > ');
+	switch (formState) {
+		case 0:
+			return A2(
+				$elm$html$Html$h3,
+				_List_Nil,
+				_List_fromArray(
+					[loans]));
+		case 1:
+			return A2(
+				$elm$html$Html$h3,
+				_List_Nil,
+				_List_fromArray(
+					[loans, divider, paymentStrategy]));
+		default:
+			return A2(
+				$elm$html$Html$h3,
+				_List_Nil,
+				_List_fromArray(
+					[loans, divider, paymentStrategy, divider, paymentPlan]));
+	}
+};
+var $author$project$State$AddLoan = {$: 0};
+var $author$project$State$DoNothing = {$: 8};
 var $author$project$State$ResetNewLoan = {$: 1};
 var $author$project$State$UpdateLoanApr = function (a) {
 	return {$: 4, a: a};
@@ -6330,6 +6397,7 @@ var $author$project$TimeUtil$getNextYear = F2(
 			return year;
 		}
 	});
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$TimeUtil$monthToString = function (month) {
 	switch (month) {
 		case 0:
@@ -6658,44 +6726,10 @@ var $author$project$Main$viewPaymentStrategy = F3(
 				]));
 	});
 var $author$project$Main$view = function (model) {
-	var title = function () {
-		var _v2 = model.E;
-		switch (_v2) {
-			case 0:
-				return _List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Loans')
-							]))
-					]);
-			case 1:
-				return _List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Loans > Payment Strategy')
-							]))
-					]);
-			default:
-				return _List_fromArray(
-					[
-						A2(
-						$elm$html$Html$h2,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Loans > Payment Strategy > Payment Plan')
-							]))
-					]);
-		}
-	}();
+	var title = _List_fromArray(
+		[
+			$author$project$Main$viewMenu(model.E)
+		]);
 	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.s);
 	var paymentStrategy = A2(
 		$elm$html$Html$div,

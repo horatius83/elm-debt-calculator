@@ -2,10 +2,10 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, disabled, value)
+import Html.Attributes exposing (attribute, class, disabled, href, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumPaymentAmount, getMinimumTotalAmount, snowball, toPaymentPlan)
+import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (emptyLoanForm)
 import State exposing (FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
@@ -173,19 +173,47 @@ subscriptions _ =
     Sub.none
 
 
+viewMenu : FormState -> Html Msg
+viewMenu formState =
+    let
+        loans =
+            case formState of
+                EnterLoans ->
+                    text "Loans"
+
+                _ ->
+                    a [ href "#", onClick (ChangeFormState EnterLoans) ] [ text "Loans" ]
+
+        paymentStrategy =
+            case formState of
+                EnterPaymentStrategy ->
+                    text "Strategy"
+
+                _ ->
+                    a [ href "#", onClick (ChangeFormState EnterPaymentStrategy) ] [ text "Strategy" ]
+
+        paymentPlan =
+            text "Plan"
+
+        divider =
+            text " > "
+    in
+    case formState of
+        EnterLoans ->
+            h3 [] [ loans ]
+
+        EnterPaymentStrategy ->
+            h3 [] [ loans, divider, paymentStrategy ]
+
+        ViewPaymentPlan ->
+            h3 [] [ loans, divider, paymentStrategy, divider, paymentPlan ]
+
+
 view : Model -> Html Msg
 view model =
     let
         title =
-            case model.formState of
-                EnterLoans ->
-                    [ h2 [] [ text "Loans" ] ]
-
-                EnterPaymentStrategy ->
-                    [ h2 [] [ text "Loans > Payment Strategy" ] ]
-
-                ViewPaymentPlan ->
-                    [ h2 [] [ text "Loans > Payment Strategy > Payment Plan" ] ]
+            [ viewMenu model.formState ]
 
         headRow =
             thead []
