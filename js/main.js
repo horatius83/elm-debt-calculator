@@ -6592,6 +6592,7 @@ var $author$project$State$ChoosePaymentStrategy = function (a) {
 	return {$: 12, a: a};
 };
 var $author$project$State$GeneratePaymentPlan = {$: 14};
+var $author$project$State$GeneratePaymentPlanAsPdf = {$: 15};
 var $author$project$State$Snowball = 1;
 var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 	return {$: 13, a: a};
@@ -6756,7 +6757,19 @@ var $author$project$Main$viewPaymentStrategy = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Calculate Payment Plan')
+									$elm$html$Html$text('Show Payment Plan')
+								])),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$disabled(
+									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans)),
+									$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlanAsPdf)
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Show Payment Plan PDF')
 								]))
 						]))
 				]));

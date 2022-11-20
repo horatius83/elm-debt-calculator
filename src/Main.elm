@@ -379,7 +379,12 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
                 [ disabled (isCalculatePaymentPlanButtonDisabled loans)
                 , onClick GeneratePaymentPlan
                 ]
-                [ text "Calculate Payment Plan" ]
+                [ text "Show Payment Plan" ]
+            , button
+                [ disabled (isCalculatePaymentPlanButtonDisabled loans)
+                , onClick GeneratePaymentPlanAsPdf
+                ]
+                [ text "Show Payment Plan PDF" ]
             ]
         ]
 
