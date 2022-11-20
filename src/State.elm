@@ -48,8 +48,8 @@ type Msg
     | Error String
     | DoNothing
     | UpdateYearsToPayoff String
-    | UpdateTime Time.Posix
-    | UpdateTimeZone Time.Zone
+    | UpdateTimeAndThen (Time.Posix -> Time.Zone -> ( Model, Cmd Msg )) Time.Posix
+    | UpdateTimeZoneAndThen (Time.Zone -> ( Model, Cmd Msg )) Time.Zone
     | ChoosePaymentStrategy PaymentStrategy
     | UpdateMaximumTotalPayment String
     | GeneratePaymentPlan

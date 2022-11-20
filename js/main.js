@@ -5202,12 +5202,14 @@ var $author$project$Main$subscriptions = function (_v0) {
 var $author$project$State$Error = function (a) {
 	return {$: 7, a: a};
 };
-var $author$project$State$UpdateTime = function (a) {
-	return {$: 10, a: a};
-};
-var $author$project$State$UpdateTimeZone = function (a) {
-	return {$: 11, a: a};
-};
+var $author$project$State$UpdateTimeAndThen = F2(
+	function (a, b) {
+		return {$: 10, a: a, b: b};
+	});
+var $author$project$State$UpdateTimeZoneAndThen = F2(
+	function (a, b) {
+		return {$: 11, a: a, b: b};
+	});
 var $author$project$State$ViewPaymentPlan = 2;
 var $author$project$Loan$Loan = F4(
 	function (name, apr, minimum, principal) {
@@ -5770,27 +5772,37 @@ var $author$project$Main$update = F2(
 						continue update;
 					}
 				case 14:
+					var f = F2(
+						function (time, timeZone) {
+							return $author$project$Main$generatePaymentPlan(
+								_Utils_update(
+									model,
+									{
+										aa: $elm$core$Maybe$Just(time),
+										ab: $elm$core$Maybe$Just(timeZone),
+										E: 2
+									}));
+						});
 					return _Utils_Tuple2(
 						model,
-						A2($elm$core$Task$perform, $author$project$State$UpdateTime, $elm$time$Time$now));
+						A2(
+							$elm$core$Task$perform,
+							$author$project$State$UpdateTimeAndThen(f),
+							$elm$time$Time$now));
 				case 10:
-					var time = msg.a;
+					var f = msg.a;
+					var time = msg.b;
+					var fPrime = f(time);
 					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{
-								aa: $elm$core$Maybe$Just(time)
-							}),
-						A2($elm$core$Task$perform, $author$project$State$UpdateTimeZone, $elm$time$Time$here));
+						model,
+						A2(
+							$elm$core$Task$perform,
+							$author$project$State$UpdateTimeZoneAndThen(fPrime),
+							$elm$time$Time$here));
 				case 11:
-					var timeZone = msg.a;
-					return $author$project$Main$generatePaymentPlan(
-						_Utils_update(
-							model,
-							{
-								ab: $elm$core$Maybe$Just(timeZone),
-								E: 2
-							}));
+					var f = msg.a;
+					var timeZone = msg.b;
+					return f(timeZone);
 				case 12:
 					var paymentStrategy = msg.a;
 					return _Utils_Tuple2(

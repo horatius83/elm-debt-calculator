@@ -92,14 +92,22 @@ update msg model =
                     update (Error errorMessage) model
 
         GeneratePaymentPlan ->
-            ( model, Task.perform UpdateTime Time.now )
+            let
+                f time timeZone =
+                    generatePaymentPlan { model | currentTime = Just time, currentTimeZone = Just timeZone, formState = ViewPaymentPlan }
+            in
+            ( model, Task.perform (UpdateTimeAndThen f) Time.now )
 
         -- https://stackoverflow.com/questions/38021777/how-do-i-get-the-current-time-in-elm-0-17-0-18
-        UpdateTime time ->
-            ( { model | currentTime = Just time }, Task.perform UpdateTimeZone Time.here )
+        UpdateTimeAndThen f time ->
+            let
+                fPrime =
+                    f time
+            in
+            ( model, Task.perform (UpdateTimeZoneAndThen fPrime) Time.here )
 
-        UpdateTimeZone timeZone ->
-            generatePaymentPlan { model | currentTimeZone = Just timeZone, formState = ViewPaymentPlan }
+        UpdateTimeZoneAndThen f timeZone ->
+            f timeZone
 
         ChoosePaymentStrategy paymentStrategy ->
             ( { model | paymentStrategy = paymentStrategy }, Cmd.none )
