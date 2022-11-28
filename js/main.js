@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.an.J === region.ay.J)
+	if (region.ap.J === region.aB.J)
 	{
-		return 'on line ' + region.an.J;
+		return 'on line ' + region.ap.J;
 	}
-	return 'on lines ' + region.an.J + ' through ' + region.ay.J;
+	return 'on lines ' + region.ap.J + ' through ' + region.aB.J;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bm,
-		impl.bH,
-		impl.bD,
+		impl.bp,
+		impl.bK,
+		impl.bG,
 		function() { return function() {} }
 	);
 });
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		w: func(record.w),
-		ao: record.ao,
-		al: record.al
+		x: func(record.x),
+		aq: record.aq,
+		an: record.an
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.w;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ao;
+		var message = !tag ? value : tag < 3 ? value.a : value.x;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aq;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.al) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.an) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bm,
-		impl.bH,
-		impl.bD,
+		impl.bp,
+		impl.bK,
+		impl.bG,
 		function(sendToApp, initialModel) {
-			var view = impl.bI;
+			var view = impl.bL;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.bm,
-		impl.bH,
-		impl.bD,
+		impl.bp,
+		impl.bK,
+		impl.bG,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.am && impl.am(sendToApp)
-			var view = impl.bI;
+			var divertHrefToApp = impl.ao && impl.ao(sendToApp)
+			var view = impl.bL;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.a8);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bb);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bG) && (_VirtualDom_doc.title = title = doc.bG);
+				(title !== doc.bJ) && (_VirtualDom_doc.title = title = doc.bJ);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.bx;
-	var onUrlRequest = impl.by;
+	var onUrlChange = impl.bA;
+	var onUrlRequest = impl.bB;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		am: function(sendToApp)
+		ao: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aR === next.aR
-							&& curr.aE === next.aE
-							&& curr.aO.a === next.aO.a
+							&& curr.aU === next.aU
+							&& curr.aH === next.aH
+							&& curr.aR.a === next.aR.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		bm: function(flags)
+		bp: function(flags)
 		{
-			return A3(impl.bm, flags, _Browser_getUrl(), key);
+			return A3(impl.bp, flags, _Browser_getUrl(), key);
 		},
-		bI: impl.bI,
-		bH: impl.bH,
-		bD: impl.bD
+		bL: impl.bL,
+		bK: impl.bK,
+		bG: impl.bG
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { bk: 'hidden', ba: 'visibilitychange' }
+		? { bn: 'hidden', bd: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { bk: 'mozHidden', ba: 'mozvisibilitychange' }
+		? { bn: 'mozHidden', bd: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { bk: 'msHidden', ba: 'msvisibilitychange' }
+		? { bn: 'msHidden', bd: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { bk: 'webkitHidden', ba: 'webkitvisibilitychange' }
-		: { bk: 'hidden', ba: 'visibilitychange' };
+		? { bn: 'webkitHidden', bd: 'webkitvisibilitychange' }
+		: { bn: 'hidden', bd: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aX: _Browser_getScene(),
-		a1: {
-			a3: _Browser_window.pageXOffset,
-			a4: _Browser_window.pageYOffset,
-			a2: _Browser_doc.documentElement.clientWidth,
-			aD: _Browser_doc.documentElement.clientHeight
+		a_: _Browser_getScene(),
+		a4: {
+			a6: _Browser_window.pageXOffset,
+			a7: _Browser_window.pageYOffset,
+			a5: _Browser_doc.documentElement.clientWidth,
+			aG: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		a2: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		aD: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		a5: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		aG: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aX: {
-				a2: node.scrollWidth,
-				aD: node.scrollHeight
+			a_: {
+				a5: node.scrollWidth,
+				aG: node.scrollHeight
 			},
-			a1: {
-				a3: node.scrollLeft,
-				a4: node.scrollTop,
-				a2: node.clientWidth,
-				aD: node.clientHeight
+			a4: {
+				a6: node.scrollLeft,
+				a7: node.scrollTop,
+				a5: node.clientWidth,
+				aG: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aX: _Browser_getScene(),
-			a1: {
-				a3: x,
-				a4: y,
-				a2: _Browser_doc.documentElement.clientWidth,
-				aD: _Browser_doc.documentElement.clientHeight
+			a_: _Browser_getScene(),
+			a4: {
+				a6: x,
+				a7: y,
+				a5: _Browser_doc.documentElement.clientWidth,
+				aG: _Browser_doc.documentElement.clientHeight
 			},
-			be: {
-				a3: x + rect.left,
-				a4: y + rect.top,
-				a2: rect.width,
-				aD: rect.height
+			bh: {
+				a6: x + rect.left,
+				a7: y + rect.top,
+				a5: rect.width,
+				aG: rect.height
 			}
 		};
 	});
@@ -4905,7 +4905,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aA: fragment, aE: host, aL: path, aO: port_, aR: protocol, aS: query};
+		return {aD: fragment, aH: host, aO: path, aR: port_, aU: protocol, aV: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5186,12 +5186,24 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$State$Avalanche = 0;
 var $author$project$State$EnterLoans = 0;
-var $author$project$NewLoan$emptyLoanForm = {ab: '', ag: '', bo: '', Z: ''};
+var $author$project$NewLoan$emptyLoanForm = {ad: '', ai: '', br: '', _: ''};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{S: $elm$core$Maybe$Nothing, T: $elm$core$Maybe$Nothing, U: _List_Nil, z: 0, s: _List_Nil, ai: $author$project$NewLoan$emptyLoanForm, M: $elm$core$Maybe$Nothing, ak: 0, G: 0, R: 20},
+		{
+			R: $elm$core$Maybe$Nothing,
+			S: $elm$core$Maybe$Nothing,
+			T: _List_Nil,
+			A: 0,
+			s: _List_Nil,
+			ak: $author$project$NewLoan$emptyLoanForm,
+			M: $elm$core$Maybe$Nothing,
+			am: 0,
+			u: {X: '', Y: ''},
+			ab: 0,
+			au: 20
+		},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5213,7 +5225,7 @@ var $author$project$State$UpdateTimeZoneAndThen = F2(
 var $author$project$State$ViewPaymentPlan = 2;
 var $author$project$Loan$Loan = F4(
 	function (name, apr, minimum, principal) {
-		return {ab: apr, ag: minimum, bo: name, Z: principal};
+		return {ad: apr, ai: minimum, br: name, _: principal};
 	});
 var $elm$core$Maybe$map3 = F4(
 	function (func, ma, mb, mc) {
@@ -5237,10 +5249,10 @@ var $elm$core$Maybe$map3 = F4(
 	});
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NewLoan$addLoan = function (model) {
-	var toLoan = $author$project$Loan$Loan(model.ai.bo);
-	var principal = $elm$core$String$toFloat(model.ai.Z);
-	var minimum = $elm$core$String$toFloat(model.ai.ag);
-	var apr = $elm$core$String$toFloat(model.ai.ab);
+	var toLoan = $author$project$Loan$Loan(model.ak.br);
+	var principal = $elm$core$String$toFloat(model.ak._);
+	var minimum = $elm$core$String$toFloat(model.ak.ai);
+	var apr = $elm$core$String$toFloat(model.ak.ad);
 	var newLoan = A4($elm$core$Maybe$map3, toLoan, apr, minimum, principal);
 	if (!newLoan.$) {
 		var loan = newLoan.a;
@@ -5252,7 +5264,7 @@ var $author$project$NewLoan$addLoan = function (model) {
 						model.s,
 						_List_fromArray(
 							[loan])),
-					ai: $author$project$NewLoan$emptyLoanForm
+					ak: $author$project$NewLoan$emptyLoanForm
 				}),
 			$elm$core$Platform$Cmd$none);
 	} else {
@@ -5291,14 +5303,14 @@ var $elm$core$List$any = F2(
 	});
 var $author$project$Loan$PaymentSequence = F4(
 	function (loan, actualMinimum, payments, isPaidOff) {
-		return {aa: actualMinimum, V: isPaidOff, W: loan, aM: payments};
+		return {ac: actualMinimum, U: isPaidOff, V: loan, aP: payments};
 	});
 var $author$project$Loan$calculateNewPayment = F2(
 	function (_v0, _v1) {
-		var loan = _v0.W;
-		var actualMinimum = _v0.aa;
-		var payments = _v0.aM;
-		var isPaidOff = _v0.V;
+		var loan = _v0.V;
+		var actualMinimum = _v0.ac;
+		var payments = _v0.aP;
+		var isPaidOff = _v0.U;
 		var bonus = _v1.a;
 		var newPaymentSequence = _v1.b;
 		var totalAmountPaid = A3(
@@ -5309,7 +5321,7 @@ var $author$project$Loan$calculateNewPayment = F2(
 				}),
 			0,
 			payments);
-		var principalRemaining = loan.Z - totalAmountPaid;
+		var principalRemaining = loan._ - totalAmountPaid;
 		var minimumAndBonus = actualMinimum + bonus;
 		return isPaidOff ? _Utils_Tuple2(
 			bonus,
@@ -5354,7 +5366,7 @@ var $author$project$Loan$getMinimumTotalAmount = A2(
 	$elm$core$List$foldl,
 	F2(
 		function (ps, totalAmount) {
-			return ps.V ? totalAmount : (totalAmount + ps.aa);
+			return ps.U ? totalAmount : (totalAmount + ps.ac);
 		}),
 	0);
 var $elm$core$Basics$not = _Basics_not;
@@ -5373,14 +5385,14 @@ var $author$project$Loan$strategy = F3(
 		var areThereAnyFurtherPayments = A2(
 			$elm$core$List$any,
 			function (ps) {
-				return !ps.V;
+				return !ps.U;
 			},
 			newPaymentPlan);
 		return (_Utils_cmp(minimumTotalPayment, maximumAmount) > 0) ? $author$project$Loan$MaximumTotalAmountTooLow(minimumTotalPayment) : ((!areThereAnyFurtherPayments) ? $author$project$Loan$NoFurtherPaymentsToBeMade(newPaymentPlan) : $author$project$Loan$PaymentsRemaining(newPaymentPlan));
 	});
 var $author$project$Loan$avalanche = $author$project$Loan$strategy(
 	function (paymentSequence) {
-		return paymentSequence.W.ab;
+		return paymentSequence.V.ad;
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$time$Time$Name = function (a) {
@@ -5567,13 +5579,13 @@ var $author$project$NewLoan$resetLoan = function (model) {
 	return _Utils_Tuple2(
 		_Utils_update(
 			model,
-			{ai: $author$project$NewLoan$emptyLoanForm}),
+			{ak: $author$project$NewLoan$emptyLoanForm}),
 		$elm$core$Platform$Cmd$none);
 };
 var $author$project$PortPdfMake$showAsPdf = _Platform_outgoingPort('showAsPdf', $elm$json$Json$Encode$string);
 var $author$project$Loan$snowball = $author$project$Loan$strategy(
 	function (paymentSequence) {
-		return paymentSequence.W.Z;
+		return paymentSequence.V._;
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -5590,11 +5602,11 @@ var $author$project$Loan$getMinimumPaymentAmount = F3(
 var $author$project$Loan$toPaymentPlan = F2(
 	function (maxNumberOfYears, loans) {
 		var calculatedMinimum = function (loan) {
-			return A3($author$project$Loan$getMinimumPaymentAmount, loan.Z, loan.ab, maxNumberOfYears);
+			return A3($author$project$Loan$getMinimumPaymentAmount, loan._, loan.ad, maxNumberOfYears);
 		};
 		var getActualMinimum = function (loan) {
 			var cm = calculatedMinimum(loan);
-			return (_Utils_cmp(cm, loan.ag) < 0) ? loan.ag : cm;
+			return (_Utils_cmp(cm, loan.ai) < 0) ? loan.ai : cm;
 		};
 		return A2(
 			$elm$core$List$map,
@@ -5610,12 +5622,12 @@ var $author$project$Loan$toPaymentPlan = F2(
 	});
 var $author$project$NewLoan$updateNewLoanForm = F2(
 	function (f, model) {
-		var oldLoanForm = model.ai;
+		var oldLoanForm = model.ak;
 		var newLoanForm = f(oldLoanForm);
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{ai: newLoanForm}),
+				{ak: newLoanForm}),
 			$elm$core$Platform$Cmd$none);
 	});
 var $author$project$NewLoan$updateLoanApr = F2(
@@ -5625,7 +5637,7 @@ var $author$project$NewLoan$updateLoanApr = F2(
 			function (nlf) {
 				return _Utils_update(
 					nlf,
-					{ab: apr});
+					{ad: apr});
 			},
 			model);
 	});
@@ -5636,7 +5648,7 @@ var $author$project$NewLoan$updateLoanMinimum = F2(
 			function (nlf) {
 				return _Utils_update(
 					nlf,
-					{ag: minimum});
+					{ai: minimum});
 			},
 			model);
 	});
@@ -5647,7 +5659,7 @@ var $author$project$NewLoan$updateLoanName = F2(
 			function (nlf) {
 				return _Utils_update(
 					nlf,
-					{bo: name});
+					{br: name});
 			},
 			model);
 	});
@@ -5658,7 +5670,7 @@ var $author$project$NewLoan$updateLoanPrincipal = F2(
 			function (nlf) {
 				return _Utils_update(
 					nlf,
-					{Z: principal});
+					{_: principal});
 			},
 			model);
 	});
@@ -5666,20 +5678,20 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 	generatePaymentPlan:
 	while (true) {
 		var newPaymentPlan = function () {
-			var _v7 = model.M;
-			if (_v7.$ === 1) {
-				return A2($author$project$Loan$toPaymentPlan, model.R, model.s);
+			var _v5 = model.M;
+			if (_v5.$ === 1) {
+				return A2($author$project$Loan$toPaymentPlan, model.au, model.s);
 			} else {
-				var x = _v7.a;
+				var x = _v5.a;
 				return x;
 			}
 		}();
 		var paymentPlanResult = function () {
-			var _v6 = model.ak;
-			if (!_v6) {
-				return A2($author$project$Loan$avalanche, newPaymentPlan, model.G);
+			var _v4 = model.am;
+			if (!_v4) {
+				return A2($author$project$Loan$avalanche, newPaymentPlan, model.ab);
 			} else {
-				return A2($author$project$Loan$snowball, newPaymentPlan, model.G);
+				return A2($author$project$Loan$snowball, newPaymentPlan, model.ab);
 			}
 		}();
 		var getErrorMessage = function (minimumAmount) {
@@ -5716,160 +5728,143 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		update:
-		while (true) {
-			switch (msg.$) {
-				case 0:
-					return $author$project$NewLoan$addLoan(model);
-				case 2:
-					var index = msg.a;
-					var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.s);
+		switch (msg.$) {
+			case 0:
+				return $author$project$NewLoan$addLoan(model);
+			case 2:
+				var index = msg.a;
+				var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.s);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{s: loans, ak: $author$project$NewLoan$emptyLoanForm}),
+					$elm$core$Platform$Cmd$none);
+			case 1:
+				return $author$project$NewLoan$resetLoan(model);
+			case 3:
+				var name = msg.a;
+				return A2($author$project$NewLoan$updateLoanName, name, model);
+			case 5:
+				var principal = msg.a;
+				return A2($author$project$NewLoan$updateLoanPrincipal, principal, model);
+			case 6:
+				var minimum = msg.a;
+				return A2($author$project$NewLoan$updateLoanMinimum, minimum, model);
+			case 4:
+				var apr = msg.a;
+				return A2($author$project$NewLoan$updateLoanApr, apr, model);
+			case 7:
+				var errorMessage = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							T: A2($elm$core$List$cons, errorMessage, model.T)
+						}),
+					$author$project$PortConsole$logError(errorMessage));
+			case 8:
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 9:
+				var yearsAsString = msg.a;
+				var form = model.u;
+				var newForm = _Utils_update(
+					form,
+					{X: yearsAsString});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: newForm}),
+					$elm$core$Platform$Cmd$none);
+			case 14:
+				var f = F2(
+					function (time, timeZone) {
+						return $author$project$Main$generatePaymentPlan(
+							_Utils_update(
+								model,
+								{
+									R: $elm$core$Maybe$Just(time),
+									S: $elm$core$Maybe$Just(timeZone),
+									A: 2
+								}));
+					});
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$core$Task$perform,
+						$author$project$State$UpdateTimeAndThen(f),
+						$elm$time$Time$now));
+			case 15:
+				var f = F2(
+					function (time, timeZone) {
+						var _v1 = $author$project$Main$generatePaymentPlan(
+							_Utils_update(
+								model,
+								{
+									R: $elm$core$Maybe$Just(time),
+									S: $elm$core$Maybe$Just(timeZone),
+									A: 2
+								}));
+						var paymentPlanModel = _v1.a;
+						return _Utils_Tuple2(
+							paymentPlanModel,
+							$author$project$PortPdfMake$showAsPdf('placeholder'));
+					});
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$core$Task$perform,
+						$author$project$State$UpdateTimeAndThen(f),
+						$elm$time$Time$now));
+			case 10:
+				var f = msg.a;
+				var time = msg.b;
+				var fPrime = f(time);
+				return _Utils_Tuple2(
+					model,
+					A2(
+						$elm$core$Task$perform,
+						$author$project$State$UpdateTimeZoneAndThen(fPrime),
+						$elm$time$Time$here));
+			case 11:
+				var f = msg.a;
+				var timeZone = msg.b;
+				return f(timeZone);
+			case 12:
+				var paymentStrategy = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{am: paymentStrategy}),
+					$elm$core$Platform$Cmd$none);
+			case 13:
+				var paymentAsString = msg.a;
+				var form = model.u;
+				var newForm = _Utils_update(
+					form,
+					{Y: paymentAsString});
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{u: newForm}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var formState = msg.a;
+				var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.au, model.s);
+				var totalMinimumAmount = $elm$core$Basics$ceiling(
+					$author$project$Loan$getMinimumTotalAmount(paymentPlan));
+				if (formState === 1) {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{s: loans, ai: $author$project$NewLoan$emptyLoanForm}),
+							{A: formState, ab: totalMinimumAmount}),
 						$elm$core$Platform$Cmd$none);
-				case 1:
-					return $author$project$NewLoan$resetLoan(model);
-				case 3:
-					var name = msg.a;
-					return A2($author$project$NewLoan$updateLoanName, name, model);
-				case 5:
-					var principal = msg.a;
-					return A2($author$project$NewLoan$updateLoanPrincipal, principal, model);
-				case 6:
-					var minimum = msg.a;
-					return A2($author$project$NewLoan$updateLoanMinimum, minimum, model);
-				case 4:
-					var apr = msg.a;
-					return A2($author$project$NewLoan$updateLoanApr, apr, model);
-				case 7:
-					var errorMessage = msg.a;
+				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								U: A2($elm$core$List$cons, errorMessage, model.U)
-							}),
-						$author$project$PortConsole$logError(errorMessage));
-				case 8:
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				case 9:
-					var yearsAsString = msg.a;
-					var maybeYears = $elm$core$String$toInt(yearsAsString);
-					var errorMessage = 'Could not parse ' + (yearsAsString + ' as Years to Payoff');
-					if (!maybeYears.$) {
-						var years = maybeYears.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{R: years}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var $temp$msg = $author$project$State$Error(errorMessage),
-							$temp$model = model;
-						msg = $temp$msg;
-						model = $temp$model;
-						continue update;
-					}
-				case 14:
-					var f = F2(
-						function (time, timeZone) {
-							return $author$project$Main$generatePaymentPlan(
-								_Utils_update(
-									model,
-									{
-										S: $elm$core$Maybe$Just(time),
-										T: $elm$core$Maybe$Just(timeZone),
-										z: 2
-									}));
-						});
-					return _Utils_Tuple2(
-						model,
-						A2(
-							$elm$core$Task$perform,
-							$author$project$State$UpdateTimeAndThen(f),
-							$elm$time$Time$now));
-				case 15:
-					var f = F2(
-						function (time, timeZone) {
-							var _v2 = $author$project$Main$generatePaymentPlan(
-								_Utils_update(
-									model,
-									{
-										S: $elm$core$Maybe$Just(time),
-										T: $elm$core$Maybe$Just(timeZone),
-										z: 2
-									}));
-							var paymentPlanModel = _v2.a;
-							return _Utils_Tuple2(
-								paymentPlanModel,
-								$author$project$PortPdfMake$showAsPdf('placeholder'));
-						});
-					return _Utils_Tuple2(
-						model,
-						A2(
-							$elm$core$Task$perform,
-							$author$project$State$UpdateTimeAndThen(f),
-							$elm$time$Time$now));
-				case 10:
-					var f = msg.a;
-					var time = msg.b;
-					var fPrime = f(time);
-					return _Utils_Tuple2(
-						model,
-						A2(
-							$elm$core$Task$perform,
-							$author$project$State$UpdateTimeZoneAndThen(fPrime),
-							$elm$time$Time$here));
-				case 11:
-					var f = msg.a;
-					var timeZone = msg.b;
-					return f(timeZone);
-				case 12:
-					var paymentStrategy = msg.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{ak: paymentStrategy}),
+							{A: formState}),
 						$elm$core$Platform$Cmd$none);
-				case 13:
-					var paymentAsString = msg.a;
-					var maybePayment = $elm$core$String$toFloat(paymentAsString);
-					var errorMessage = 'Could not parse ' + (paymentAsString + ' as a Total Monthly Payment');
-					if (!maybePayment.$) {
-						var payment = maybePayment.a;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{G: payment}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						var $temp$msg = $author$project$State$Error(errorMessage),
-							$temp$model = model;
-						msg = $temp$msg;
-						model = $temp$model;
-						continue update;
-					}
-				default:
-					var formState = msg.a;
-					var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.R, model.s);
-					var totalMinimumAmount = $elm$core$Basics$ceiling(
-						$author$project$Loan$getMinimumTotalAmount(paymentPlan));
-					if (formState === 1) {
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{z: formState, G: totalMinimumAmount}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{z: formState}),
-							$elm$core$Platform$Cmd$none);
-					}
-			}
+				}
 		}
 	});
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5923,8 +5918,8 @@ var $elm$time$Time$toAdjustedMinutesHelp = F3(
 			} else {
 				var era = eras.a;
 				var olderEras = eras.b;
-				if (_Utils_cmp(era.an, posixMinutes) < 0) {
-					return posixMinutes + era.aK;
+				if (_Utils_cmp(era.ap, posixMinutes) < 0) {
+					return posixMinutes + era.aN;
 				} else {
 					var $temp$defaultOffset = defaultOffset,
 						$temp$posixMinutes = posixMinutes,
@@ -5961,15 +5956,15 @@ var $elm$time$Time$toCivil = function (minutes) {
 	var month = mp + ((mp < 10) ? 3 : (-9));
 	var year = yearOfEra + (era * 400);
 	return {
-		aw: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		aI: month,
-		a5: year + ((month <= 2) ? 1 : 0)
+		az: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		aL: month,
+		a8: year + ((month <= 2) ? 1 : 0)
 	};
 };
 var $elm$time$Time$toMonth = F2(
 	function (zone, time) {
 		var _v0 = $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aI;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aL;
 		switch (_v0) {
 			case 1:
 				return 0;
@@ -6000,7 +5995,7 @@ var $elm$time$Time$toMonth = F2(
 var $elm$time$Time$toYear = F2(
 	function (zone, time) {
 		return $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).a5;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).a8;
 	});
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
@@ -6050,7 +6045,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(loan.bo)
+							$elm$html$Html$text(loan.br)
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6061,7 +6056,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.Z))
+							toCash(loan._))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6072,7 +6067,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toCash(loan.ag))
+							toCash(loan.ai))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6083,7 +6078,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							toPercent(loan.ab))
+							toPercent(loan.ad))
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6312,7 +6307,7 @@ var $author$project$Main$viewTextInput = F4(
 				]));
 	});
 var $author$project$Main$viewNewLoan = function (model) {
-	var loan = model.ai;
+	var loan = model.ak;
 	var isJust = function (x) {
 		if (!x.$) {
 			return true;
@@ -6327,7 +6322,7 @@ var $author$project$Main$viewNewLoan = function (model) {
 			$elm$core$List$map,
 			$elm$core$String$toFloat,
 			_List_fromArray(
-				[loan.Z, loan.ag, loan.ab])));
+				[loan._, loan.ai, loan.ad])));
 	var canPickPaymentStrategy = function () {
 		var _v0 = model.s;
 		if (!_v0.b) {
@@ -6349,10 +6344,10 @@ var $author$project$Main$viewNewLoan = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A4($author$project$Main$viewTextInput, 'Name', loan.bo, 'new-loan-name', $author$project$State$UpdateLoanName),
-						A4($author$project$Main$viewTextInput, 'Principal', loan.Z, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
-						A4($author$project$Main$viewTextInput, 'Minimum', loan.ag, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
-						A4($author$project$Main$viewTextInput, 'APR', loan.ab, 'new-loan-apr', $author$project$State$UpdateLoanApr),
+						A4($author$project$Main$viewTextInput, 'Name', loan.br, 'new-loan-name', $author$project$State$UpdateLoanName),
+						A4($author$project$Main$viewTextInput, 'Principal', loan._, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
+						A4($author$project$Main$viewTextInput, 'Minimum', loan.ai, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
+						A4($author$project$Main$viewTextInput, 'APR', loan.ad, 'new-loan-apr', $author$project$State$UpdateLoanApr),
 						A2(
 						$elm$html$Html$button,
 						_List_fromArray(
@@ -6508,7 +6503,7 @@ var $author$project$Main$viewPaymentSequence = F3(
 			});
 		var nextMonthsPaymentSequenceAcc = F2(
 			function (ps, acc) {
-				var _v3 = ps.aM;
+				var _v3 = ps.aP;
 				if (!_v3.b) {
 					return acc;
 				} else {
@@ -6518,14 +6513,14 @@ var $author$project$Main$viewPaymentSequence = F3(
 						acc,
 						_List_fromArray(
 							[
-								A4($author$project$Loan$PaymentSequence, ps.W, ps.aa, xs, ps.V)
+								A4($author$project$Loan$PaymentSequence, ps.V, ps.ac, xs, ps.U)
 							]));
 				}
 			});
 		var nextMonthsPaymentSequence = A3($elm$core$List$foldl, nextMonthsPaymentSequenceAcc, _List_Nil, paymentSequence);
 		var getThisMonthsPaymentsAcc = F2(
 			function (ps, acc) {
-				var _v2 = ps.aM;
+				var _v2 = ps.aP;
 				if (!_v2.b) {
 					return acc;
 				} else {
@@ -6535,7 +6530,7 @@ var $author$project$Main$viewPaymentSequence = F3(
 						acc,
 						_List_fromArray(
 							[
-								_Utils_Tuple2(ps.W.bo, x)
+								_Utils_Tuple2(ps.V.br, x)
 							]));
 				}
 			});
@@ -6600,73 +6595,17 @@ var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 var $author$project$State$UpdateYearsToPayoff = function (a) {
 	return {$: 9, a: a};
 };
-var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (loans) {
-	return !$elm$core$List$length(loans);
+var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (model) {
+	var maxTotalPayment = $elm$core$String$toFloat(model.u.Y);
+	var maxNumberOfYears = $elm$core$String$toFloat(model.u.X);
+	var hasLoans = !$elm$core$List$length(model.s);
+	var _v0 = _Utils_Tuple3(hasLoans, maxNumberOfYears, maxTotalPayment);
+	if ((_v0.a && (!_v0.b.$)) && (!_v0.c.$)) {
+		return true;
+	} else {
+		return false;
+	}
 };
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
-var $author$project$Main$viewNumericInput = F5(
-	function (labelText, val, id, callback, otherAttributes) {
-		var attributeList = _Utils_ap(
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$value(val),
-					$elm$html$Html$Events$onInput(callback),
-					A2($elm$html$Html$Attributes$attribute, 'step', '0.01'),
-					A2($elm$html$Html$Attributes$attribute, 'name', id),
-					A2($elm$html$Html$Attributes$attribute, 'type', 'number')
-				]),
-			otherAttributes);
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$attribute, 'for', id)
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(labelText)
-						])),
-					A2($elm$html$Html$br, _List_Nil, _List_Nil),
-					A2($elm$html$Html$input, attributeList, _List_Nil)
-				]));
-	});
-var $author$project$Main$viewFloatInput = F5(
-	function (labelText, value, id, minimum, callback) {
-		var valueAsString = $elm$core$String$fromFloat(value);
-		var minimumAsString = A2($elm$core$Maybe$map, $elm$core$String$fromFloat, minimum);
-		var attributes = function () {
-			if (!minimumAsString.$) {
-				var m = minimumAsString.a;
-				return _List_fromArray(
-					[
-						$elm$html$Html$Attributes$min(m)
-					]);
-			} else {
-				return _List_Nil;
-			}
-		}();
-		return A5($author$project$Main$viewNumericInput, labelText, valueAsString, id, callback, attributes);
-	});
-var $author$project$Main$viewIntInput = F4(
-	function (labelText, value, id, callback) {
-		var valueAsString = $elm$core$String$fromInt(value);
-		return A5($author$project$Main$viewNumericInput, labelText, valueAsString, id, callback, _List_Nil);
-	});
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$select = _VirtualDom_node('select');
 var $author$project$Main$viewSelect = F4(
@@ -6711,73 +6650,63 @@ var $author$project$Main$viewSelect = F4(
 					optionsAsHtml)
 				]));
 	});
-var $author$project$Main$viewPaymentStrategy = F3(
-	function (yearsToPayoff, totalMaximumMonthlyPayment, loans) {
-		var paymentStrategyOptions = _List_fromArray(
-			['Highest Interest First', 'Lowest Principal First']);
-		var paymentPlan = A2($author$project$Loan$toPaymentPlan, yearsToPayoff, loans);
-		var totalMinimumAmount = $elm$core$Basics$ceiling(
-			$author$project$Loan$getMinimumTotalAmount(paymentPlan));
-		var optionToStrategy = function (option) {
-			if (option === 'Lowest Principal First') {
-				return $author$project$State$ChoosePaymentStrategy(1);
-			} else {
-				return $author$project$State$ChoosePaymentStrategy(0);
-			}
-		};
-		return A2(
-			$elm$html$Html$form,
-			_List_fromArray(
-				[
-					$elm$html$Html$Events$onSubmit($author$project$State$DoNothing)
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$fieldset,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A4($author$project$Main$viewIntInput, 'Maximum number of years to payoff', yearsToPayoff, 'years-to-payoff', $author$project$State$UpdateYearsToPayoff),
-							A5(
-							$author$project$Main$viewFloatInput,
-							'Maximum total monthly payment',
-							totalMaximumMonthlyPayment,
-							'total-minimum-amount',
-							$elm$core$Maybe$Just(totalMinimumAmount),
-							$author$project$State$UpdateMaximumTotalPayment),
-							A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$disabled(
-									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans)),
-									$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlan)
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Show Payment Plan')
-								])),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$disabled(
-									$author$project$Main$isCalculatePaymentPlanButtonDisabled(loans)),
-									$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlanAsPdf)
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Show Payment Plan PDF')
-								]))
-						]))
-				]));
-	});
+var $author$project$Main$viewPaymentStrategy = function (model) {
+	var paymentStrategyOptions = _List_fromArray(
+		['Highest Interest First', 'Lowest Principal First']);
+	var optionToStrategy = function (option) {
+		if (option === 'Lowest Principal First') {
+			return $author$project$State$ChoosePaymentStrategy(1);
+		} else {
+			return $author$project$State$ChoosePaymentStrategy(0);
+		}
+	};
+	return A2(
+		$elm$html$Html$form,
+		_List_fromArray(
+			[
+				$elm$html$Html$Events$onSubmit($author$project$State$DoNothing)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$fieldset,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A4($author$project$Main$viewTextInput, 'Maximum number of years to payoff', model.u.X, 'years-to-payoff', $author$project$State$UpdateYearsToPayoff),
+						A4($author$project$Main$viewTextInput, 'Maximum total monthly payment', model.u.Y, 'total-minimum-amount', $author$project$State$UpdateMaximumTotalPayment),
+						A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$disabled(
+								$author$project$Main$isCalculatePaymentPlanButtonDisabled(model)),
+								$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlan)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Show Payment Plan')
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$disabled(
+								$author$project$Main$isCalculatePaymentPlanButtonDisabled(model)),
+								$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlanAsPdf)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Show Payment Plan PDF')
+							]))
+					]))
+			]));
+};
 var $author$project$Main$view = function (model) {
 	var title = _List_fromArray(
 		[
-			$author$project$Main$viewMenu(model.z)
+			$author$project$Main$viewMenu(model.A)
 		]);
 	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.s);
 	var paymentStrategy = A2(
@@ -6785,10 +6714,10 @@ var $author$project$Main$view = function (model) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				A3($author$project$Main$viewPaymentStrategy, model.R, model.G, model.s)
+				$author$project$Main$viewPaymentStrategy(model)
 			]));
 	var paymentPlan = function () {
-		var _v1 = _Utils_Tuple3(model.S, model.T, model.M);
+		var _v1 = _Utils_Tuple3(model.R, model.S, model.M);
 		if (((!_v1.a.$) && (!_v1.b.$)) && (!_v1.c.$)) {
 			var time = _v1.a.a;
 			var timeZone = _v1.b.a;
@@ -6866,9 +6795,9 @@ var $author$project$Main$view = function (model) {
 	var errors = A2(
 		$elm$html$Html$ul,
 		_List_Nil,
-		A2($elm$core$List$map, errorListItem, model.U));
+		A2($elm$core$List$map, errorListItem, model.T));
 	var document = function () {
-		var _v0 = model.z;
+		var _v0 = model.A;
 		switch (_v0) {
 			case 0:
 				return A2(
@@ -6905,6 +6834,6 @@ var $author$project$Main$view = function (model) {
 	return document;
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{bm: $author$project$Main$init, bD: $author$project$Main$subscriptions, bH: $author$project$Main$update, bI: $author$project$Main$view});
+	{bp: $author$project$Main$init, bG: $author$project$Main$subscriptions, bK: $author$project$Main$update, bL: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

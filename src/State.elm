@@ -23,6 +23,12 @@ type alias NewLoanForm =
     }
 
 
+type alias StrategyForm =
+    { maxNumberOfYears : String
+    , maxTotalPayment : String
+    }
+
+
 type alias Model =
     { loans : List Loan
     , errors : List String
@@ -34,6 +40,7 @@ type alias Model =
     , currentTimeZone : Maybe Time.Zone
     , formState : FormState
     , newLoanForm : NewLoanForm
+    , strategyForm : StrategyForm
     }
 
 

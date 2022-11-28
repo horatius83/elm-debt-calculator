@@ -37,6 +37,7 @@ init _ =
       , currentTimeZone = Nothing
       , formState = EnterLoans
       , newLoanForm = emptyLoanForm
+      , strategyForm = { maxNumberOfYears = "", maxTotalPayment = "" }
       }
     , Cmd.none
     )
@@ -78,18 +79,13 @@ update msg model =
 
         UpdateYearsToPayoff yearsAsString ->
             let
-                maybeYears =
-                    String.toInt yearsAsString
+                form =
+                    model.strategyForm
 
-                errorMessage =
-                    "Could not parse " ++ yearsAsString ++ " as Years to Payoff"
+                newForm =
+                    { form | maxNumberOfYears = yearsAsString }
             in
-            case maybeYears of
-                Just years ->
-                    ( { model | yearsToPayoff = years }, Cmd.none )
-
-                _ ->
-                    update (Error errorMessage) model
+            ( { model | strategyForm = newForm }, Cmd.none )
 
         GeneratePaymentPlan ->
             let
@@ -125,18 +121,13 @@ update msg model =
 
         UpdateMaximumTotalPayment paymentAsString ->
             let
-                maybePayment =
-                    String.toFloat paymentAsString
+                form =
+                    model.strategyForm
 
-                errorMessage =
-                    "Could not parse " ++ paymentAsString ++ " as a Total Monthly Payment"
+                newForm =
+                    { form | maxTotalPayment = paymentAsString }
             in
-            case maybePayment of
-                Just payment ->
-                    ( { model | totalMonthlyPayment = payment }, Cmd.none )
-
-                _ ->
-                    update (Error errorMessage) model
+            ( { model | strategyForm = newForm }, Cmd.none )
 
         ChangeFormState formState ->
             let
@@ -263,7 +254,7 @@ view model =
 
         paymentStrategy =
             div []
-                [ viewPaymentStrategy model.yearsToPayoff model.totalMonthlyPayment model.loans
+                [ viewPaymentStrategy model
                 ]
 
         paymentPlan =
@@ -346,17 +337,9 @@ viewNewLoan model =
         ]
 
 
-viewPaymentStrategy : Int -> Float -> List Loan -> Html Msg
-viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
+viewPaymentStrategy : Model -> Html Msg
+viewPaymentStrategy model =
     let
-        paymentPlan =
-            toPaymentPlan yearsToPayoff loans
-
-        totalMinimumAmount =
-            getMinimumTotalAmount paymentPlan
-                |> ceiling
-                |> toFloat
-
         paymentStrategyOptions =
             [ "Highest Interest First"
             , "Lowest Principal First"
@@ -372,16 +355,16 @@ viewPaymentStrategy yearsToPayoff totalMaximumMonthlyPayment loans =
     in
     form [ onSubmit DoNothing ]
         [ fieldset []
-            [ viewIntInput "Maximum number of years to payoff" yearsToPayoff "years-to-payoff" UpdateYearsToPayoff
-            , viewFloatInput "Maximum total monthly payment" totalMaximumMonthlyPayment "total-minimum-amount" (Just totalMinimumAmount) UpdateMaximumTotalPayment
+            [ viewTextInput "Maximum number of years to payoff" model.strategyForm.maxNumberOfYears "years-to-payoff" UpdateYearsToPayoff
+            , viewTextInput "Maximum total monthly payment" model.strategyForm.maxTotalPayment "total-minimum-amount" UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             , button
-                [ disabled (isCalculatePaymentPlanButtonDisabled loans)
+                [ disabled (isCalculatePaymentPlanButtonDisabled model)
                 , onClick GeneratePaymentPlan
                 ]
                 [ text "Show Payment Plan" ]
             , button
-                [ disabled (isCalculatePaymentPlanButtonDisabled loans)
+                [ disabled (isCalculatePaymentPlanButtonDisabled model)
                 , onClick GeneratePaymentPlanAsPdf
                 ]
                 [ text "Show Payment Plan PDF" ]
@@ -464,9 +447,24 @@ viewPaymentPlan currentYear currentMonth paymentPlan =
     div [] payments
 
 
-isCalculatePaymentPlanButtonDisabled : List Loan -> Bool
-isCalculatePaymentPlanButtonDisabled loans =
-    List.length loans == 0
+isCalculatePaymentPlanButtonDisabled : Model -> Bool
+isCalculatePaymentPlanButtonDisabled model =
+    let
+        hasLoans =
+            List.length model.loans == 0
+
+        maxNumberOfYears =
+            String.toFloat model.strategyForm.maxNumberOfYears
+
+        maxTotalPayment =
+            String.toFloat model.strategyForm.maxTotalPayment
+    in
+    case ( hasLoans, maxNumberOfYears, maxTotalPayment ) of
+        ( True, Just _, Just _ ) ->
+            True
+
+        _ ->
+            False
 
 
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
@@ -480,56 +478,6 @@ viewTextInput labelText val id callback =
             , attribute "name" id
             , attribute "type" "text"
             ]
-            []
-        ]
-
-
-viewFloatInput : String -> Float -> String -> Maybe Float -> (String -> Msg) -> Html Msg
-viewFloatInput labelText value id minimum callback =
-    let
-        valueAsString =
-            String.fromFloat value
-
-        minimumAsString =
-            Maybe.map String.fromFloat minimum
-
-        attributes =
-            case minimumAsString of
-                Just m ->
-                    [ Html.Attributes.min m ]
-
-                _ ->
-                    []
-    in
-    viewNumericInput labelText valueAsString id callback attributes
-
-
-viewIntInput : String -> Int -> String -> (String -> Msg) -> Html Msg
-viewIntInput labelText value id callback =
-    let
-        valueAsString =
-            String.fromInt value
-    in
-    viewNumericInput labelText valueAsString id callback []
-
-
-viewNumericInput : String -> String -> String -> (String -> Msg) -> List (Attribute Msg) -> Html Msg
-viewNumericInput labelText val id callback otherAttributes =
-    let
-        attributeList =
-            [ value val
-            , onInput callback
-            , attribute "step" "0.01"
-            , attribute "name" id
-            , attribute "type" "number"
-            ]
-                ++ otherAttributes
-    in
-    div []
-        [ label [ attribute "for" id ] [ text labelText ]
-        , br [] []
-        , input
-            attributeList
             []
         ]
 
