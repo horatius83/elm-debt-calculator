@@ -6595,17 +6595,6 @@ var $author$project$State$UpdateMaximumTotalPayment = function (a) {
 var $author$project$State$UpdateYearsToPayoff = function (a) {
 	return {$: 9, a: a};
 };
-var $author$project$Main$isCalculatePaymentPlanButtonDisabled = function (model) {
-	var maxTotalPayment = $elm$core$String$toFloat(model.u.Y);
-	var maxNumberOfYears = $elm$core$String$toFloat(model.u.X);
-	var hasLoans = !$elm$core$List$length(model.s);
-	var _v0 = _Utils_Tuple3(hasLoans, maxNumberOfYears, maxTotalPayment);
-	if ((_v0.a && (!_v0.b.$)) && (!_v0.c.$)) {
-		return true;
-	} else {
-		return false;
-	}
-};
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$select = _VirtualDom_node('select');
 var $author$project$Main$viewSelect = F4(
@@ -6660,6 +6649,17 @@ var $author$project$Main$viewPaymentStrategy = function (model) {
 			return $author$project$State$ChoosePaymentStrategy(0);
 		}
 	};
+	var isCalculatePaymentPlanButtonDisabled = function () {
+		var maxTotalPayment = $elm$core$String$toFloat(model.u.Y);
+		var maxNumberOfYears = $elm$core$String$toFloat(model.u.X);
+		var hasLoans = $elm$core$List$length(model.s) > 0;
+		var _v0 = _Utils_Tuple3(hasLoans, maxNumberOfYears, maxTotalPayment);
+		if ((_v0.a && (!_v0.b.$)) && (!_v0.c.$)) {
+			return false;
+		} else {
+			return true;
+		}
+	}();
 	return A2(
 		$elm$html$Html$form,
 		_List_fromArray(
@@ -6680,8 +6680,7 @@ var $author$project$Main$viewPaymentStrategy = function (model) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$disabled(
-								$author$project$Main$isCalculatePaymentPlanButtonDisabled(model)),
+								$elm$html$Html$Attributes$disabled(isCalculatePaymentPlanButtonDisabled),
 								$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlan)
 							]),
 						_List_fromArray(
@@ -6692,8 +6691,7 @@ var $author$project$Main$viewPaymentStrategy = function (model) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$disabled(
-								$author$project$Main$isCalculatePaymentPlanButtonDisabled(model)),
+								$elm$html$Html$Attributes$disabled(isCalculatePaymentPlanButtonDisabled),
 								$elm$html$Html$Events$onClick($author$project$State$GeneratePaymentPlanAsPdf)
 							]),
 						_List_fromArray(

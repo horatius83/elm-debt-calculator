@@ -340,6 +340,24 @@ viewNewLoan model =
 viewPaymentStrategy : Model -> Html Msg
 viewPaymentStrategy model =
     let
+        isCalculatePaymentPlanButtonDisabled =
+            let
+                hasLoans =
+                    List.length model.loans > 0
+
+                maxNumberOfYears =
+                    String.toFloat model.strategyForm.maxNumberOfYears
+
+                maxTotalPayment =
+                    String.toFloat model.strategyForm.maxTotalPayment
+            in
+            case ( hasLoans, maxNumberOfYears, maxTotalPayment ) of
+                ( True, Just _, Just _ ) ->
+                    False
+
+                _ ->
+                    True
+
         paymentStrategyOptions =
             [ "Highest Interest First"
             , "Lowest Principal First"
@@ -359,12 +377,12 @@ viewPaymentStrategy model =
             , viewTextInput "Maximum total monthly payment" model.strategyForm.maxTotalPayment "total-minimum-amount" UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             , button
-                [ disabled (isCalculatePaymentPlanButtonDisabled model)
+                [ disabled isCalculatePaymentPlanButtonDisabled
                 , onClick GeneratePaymentPlan
                 ]
                 [ text "Show Payment Plan" ]
             , button
-                [ disabled (isCalculatePaymentPlanButtonDisabled model)
+                [ disabled isCalculatePaymentPlanButtonDisabled
                 , onClick GeneratePaymentPlanAsPdf
                 ]
                 [ text "Show Payment Plan PDF" ]
@@ -445,26 +463,6 @@ viewPaymentPlan currentYear currentMonth paymentPlan =
             viewPaymentSequence currentYear currentMonth paymentPlan
     in
     div [] payments
-
-
-isCalculatePaymentPlanButtonDisabled : Model -> Bool
-isCalculatePaymentPlanButtonDisabled model =
-    let
-        hasLoans =
-            List.length model.loans == 0
-
-        maxNumberOfYears =
-            String.toFloat model.strategyForm.maxNumberOfYears
-
-        maxTotalPayment =
-            String.toFloat model.strategyForm.maxTotalPayment
-    in
-    case ( hasLoans, maxNumberOfYears, maxTotalPayment ) of
-        ( True, Just _, Just _ ) ->
-            True
-
-        _ ->
-            False
 
 
 viewTextInput : String -> String -> String -> (String -> Msg) -> Html Msg
