@@ -3,7 +3,7 @@ module MainTests exposing (..)
 import Expect exposing (FloatingPointTolerance(..))
 import Test exposing (..)
 
-import State exposing (Model, PaymentStrategy(..))
+import State exposing (Model, PaymentStrategy(..), StrategyForm)
 import Main exposing (generatePaymentPlan)
 import Loan exposing (Loan)
 import NewLoan exposing (emptyLoanForm)
@@ -19,7 +19,8 @@ suite =
                     loan = Loan "Test 1" 10.0 10.0 5000
                     loans = [loan]
                     paymentStrategy = Avalanche
-                    model = Model loans [] yearsToPayoff paymentStrategy 500.0 Nothing Nothing Nothing EnterLoans  emptyLoanForm
+                    strategyForm = StrategyForm "20" "500"
+                    model = Model loans [] yearsToPayoff paymentStrategy 500.0 Nothing Nothing Nothing EnterLoans  emptyLoanForm strategyForm
                 in
                 generatePaymentPlan model 
                     |> Tuple.first 
