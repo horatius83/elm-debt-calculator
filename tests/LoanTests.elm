@@ -33,6 +33,7 @@ suite =
                         expectedPaymentSequence = [PaymentSequence loan minimumPayment [] False]
                     in
                     toPaymentPlan yearsToPayoff [loan] 
+                        |> (\x -> x.payments)
                         |> Expect.equal expectedPaymentSequence
             , test "minimum is not sufficient for payment period" <|
                 \_ -> 
@@ -46,6 +47,7 @@ suite =
                         expectedPaymentSequence = [PaymentSequence loan actualMinimumPayment [] False]
                     in
                     toPaymentPlan yearsToPayoff [loan] 
+                        |> (\x -> x.payments)
                         |> Expect.equal expectedPaymentSequence
             ]
         , describe "calculateNewPayment" 
@@ -60,9 +62,9 @@ suite =
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
                         paymentSequence = PaymentSequence loan actualMinimumPayment [] True
                         bonus = 100
-                        newPaymentSequence = []
                     in
-                        calculateNewPayment paymentSequence (bonus, newPaymentSequence)
+                        calculateNewPayment paymentSequence (bonus, emptyPaymentPlan)
+                        |> (\x -> (Tuple.first x, (Tuple.second x).payments))
                         |> Expect.equal (bonus, [paymentSequence])
             , test "principal remaining less than minimum" <|
                 \_ -> 
@@ -73,10 +75,10 @@ suite =
                         loan = Loan "Test Loan" apr minimumPayment principal
                         paymentSequence = PaymentSequence loan minimumPayment [] False
                         bonus = 100
-                        emptyPaymentSequence = []
                         newPaymentSequence = [ PaymentSequence loan minimumPayment [ principal ] True ]
                     in
-                        calculateNewPayment paymentSequence (bonus, emptyPaymentSequence)
+                        calculateNewPayment paymentSequence (bonus, emptyPaymentPlan)
+                        |> (\x -> (Tuple.first x, (Tuple.second x).payments))
                         |> Expect.equal (bonus + (minimumPayment - principal), newPaymentSequence)
             , test "principal remaining greater than minimum" <|
                 \_ -> 
@@ -91,7 +93,8 @@ suite =
                         bonus = 100
                         newPaymentSequence = [ PaymentSequence loan actualMinimumPayment [ actualMinimumPayment + bonus ] False ]
                     in
-                        calculateNewPayment paymentSequence (bonus, [])
+                        calculateNewPayment paymentSequence (bonus, emptyPaymentPlan)
+                        |> (\x -> (Tuple.first x, (Tuple.second x).payments))
                         |> Expect.equal (0, newPaymentSequence)
             ]
         , describe "avalanche"
@@ -104,7 +107,7 @@ suite =
                         apr = 20.0
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
-                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] Nothing
                         totalAmount = actualMinimumPayment - 10.0
                         isMaximumTotalAmountTooLow x = case x of
                             MaximumTotalAmountTooLow _ -> True
@@ -122,7 +125,7 @@ suite =
                         apr = 20.0
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
-                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] Nothing
                         totalAmount = principal + 10.0
                         isNoFurtherPaymentsToBeMade x = case x of
                             NoFurtherPaymentsToBeMade _ -> True
@@ -140,7 +143,7 @@ suite =
                         apr = 20.0
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
-                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] True]
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] True] Nothing
                         totalAmount = actualMinimumPayment
                         isNoFurtherPaymentsToBeMade x = case x of
                             NoFurtherPaymentsToBeMade _ -> True
@@ -158,7 +161,7 @@ suite =
                         apr = 20.0
                         loan = Loan "Test Loan" apr minimumPayment principal
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
-                        paymentPlan = [PaymentSequence loan actualMinimumPayment [] False]
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] Nothing
                         totalAmount = actualMinimumPayment + 10.0
                         isPaymentsRemaining x = case x of
                             PaymentsRemaining _ -> True
@@ -175,8 +178,9 @@ suite =
                         loans = 
                             [ Loan "Test Loan 1" 10.0 50.0 5000.0
                             , Loan "Test Loan 2" 20.0 20.0 2000.0]
-                        paymentPlan = List.map (\{name, apr, minimum, principal} -> 
+                        payments = List.map (\{name, apr, minimum, principal} -> 
                             PaymentSequence (Loan name apr minimum principal) minimum [] False) loans
+                        paymentPlan = PaymentPlan payments Nothing
                     in
                     getMinimumTotalAmount paymentPlan
                     |> Expect.within (Absolute 0.001)  70.0
@@ -186,8 +190,9 @@ suite =
                         loans = 
                             [ (Loan "Test Loan 1" 10.0 50.0 5000.0, False)
                             , (Loan "Test Loan 2" 20.0 20.0 2000.0, True)]
-                        paymentPlan = List.map (\({name, apr, minimum, principal}, isPaidOff) -> 
+                        payments = List.map (\({name, apr, minimum, principal}, isPaidOff) -> 
                             PaymentSequence (Loan name apr minimum principal) minimum [] isPaidOff) loans
+                        paymentPlan = PaymentPlan payments Nothing
                     in
                     getMinimumTotalAmount paymentPlan
                     |> Expect.within (Absolute 0.001)  50.0

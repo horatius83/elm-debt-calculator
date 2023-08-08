@@ -1,6 +1,6 @@
 module State exposing (..)
 
-import Loan exposing (Loan, PaymentPlan)
+import Loan exposing (EmergencyFundPlan, Loan, PaymentPlan)
 import Time
 
 
@@ -27,6 +27,7 @@ type alias StrategyForm =
     { maxNumberOfYears : String
     , maxTotalPayment : String
     , paymentStrategy : PaymentStrategy
+    , emergencyFund : Maybe EmergencyFundPlan
     }
 
 
@@ -34,8 +35,6 @@ type alias Model =
     { loans : List Loan
     , errors : List String
     , yearsToPayoff : Int
-
-    --, paymentStrategy : PaymentStrategy
     , totalMonthlyPayment : Float
     , paymentPlan : Maybe PaymentPlan
     , currentTime : Maybe Time.Posix

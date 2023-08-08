@@ -36,7 +36,12 @@ init _ =
       , currentTimeZone = Nothing
       , formState = EnterLoans
       , newLoanForm = emptyLoanForm
-      , strategyForm = { maxNumberOfYears = "", maxTotalPayment = "", paymentStrategy = Avalanche }
+      , strategyForm =
+            { maxNumberOfYears = ""
+            , maxTotalPayment = ""
+            , paymentStrategy = Avalanche
+            , emergencyFund = Nothing
+            }
       }
     , Cmd.none
     )
@@ -266,7 +271,7 @@ view model =
         paymentPlan =
             case ( model.currentTime, model.currentTimeZone, model.paymentPlan ) of
                 ( Just time, Just timeZone, Just pp ) ->
-                    [ viewPaymentPlan (Time.toYear timeZone time) (Time.toMonth timeZone time) pp ]
+                    [ viewPaymentPlan (Time.toYear timeZone time) (Time.toMonth timeZone time) pp.payments ]
 
                 _ ->
                     []

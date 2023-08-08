@@ -9,6 +9,18 @@ type alias Loan =
     }
 
 
+type alias EmergencyFundPlan =
+    { maxAmount : Float
+    , percentageToApply : Float
+    }
+
+
+type alias EmergencyFundPayment =
+    { plan : EmergencyFundPlan
+    , payment : Payment
+    }
+
+
 type alias Payment =
     Float
 
@@ -22,7 +34,26 @@ type alias PaymentSequence =
 
 
 type alias PaymentPlan =
-    List PaymentSequence
+    { payments : List PaymentSequence
+    , savings : Maybe (List EmergencyFundPayment)
+    }
+
+
+addPaymentToPaymentPlan : PaymentPlan -> PaymentSequence -> PaymentPlan
+addPaymentToPaymentPlan pp ps =
+    let
+        oldPayments =
+            pp.payments
+
+        newPayments =
+            oldPayments ++ [ ps ]
+    in
+    { pp | payments = newPayments }
+
+
+emptyPaymentPlan : PaymentPlan
+emptyPaymentPlan =
+    PaymentPlan [] Nothing
 
 
 type PaymentPlanResult
@@ -68,21 +99,27 @@ toPaymentPlan maxNumberOfYears loans =
 
             else
                 cm
+
+        payments =
+            List.map (\ln -> PaymentSequence ln (getActualMinimum ln) [] False) loans
     in
-    List.map (\ln -> PaymentSequence ln (getActualMinimum ln) [] False) loans
+    PaymentPlan payments Nothing
 
 
 getMinimumTotalAmount : PaymentPlan -> Float
-getMinimumTotalAmount =
-    List.foldl
-        (\ps totalAmount ->
+getMinimumTotalAmount pp =
+    let
+        payments =
+            pp.payments
+
+        f ps totalAmount =
             if ps.isPaidOff then
                 totalAmount
 
             else
                 totalAmount + ps.actualMinimum
-        )
-        0
+    in
+    List.foldl f 0 payments
 
 
 calculateNewPayment : PaymentSequence -> ( Float, PaymentPlan ) -> ( Float, PaymentPlan )
@@ -98,20 +135,20 @@ calculateNewPayment { loan, actualMinimum, payments, isPaidOff } ( bonus, newPay
             actualMinimum + bonus
     in
     if isPaidOff then
-        ( bonus, newPaymentSequence ++ [ PaymentSequence loan actualMinimum payments True ] )
+        ( bonus, addPaymentToPaymentPlan newPaymentSequence (PaymentSequence loan actualMinimum payments True) )
 
     else if principalRemaining < minimumAndBonus then
-        ( minimumAndBonus - principalRemaining, newPaymentSequence ++ [ PaymentSequence loan actualMinimum (payments ++ [ principalRemaining ]) True ] )
+        ( minimumAndBonus - principalRemaining, addPaymentToPaymentPlan newPaymentSequence (PaymentSequence loan actualMinimum (payments ++ [ principalRemaining ]) True) )
 
     else
-        ( 0, newPaymentSequence ++ [ PaymentSequence loan actualMinimum (payments ++ [ minimumAndBonus ]) False ] )
+        ( 0, addPaymentToPaymentPlan newPaymentSequence (PaymentSequence loan actualMinimum (payments ++ [ minimumAndBonus ]) False) )
 
 
 strategy : (PaymentSequence -> comparable) -> PaymentPlan -> Float -> PaymentPlanResult
 strategy sortFunction paymentPlan maximumAmount =
     let
         sortedPaymentPlan =
-            List.sortBy sortFunction paymentPlan
+            List.sortBy sortFunction paymentPlan.payments
 
         minimumTotalPayment =
             getMinimumTotalAmount paymentPlan
@@ -119,11 +156,14 @@ strategy sortFunction paymentPlan maximumAmount =
         bonusAmount =
             maximumAmount - minimumTotalPayment
 
+        emptyPp =
+            PaymentPlan [] Nothing
+
         ( _, newPaymentPlan ) =
-            List.foldl calculateNewPayment ( bonusAmount, [] ) sortedPaymentPlan
+            List.foldl calculateNewPayment ( bonusAmount, emptyPp ) sortedPaymentPlan
 
         areThereAnyFurtherPayments =
-            List.any (\ps -> not ps.isPaidOff) newPaymentPlan
+            List.any (\ps -> not ps.isPaidOff) newPaymentPlan.payments
     in
     if minimumTotalPayment > maximumAmount then
         MaximumTotalAmountTooLow minimumTotalPayment
@@ -143,6 +183,8 @@ avalanche =
 snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
     strategy (\paymentSequence -> paymentSequence.loan.principal)
+
+
 
 -- Strategies
 --  Double Double - pick payments to double, triple, etc. in a given month and apply that
