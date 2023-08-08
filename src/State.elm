@@ -26,6 +26,7 @@ type alias NewLoanForm =
 type alias StrategyForm =
     { maxNumberOfYears : String
     , maxTotalPayment : String
+    , paymentStrategy : PaymentStrategy
     }
 
 
@@ -33,7 +34,8 @@ type alias Model =
     { loans : List Loan
     , errors : List String
     , yearsToPayoff : Int
-    , paymentStrategy : PaymentStrategy
+
+    --, paymentStrategy : PaymentStrategy
     , totalMonthlyPayment : Float
     , paymentPlan : Maybe PaymentPlan
     , currentTime : Maybe Time.Posix

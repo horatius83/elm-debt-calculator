@@ -5196,11 +5196,10 @@ var $author$project$Main$init = function (_v0) {
 			S: $elm$core$Maybe$Nothing,
 			T: _List_Nil,
 			A: 0,
-			s: _List_Nil,
+			t: _List_Nil,
 			ak: $author$project$NewLoan$emptyLoanForm,
 			M: $elm$core$Maybe$Nothing,
-			am: 0,
-			u: {X: '', Y: ''},
+			p: {X: '', Y: '', am: 0},
 			ab: 0,
 			au: 20
 		},
@@ -5260,8 +5259,8 @@ var $author$project$NewLoan$addLoan = function (model) {
 			_Utils_update(
 				model,
 				{
-					s: _Utils_ap(
-						model.s,
+					t: _Utils_ap(
+						model.t,
 						_List_fromArray(
 							[loan])),
 					ak: $author$project$NewLoan$emptyLoanForm
@@ -5680,14 +5679,14 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 		var newPaymentPlan = function () {
 			var _v5 = model.M;
 			if (_v5.$ === 1) {
-				return A2($author$project$Loan$toPaymentPlan, model.au, model.s);
+				return A2($author$project$Loan$toPaymentPlan, model.au, model.t);
 			} else {
 				var x = _v5.a;
 				return x;
 			}
 		}();
 		var paymentPlanResult = function () {
-			var _v4 = model.am;
+			var _v4 = model.p.am;
 			if (!_v4) {
 				return A2($author$project$Loan$avalanche, newPaymentPlan, model.ab);
 			} else {
@@ -5733,11 +5732,11 @@ var $author$project$Main$update = F2(
 				return $author$project$NewLoan$addLoan(model);
 			case 2:
 				var index = msg.a;
-				var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.s);
+				var loans = A2($elm_community$list_extra$List$Extra$removeAt, index, model.t);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{s: loans, ak: $author$project$NewLoan$emptyLoanForm}),
+						{t: loans, ak: $author$project$NewLoan$emptyLoanForm}),
 					$elm$core$Platform$Cmd$none);
 			case 1:
 				return $author$project$NewLoan$resetLoan(model);
@@ -5766,14 +5765,14 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 9:
 				var yearsAsString = msg.a;
-				var form = model.u;
+				var form = model.p;
 				var newForm = _Utils_update(
 					form,
 					{X: yearsAsString});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{u: newForm}),
+						{p: newForm}),
 					$elm$core$Platform$Cmd$none);
 			case 14:
 				var f = F2(
@@ -5831,25 +5830,29 @@ var $author$project$Main$update = F2(
 				return f(timeZone);
 			case 12:
 				var paymentStrategy = msg.a;
+				var form = model.p;
+				var newForm = _Utils_update(
+					form,
+					{am: paymentStrategy});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{am: paymentStrategy}),
+						{p: newForm}),
 					$elm$core$Platform$Cmd$none);
 			case 13:
 				var paymentAsString = msg.a;
-				var form = model.u;
+				var form = model.p;
 				var newForm = _Utils_update(
 					form,
 					{Y: paymentAsString});
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{u: newForm}),
+						{p: newForm}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var formState = msg.a;
-				var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.au, model.s);
+				var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.au, model.t);
 				var totalMinimumAmount = $elm$core$Basics$ceiling(
 					$author$project$Loan$getMinimumTotalAmount(paymentPlan));
 				if (formState === 1) {
@@ -6324,7 +6327,7 @@ var $author$project$Main$viewNewLoan = function (model) {
 			_List_fromArray(
 				[loan._, loan.ai, loan.ad])));
 	var canPickPaymentStrategy = function () {
-		var _v0 = model.s;
+		var _v0 = model.t;
 		if (!_v0.b) {
 			return true;
 		} else {
@@ -6650,9 +6653,9 @@ var $author$project$Main$viewPaymentStrategy = function (model) {
 		}
 	};
 	var isCalculatePaymentPlanButtonDisabled = function () {
-		var maxTotalPayment = $elm$core$String$toFloat(model.u.Y);
-		var maxNumberOfYears = $elm$core$String$toFloat(model.u.X);
-		var hasLoans = $elm$core$List$length(model.s) > 0;
+		var maxTotalPayment = $elm$core$String$toFloat(model.p.Y);
+		var maxNumberOfYears = $elm$core$String$toFloat(model.p.X);
+		var hasLoans = $elm$core$List$length(model.t) > 0;
 		var _v0 = _Utils_Tuple3(hasLoans, maxNumberOfYears, maxTotalPayment);
 		if ((_v0.a && (!_v0.b.$)) && (!_v0.c.$)) {
 			return false;
@@ -6673,8 +6676,8 @@ var $author$project$Main$viewPaymentStrategy = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A4($author$project$Main$viewTextInput, 'Maximum number of years to payoff', model.u.X, 'years-to-payoff', $author$project$State$UpdateYearsToPayoff),
-						A4($author$project$Main$viewTextInput, 'Maximum total monthly payment', model.u.Y, 'total-minimum-amount', $author$project$State$UpdateMaximumTotalPayment),
+						A4($author$project$Main$viewTextInput, 'Maximum number of years to payoff', model.p.X, 'years-to-payoff', $author$project$State$UpdateYearsToPayoff),
+						A4($author$project$Main$viewTextInput, 'Maximum total monthly payment', model.p.Y, 'total-minimum-amount', $author$project$State$UpdateMaximumTotalPayment),
 						A4($author$project$Main$viewSelect, 'Payment Strategy', 'payment-strategy', paymentStrategyOptions, optionToStrategy),
 						A2(
 						$elm$html$Html$button,
@@ -6706,7 +6709,7 @@ var $author$project$Main$view = function (model) {
 		[
 			$author$project$Main$viewMenu(model.A)
 		]);
-	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.s);
+	var tableRows = A2($elm$core$List$indexedMap, $author$project$Main$viewLoan, model.t);
 	var paymentStrategy = A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -6771,7 +6774,7 @@ var $author$project$Main$view = function (model) {
 						A2($elm$html$Html$th, _List_Nil, _List_Nil)
 					]))
 			]));
-	var loans = $elm$core$List$isEmpty(model.s) ? _List_Nil : _List_fromArray(
+	var loans = $elm$core$List$isEmpty(model.t) ? _List_Nil : _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$table,

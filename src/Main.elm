@@ -30,14 +30,13 @@ init _ =
     ( { loans = []
       , errors = []
       , yearsToPayoff = 20
-      , paymentStrategy = Avalanche
       , totalMonthlyPayment = 0
       , paymentPlan = Nothing
       , currentTime = Nothing
       , currentTimeZone = Nothing
       , formState = EnterLoans
       , newLoanForm = emptyLoanForm
-      , strategyForm = { maxNumberOfYears = "", maxTotalPayment = "" }
+      , strategyForm = { maxNumberOfYears = "", maxTotalPayment = "", paymentStrategy = Avalanche }
       }
     , Cmd.none
     )
@@ -117,7 +116,14 @@ update msg model =
             f timeZone
 
         ChoosePaymentStrategy paymentStrategy ->
-            ( { model | paymentStrategy = paymentStrategy }, Cmd.none )
+            let
+                form =
+                    model.strategyForm
+
+                newForm =
+                    { form | paymentStrategy = paymentStrategy }
+            in
+            ( { model | strategyForm = newForm }, Cmd.none )
 
         UpdateMaximumTotalPayment paymentAsString ->
             let
@@ -159,7 +165,7 @@ generatePaymentPlan model =
                     x
 
         paymentPlanResult =
-            case model.paymentStrategy of
+            case model.strategyForm.paymentStrategy of
                 Avalanche ->
                     avalanche newPaymentPlan model.totalMonthlyPayment
 

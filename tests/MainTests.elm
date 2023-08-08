@@ -19,8 +19,8 @@ suite =
                     loan = Loan "Test 1" 10.0 10.0 5000
                     loans = [loan]
                     paymentStrategy = Avalanche
-                    strategyForm = StrategyForm "20" "500"
-                    model = Model loans [] yearsToPayoff paymentStrategy 500.0 Nothing Nothing Nothing EnterLoans  emptyLoanForm strategyForm
+                    strategyForm = StrategyForm "20" "500" paymentStrategy
+                    model = Model loans [] yearsToPayoff 500.0 Nothing Nothing Nothing EnterLoans  emptyLoanForm strategyForm
                 in
                 generatePaymentPlan model 
                     |> Tuple.first 
