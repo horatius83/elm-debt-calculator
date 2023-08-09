@@ -135,10 +135,18 @@ update msg model =
                 form =
                     model.strategyForm
 
+                totalMonthlyPayment =
+                    String.toFloat paymentAsString
+
                 newForm =
                     { form | maxTotalPayment = paymentAsString }
             in
-            ( { model | strategyForm = newForm }, Cmd.none )
+            case totalMonthlyPayment of
+                Just tmp ->
+                    ( { model | strategyForm = newForm, totalMonthlyPayment = tmp }, Cmd.none )
+
+                Nothing ->
+                    ( { model | strategyForm = newForm }, Cmd.none )
 
         ChangeFormState formState ->
             let
