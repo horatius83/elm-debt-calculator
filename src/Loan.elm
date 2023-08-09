@@ -11,7 +11,9 @@ type alias Loan =
 
 type alias EmergencyFundPlan =
     { maxAmount : Float
+    , maxAmountAsString : String
     , percentageToApply : Float
+    , percentageToApplyAsString : String
     }
 
 

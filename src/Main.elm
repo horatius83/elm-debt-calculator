@@ -176,7 +176,7 @@ update msg model =
                             Nothing
 
                         Nothing ->
-                            Just (EmergencyFundPlan 0 0)
+                            Just (EmergencyFundPlan 0 "" 0 "")
 
                 newStrategyForm =
                     { sf | emergencyFund = newEmergencyFund }

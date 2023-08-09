@@ -1858,8 +1858,8 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 		flagDecoder,
 		args,
 		impl.bq,
-		impl.bQ,
-		impl.bM,
+		impl.bS,
+		impl.bO,
 		function() { return function() {} }
 	);
 });
@@ -3929,10 +3929,10 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 		flagDecoder,
 		args,
 		impl.bq,
-		impl.bQ,
-		impl.bM,
+		impl.bS,
+		impl.bO,
 		function(sendToApp, initialModel) {
-			var view = impl.bR;
+			var view = impl.bT;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3965,11 +3965,11 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		flagDecoder,
 		args,
 		impl.bq,
-		impl.bQ,
-		impl.bM,
+		impl.bS,
+		impl.bO,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.aq && impl.aq(sendToApp)
-			var view = impl.bR;
+			var view = impl.bT;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3982,7 +3982,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bP) && (_VirtualDom_doc.title = title = doc.bP);
+				(title !== doc.bR) && (_VirtualDom_doc.title = title = doc.bR);
 			});
 		}
 	);
@@ -4038,8 +4038,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.bC;
-	var onUrlRequest = impl.bD;
+	var onUrlChange = impl.bD;
+	var onUrlRequest = impl.bE;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4073,9 +4073,9 @@ function _Browser_application(impl)
 		{
 			return A3(impl.bq, flags, _Browser_getUrl(), key);
 		},
-		bR: impl.bR,
-		bQ: impl.bQ,
-		bM: impl.bM
+		bT: impl.bT,
+		bS: impl.bS,
+		bO: impl.bO
 	});
 }
 
@@ -5186,7 +5186,7 @@ var $elm$core$Task$perform = F2(
 var $elm$browser$Browser$element = _Browser_element;
 var $author$project$State$Avalanche = 0;
 var $author$project$State$EnterLoans = 0;
-var $author$project$NewLoan$emptyLoanForm = {af: '', ak: '', bt: '', ac: ''};
+var $author$project$NewLoan$emptyLoanForm = {af: '', ak: '', bu: '', ac: ''};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
@@ -5210,9 +5210,9 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Loan$EmergencyFundPlan = F2(
-	function (maxAmount, percentageToApply) {
-		return {br: maxAmount, bH: percentageToApply};
+var $author$project$Loan$EmergencyFundPlan = F4(
+	function (maxAmount, maxAmountAsString, percentageToApply, percentageToApplyAsString) {
+		return {br: maxAmount, bs: maxAmountAsString, bI: percentageToApply, bJ: percentageToApplyAsString};
 	});
 var $author$project$State$Error = function (a) {
 	return {$: 7, a: a};
@@ -5228,7 +5228,7 @@ var $author$project$State$UpdateTimeZoneAndThen = F2(
 var $author$project$State$ViewPaymentPlan = 2;
 var $author$project$Loan$Loan = F4(
 	function (name, apr, minimum, principal) {
-		return {af: apr, ak: minimum, bt: name, ac: principal};
+		return {af: apr, ak: minimum, bu: name, ac: principal};
 	});
 var $elm$core$Maybe$map3 = F4(
 	function (func, ma, mb, mc) {
@@ -5252,7 +5252,7 @@ var $elm$core$Maybe$map3 = F4(
 	});
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$NewLoan$addLoan = function (model) {
-	var toLoan = $author$project$Loan$Loan(model.am.bt);
+	var toLoan = $author$project$Loan$Loan(model.am.bu);
 	var principal = $elm$core$String$toFloat(model.am.ac);
 	var minimum = $elm$core$String$toFloat(model.am.ak);
 	var apr = $elm$core$String$toFloat(model.am.af);
@@ -5282,7 +5282,7 @@ var $author$project$Loan$NoFurtherPaymentsToBeMade = function (a) {
 };
 var $author$project$Loan$PaymentPlan = F2(
 	function (payments, savings) {
-		return {y: payments, bL: savings};
+		return {y: payments, bN: savings};
 	});
 var $author$project$Loan$PaymentsRemaining = function (a) {
 	return {$: 2, a: a};
@@ -5674,7 +5674,7 @@ var $author$project$NewLoan$updateLoanName = F2(
 			function (nlf) {
 				return _Utils_update(
 					nlf,
-					{bt: name});
+					{bu: name});
 			},
 			model);
 	});
@@ -5902,7 +5902,7 @@ var $author$project$Main$update = F2(
 						return $elm$core$Maybe$Nothing;
 					} else {
 						return $elm$core$Maybe$Just(
-							A2($author$project$Loan$EmergencyFundPlan, 0, 0));
+							A4($author$project$Loan$EmergencyFundPlan, 0, '', 0, ''));
 					}
 				}();
 				var newStrategyForm = _Utils_update(
@@ -6093,7 +6093,7 @@ var $author$project$Main$viewLoan = F2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(loan.bt)
+							$elm$html$Html$text(loan.bu)
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6392,7 +6392,7 @@ var $author$project$Main$viewNewLoan = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						A4($author$project$Main$viewTextInput, 'Name', loan.bt, 'new-loan-name', $author$project$State$UpdateLoanName),
+						A4($author$project$Main$viewTextInput, 'Name', loan.bu, 'new-loan-name', $author$project$State$UpdateLoanName),
 						A4($author$project$Main$viewTextInput, 'Principal', loan.ac, 'new-loan-principal', $author$project$State$UpdateLoanPrincipal),
 						A4($author$project$Main$viewTextInput, 'Minimum', loan.ak, 'new-loan-minimum', $author$project$State$UpdateLoanMinimum),
 						A4($author$project$Main$viewTextInput, 'APR', loan.af, 'new-loan-apr', $author$project$State$UpdateLoanApr),
@@ -6578,7 +6578,7 @@ var $author$project$Main$viewPaymentSequence = F3(
 						acc,
 						_List_fromArray(
 							[
-								_Utils_Tuple2(ps.Y.bt, x)
+								_Utils_Tuple2(ps.Y.bu, x)
 							]));
 				}
 			});
@@ -6920,6 +6920,6 @@ var $author$project$Main$view = function (model) {
 	return document;
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
-	{bq: $author$project$Main$init, bM: $author$project$Main$subscriptions, bQ: $author$project$Main$update, bR: $author$project$Main$view});
+	{bq: $author$project$Main$init, bO: $author$project$Main$subscriptions, bS: $author$project$Main$update, bT: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
