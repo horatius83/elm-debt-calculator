@@ -63,3 +63,4 @@ type Msg
     | GeneratePaymentPlan
     | GeneratePaymentPlanAsPdf
     | ChangeFormState FormState
+    | ToggleHasEmergencyFund

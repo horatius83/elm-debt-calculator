@@ -2,10 +2,10 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, disabled, href, value)
+import Html.Attributes exposing (attribute, checked, class, disabled, href, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
 import List.Extra exposing (removeAt)
-import Loan exposing (Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
+import Loan exposing (EmergencyFundPlan, Loan, PaymentPlanResult(..), PaymentSequence, avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (emptyLoanForm)
 import PortConsole exposing (logError)
 import PortPdfMake exposing (showAsPdf)
@@ -164,6 +164,24 @@ update msg model =
 
                 _ ->
                     ( { model | formState = formState }, Cmd.none )
+
+        ToggleHasEmergencyFund ->
+            let
+                sf =
+                    model.strategyForm
+
+                newEmergencyFund =
+                    case model.strategyForm.emergencyFund of
+                        Just _ ->
+                            Nothing
+
+                        Nothing ->
+                            Just (EmergencyFundPlan 0 0)
+
+                newStrategyForm =
+                    { sf | emergencyFund = newEmergencyFund }
+            in
+            ( { model | strategyForm = newStrategyForm }, Cmd.none )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
@@ -389,12 +407,21 @@ viewPaymentStrategy model =
 
                 _ ->
                     ChoosePaymentStrategy Avalanche
+
+        displayEmergencyFundOptions =
+            case model.strategyForm.emergencyFund of
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
     in
     form [ onSubmit DoNothing ]
         [ fieldset []
             [ viewTextInput "Maximum number of years to payoff" model.strategyForm.maxNumberOfYears "years-to-payoff" UpdateYearsToPayoff
             , viewTextInput "Maximum total monthly payment" model.strategyForm.maxTotalPayment "total-minimum-amount" UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
+            , viewCheckboxInput "Build Emergency Fund?" "has-emergency-fund" displayEmergencyFundOptions ToggleHasEmergencyFund
             , button
                 [ disabled isCalculatePaymentPlanButtonDisabled
                 , onClick GeneratePaymentPlan
@@ -494,6 +521,20 @@ viewTextInput labelText val id callback =
             , onInput callback
             , attribute "name" id
             , attribute "type" "text"
+            ]
+            []
+        ]
+
+
+viewCheckboxInput : String -> String -> Bool -> Msg -> Html Msg
+viewCheckboxInput labelText id val callback =
+    div []
+        [ label [ attribute "for" id ] [ text labelText ]
+        , input
+            [ attribute "type" "checkbox"
+            , checked val
+            , onClick callback
+            , attribute "name" id
             ]
             []
         ]
