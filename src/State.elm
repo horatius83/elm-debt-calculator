@@ -64,3 +64,5 @@ type Msg
     | GeneratePaymentPlanAsPdf
     | ChangeFormState FormState
     | ToggleHasEmergencyFund
+    | UpdateEmergencyFundMaxAmount String
+    | UpdateEmergencyFundPercentage String

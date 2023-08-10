@@ -176,12 +176,37 @@ update msg model =
                             Nothing
 
                         Nothing ->
-                            Just (EmergencyFundPlan 0 "" 0 "")
+                            Just (EmergencyFundPlan 0 "" 0.5 "")
 
                 newStrategyForm =
                     { sf | emergencyFund = newEmergencyFund }
             in
             ( { model | strategyForm = newStrategyForm }, Cmd.none )
+        UpdateEmergencyFundMaxAmount amount -> 
+            let
+                sf = model.strategyForm
+                ef = sf.emergencyFund
+                amountN = String.toFloat amount
+                newEmergencyFundPlan ef_ amnt = { ef_ | maxAmountAsString = amount, maxAmount = amnt}
+                newEf = Maybe.map2 newEmergencyFundPlan ef amountN 
+                newModel = case newEf of 
+                    Just nefp -> {model | strategyForm = { sf | emergencyFund = Just nefp }}
+                    Nothing -> { model | strategyForm = { sf | emergencyFund = Maybe.map (\x -> {x | maxAmountAsString = amount }) ef}}
+            in
+            ( newModel, Cmd.none )
+
+        UpdateEmergencyFundPercentage amount -> 
+            let
+                sf = model.strategyForm
+                ef = sf.emergencyFund
+                amountN = String.toFloat amount
+                newEmergencyFundPlan ef_ amnt = { ef_ | percentageToApplyAsString = amount, percentageToApply = amnt}
+                newEf = Maybe.map2 newEmergencyFundPlan ef amountN 
+                newModel = case newEf of 
+                    Just nefp -> {model | strategyForm = { sf | emergencyFund = Just nefp }}
+                    Nothing -> { model | strategyForm = { sf | emergencyFund = Maybe.map (\x -> {x | percentageToApplyAsString = amount }) ef}}
+            in
+            ( newModel, Cmd.none )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )
@@ -415,14 +440,20 @@ viewPaymentStrategy model =
 
                 Nothing ->
                     False
-    in
-    form [ onSubmit DoNothing ]
-        [ fieldset []
+        strategyFields = 
             [ viewTextInput "Maximum number of years to payoff" model.strategyForm.maxNumberOfYears "years-to-payoff" UpdateYearsToPayoff
             , viewTextInput "Maximum total monthly payment" model.strategyForm.maxTotalPayment "total-minimum-amount" UpdateMaximumTotalPayment
             , viewSelect "Payment Strategy" "payment-strategy" paymentStrategyOptions optionToStrategy
             , viewCheckboxInput "Build Emergency Fund?" "has-emergency-fund" displayEmergencyFundOptions ToggleHasEmergencyFund
-            , button
+            ]
+        emergencyFundFields = case model.strategyForm.emergencyFund of
+            Just ef -> 
+                [ viewTextInput "Maximum Emergency Fund Amount" ef.maxAmountAsString "max-emergency-fund-amount" UpdateEmergencyFundMaxAmount
+                , viewTextInput "Percentage of Bonus Funds to Apply" ef.percentageToApplyAsString "percentage-to-apply" UpdateEmergencyFundPercentage
+                ]
+            Nothing -> []
+        buttons = 
+            [ button
                 [ disabled isCalculatePaymentPlanButtonDisabled
                 , onClick GeneratePaymentPlan
                 ]
@@ -433,6 +464,11 @@ viewPaymentStrategy model =
                 ]
                 [ text "Show Payment Plan PDF" ]
             ]
+        
+    in
+    form [ onSubmit DoNothing ]
+        [ fieldset []
+            (strategyFields ++ emergencyFundFields ++ buttons)
         ]
 
 
