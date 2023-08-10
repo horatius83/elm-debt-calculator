@@ -37,7 +37,7 @@ init _ =
       , formState = EnterLoans
       , newLoanForm = emptyLoanForm
       , strategyForm =
-            { maxNumberOfYears = ""
+            { maxNumberOfYears = "20"
             , maxTotalPayment = ""
             , paymentStrategy = Avalanche
             , emergencyFund = Nothing
@@ -157,10 +157,16 @@ update msg model =
                     getMinimumTotalAmount paymentPlan
                         |> ceiling
                         |> toFloat
+
+                sf = model.strategyForm
             in
             case formState of
                 EnterPaymentStrategy ->
-                    ( { model | formState = formState, totalMonthlyPayment = totalMinimumAmount }, Cmd.none )
+                    ( { model | 
+                        formState = formState, 
+                        totalMonthlyPayment = totalMinimumAmount, 
+                        strategyForm = { sf | maxTotalPayment = String.fromFloat totalMinimumAmount } }, 
+                    Cmd.none )
 
                 _ ->
                     ( { model | formState = formState }, Cmd.none )
@@ -176,7 +182,7 @@ update msg model =
                             Nothing
 
                         Nothing ->
-                            Just (EmergencyFundPlan 0 "" 0.5 "")
+                            Just (EmergencyFundPlan 0 "0" 0.5 "50%")
 
                 newStrategyForm =
                     { sf | emergencyFund = newEmergencyFund }
