@@ -17,9 +17,9 @@ type alias EmergencyFundPlan =
     }
 
 
-type alias EmergencyFundPayment =
+type alias EmergencyFundPayments =
     { plan : EmergencyFundPlan
-    , payment : Payment
+    , payments : List Payment
     }
 
 
@@ -37,7 +37,7 @@ type alias PaymentSequence =
 
 type alias PaymentPlan =
     { payments : List PaymentSequence
-    , savings : Maybe (List EmergencyFundPayment)
+    , savings : Maybe EmergencyFundPayments
     }
 
 
