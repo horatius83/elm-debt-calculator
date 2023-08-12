@@ -52,6 +52,7 @@ addPaymentToPaymentPlan pp ps =
     in
     { pp | payments = newPayments }
 
+
 emptyPaymentPlan : PaymentPlan
 emptyPaymentPlan =
     PaymentPlan [] Nothing
@@ -156,21 +157,30 @@ strategy sortFunction paymentPlan maximumAmount =
 
         bonusAmount =
             let
-                inv x = (1.0 - x)
+                inv x =
+                    1.0 - x
             in
             case paymentPlan.savings of
-                Just efp -> maximumAmount - (minimumTotalPayment * inv efp.plan.percentageToApply)
-                Nothing -> maximumAmount - minimumTotalPayment
+                Just efp ->
+                    maximumAmount - (minimumTotalPayment * inv efp.plan.percentageToApply)
+
+                Nothing ->
+                    maximumAmount - minimumTotalPayment
 
         emptyPp =
             case paymentPlan.savings of
-                Just efp -> 
+                Just efp ->
                     let
-                        savingsAmount = maximumAmount - bonusAmount
-                        newEfpPlans = { efp | payments = efp.payments ++ [savingsAmount]}
+                        savingsAmount =
+                            maximumAmount - bonusAmount
+
+                        newEfpPlans =
+                            { efp | payments = efp.payments ++ [ savingsAmount ] }
                     in
                     PaymentPlan [] <| Just newEfpPlans
-                Nothing -> PaymentPlan [] Nothing
+
+                Nothing ->
+                    PaymentPlan [] Nothing
 
         ( _, newPaymentPlan ) =
             List.foldl calculateNewPayment ( bonusAmount, emptyPp ) sortedPaymentPlan

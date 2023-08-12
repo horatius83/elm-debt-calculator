@@ -158,15 +158,18 @@ update msg model =
                         |> ceiling
                         |> toFloat
 
-                sf = model.strategyForm
+                sf =
+                    model.strategyForm
             in
             case formState of
                 EnterPaymentStrategy ->
-                    ( { model | 
-                        formState = formState, 
-                        totalMonthlyPayment = totalMinimumAmount, 
-                        strategyForm = { sf | maxTotalPayment = String.fromFloat totalMinimumAmount } }, 
-                    Cmd.none )
+                    ( { model
+                        | formState = formState
+                        , totalMonthlyPayment = totalMinimumAmount
+                        , strategyForm = { sf | maxTotalPayment = String.fromFloat totalMinimumAmount }
+                      }
+                    , Cmd.none
+                    )
 
                 _ ->
                     ( { model | formState = formState }, Cmd.none )
