@@ -207,7 +207,45 @@ suite =
                         avalanche paymentPlan totalAmount
                         |> (\pp -> (amountPaidToEmergencyFund pp, amountPaidToLoans pp))
                         |> Expect.equal (Just 5.0, Just <| actualMinimumPayment + 5.0)
-            --, test "Should add emergency fund bonuses correctly" <|
+            , test "Should add emergency fund bonuses correctly" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        emergencyFundPlan = EmergencyFundPlan 5000 "" 0.5 ""
+                        emergencyFund = Just <| EmergencyFundPayments emergencyFundPlan []
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] emergencyFund
+                        totalAmount = actualMinimumPayment + 10.0
+
+                        amountPaidToEmergencyFund x = case x of 
+                            PaymentsRemaining r -> 
+                                case r.savings of
+                                    Just ss -> 
+                                        case ss.payments of
+                                            [_, p] -> Just p
+                                            _ -> Nothing
+                                    _ -> Nothing
+                            _ -> Nothing
+
+                        amountPaidToLoans x = case x of
+                            PaymentsRemaining r ->
+                                case r.payments of
+                                    [p] -> case p.payments of
+                                        [_, pp] -> Just pp
+                                        _ -> Nothing
+                                    _ -> Nothing
+                            _ -> Nothing
+                        firstRun = case avalanche paymentPlan totalAmount of
+                            PaymentsRemaining r -> Just r
+                            _ -> Nothing
+                    in
+                        Maybe.map (\p -> avalanche p totalAmount) firstRun
+                        |> (\pp -> Maybe.map (\ppp -> (amountPaidToEmergencyFund ppp, amountPaidToLoans ppp)) pp)
+                        |> Expect.equal (Just (Just 5.0, Just (actualMinimumPayment + 5.0)))
             ]
             , describe "getMinimumTotalAmount"
             [ test "Gets total amount" <|
