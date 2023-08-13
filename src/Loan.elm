@@ -155,14 +155,13 @@ strategy sortFunction paymentPlan maximumAmount =
         minimumTotalPayment =
             getMinimumTotalAmount paymentPlan
 
+        inv x =
+            1.0 - x
+
         bonusAmount =
-            let
-                inv x =
-                    1.0 - x
-            in
             case paymentPlan.savings of
                 Just efp ->
-                    maximumAmount - (minimumTotalPayment * inv efp.plan.percentageToApply)
+                    (maximumAmount - minimumTotalPayment) * inv efp.plan.percentageToApply
 
                 Nothing ->
                     maximumAmount - minimumTotalPayment
@@ -172,7 +171,7 @@ strategy sortFunction paymentPlan maximumAmount =
                 Just efp ->
                     let
                         savingsAmount =
-                            maximumAmount - bonusAmount
+                            (maximumAmount - minimumTotalPayment) * efp.plan.percentageToApply
 
                         newEfpPlans =
                             { efp | payments = efp.payments ++ [ savingsAmount ] }

@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.as.L === region.aE.L)
+	if (region.au.L === region.aG.L)
 	{
-		return 'on line ' + region.as.L;
+		return 'on line ' + region.au.L;
 	}
-	return 'on lines ' + region.as.L + ' through ' + region.aE.L;
+	return 'on lines ' + region.au.L + ' through ' + region.aG.L;
 }
 
 
@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		z: func(record.z),
-		at: record.at,
-		ap: record.ap
+		av: record.av,
+		ar: record.ar
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.z;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.at;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.av;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ap) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ar) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3968,7 +3968,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 		impl.bR,
 		impl.bN,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.ar && impl.ar(sendToApp)
+			var divertHrefToApp = impl.at && impl.at(sendToApp)
 			var view = impl.bS;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
@@ -4043,7 +4043,7 @@ function _Browser_application(impl)
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		ar: function(sendToApp)
+		at: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4060,7 +4060,7 @@ function _Browser_application(impl)
 					sendToApp(onUrlRequest(
 						(next
 							&& curr.aY === next.aY
-							&& curr.aK === next.aK
+							&& curr.aM === next.aM
 							&& curr.aV.a === next.aV.a
 						)
 							? $elm$browser$Browser$Internal(next)
@@ -4237,7 +4237,7 @@ function _Browser_getViewport()
 			ba: _Browser_window.pageXOffset,
 			bb: _Browser_window.pageYOffset,
 			a9: _Browser_doc.documentElement.clientWidth,
-			aJ: _Browser_doc.documentElement.clientHeight
+			aL: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4248,7 +4248,7 @@ function _Browser_getScene()
 	var elem = _Browser_doc.documentElement;
 	return {
 		a9: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		aJ: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aL: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4273,13 +4273,13 @@ function _Browser_getViewportOf(id)
 		return {
 			a2: {
 				a9: node.scrollWidth,
-				aJ: node.scrollHeight
+				aL: node.scrollHeight
 			},
 			a8: {
 				ba: node.scrollLeft,
 				bb: node.scrollTop,
 				a9: node.clientWidth,
-				aJ: node.clientHeight
+				aL: node.clientHeight
 			}
 		};
 	});
@@ -4314,13 +4314,13 @@ function _Browser_getElement(id)
 				ba: x,
 				bb: y,
 				a9: _Browser_doc.documentElement.clientWidth,
-				aJ: _Browser_doc.documentElement.clientHeight
+				aL: _Browser_doc.documentElement.clientHeight
 			},
 			bl: {
 				ba: x + rect.left,
 				bb: y + rect.top,
 				a9: rect.width,
-				aJ: rect.height
+				aL: rect.height
 			}
 		};
 	});
@@ -4905,7 +4905,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {aG: fragment, aK: host, aR: path, aV: port_, aY: protocol, aZ: query};
+		return {aI: fragment, aM: host, aT: path, aV: port_, aY: protocol, aZ: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5201,7 +5201,7 @@ var $author$project$Main$init = function (_v0) {
 			P: $elm$core$Maybe$Nothing,
 			a: {q: $elm$core$Maybe$Nothing, aa: '20', M: '', ao: 0},
 			S: 0,
-			ax: 20
+			az: 20
 		},
 		$elm$core$Platform$Cmd$none);
 };
@@ -5212,7 +5212,7 @@ var $author$project$Main$subscriptions = function (_v0) {
 };
 var $author$project$Loan$EmergencyFundPlan = F4(
 	function (maxAmount, maxAmountAsString, percentageToApply, percentageToApplyAsString) {
-		return {bu: maxAmount, bv: maxAmountAsString, aS: percentageToApply, bK: percentageToApplyAsString};
+		return {bu: maxAmount, bv: maxAmountAsString, ap: percentageToApply, bK: percentageToApplyAsString};
 	});
 var $author$project$State$Error = function (a) {
 	return {$: 7, a: a};
@@ -5282,7 +5282,7 @@ var $author$project$Loan$NoFurtherPaymentsToBeMade = function (a) {
 };
 var $author$project$Loan$PaymentPlan = F2(
 	function (payments, savings) {
-		return {s: payments, aq: savings};
+		return {s: payments, as: savings};
 	});
 var $author$project$Loan$PaymentsRemaining = function (a) {
 	return {$: 2, a: a};
@@ -5388,23 +5388,14 @@ var $author$project$Loan$strategy = F3(
 	function (sortFunction, paymentPlan, maximumAmount) {
 		var sortedPaymentPlan = A2($elm$core$List$sortBy, sortFunction, paymentPlan.s);
 		var minimumTotalPayment = $author$project$Loan$getMinimumTotalAmount(paymentPlan);
-		var bonusAmount = function () {
-			var inv = function (x) {
-				return 1.0 - x;
-			};
-			var _v2 = paymentPlan.aq;
+		var inv = function (x) {
+			return 1.0 - x;
+		};
+		var emptyPp = function () {
+			var _v2 = paymentPlan.as;
 			if (!_v2.$) {
 				var efp = _v2.a;
-				return maximumAmount - (minimumTotalPayment * inv(efp.aU.aS));
-			} else {
-				return maximumAmount - minimumTotalPayment;
-			}
-		}();
-		var emptyPp = function () {
-			var _v1 = paymentPlan.aq;
-			if (!_v1.$) {
-				var efp = _v1.a;
-				var savingsAmount = maximumAmount - bonusAmount;
+				var savingsAmount = (maximumAmount - minimumTotalPayment) * efp.aq.ap;
 				var newEfpPlans = _Utils_update(
 					efp,
 					{
@@ -5419,6 +5410,15 @@ var $author$project$Loan$strategy = F3(
 					$elm$core$Maybe$Just(newEfpPlans));
 			} else {
 				return A2($author$project$Loan$PaymentPlan, _List_Nil, $elm$core$Maybe$Nothing);
+			}
+		}();
+		var bonusAmount = function () {
+			var _v1 = paymentPlan.as;
+			if (!_v1.$) {
+				var efp = _v1.a;
+				return (maximumAmount - minimumTotalPayment) * inv(efp.aq.ap);
+			} else {
+				return maximumAmount - minimumTotalPayment;
 			}
 		}();
 		var _v0 = A3(
@@ -5751,7 +5751,7 @@ var $author$project$Main$generatePaymentPlan = function (model) {
 		var newPaymentPlan = function () {
 			var _v9 = model.P;
 			if (_v9.$ === 1) {
-				return A2($author$project$Loan$toPaymentPlan, model.ax, model.v);
+				return A2($author$project$Loan$toPaymentPlan, model.az, model.v);
 			} else {
 				var x = _v9.a;
 				return x;
@@ -5935,7 +5935,7 @@ var $author$project$Main$update = F2(
 			case 16:
 				var formState = msg.a;
 				var sf = model.a;
-				var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.ax, model.v);
+				var paymentPlan = A2($author$project$Loan$toPaymentPlan, model.az, model.v);
 				var totalMinimumAmount = $elm$core$Basics$ceiling(
 					$author$project$Loan$getMinimumTotalAmount(paymentPlan));
 				if (formState === 1) {
@@ -6029,7 +6029,7 @@ var $author$project$Main$update = F2(
 					function (ef_, amnt) {
 						return _Utils_update(
 							ef_,
-							{aS: amnt, bK: amount});
+							{ap: amnt, bK: amount});
 					});
 				var ef = sf.q;
 				var amountN = $elm$core$String$toFloat(amount);
@@ -6119,8 +6119,8 @@ var $elm$time$Time$toAdjustedMinutesHelp = F3(
 			} else {
 				var era = eras.a;
 				var olderEras = eras.b;
-				if (_Utils_cmp(era.as, posixMinutes) < 0) {
-					return posixMinutes + era.aQ;
+				if (_Utils_cmp(era.au, posixMinutes) < 0) {
+					return posixMinutes + era.aS;
 				} else {
 					var $temp$defaultOffset = defaultOffset,
 						$temp$posixMinutes = posixMinutes,
@@ -6157,15 +6157,15 @@ var $elm$time$Time$toCivil = function (minutes) {
 	var month = mp + ((mp < 10) ? 3 : (-9));
 	var year = yearOfEra + (era * 400);
 	return {
-		aC: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
-		aO: month,
+		aE: (dayOfYear - ((((153 * mp) + 2) / 5) | 0)) + 1,
+		aQ: month,
 		bc: year + ((month <= 2) ? 1 : 0)
 	};
 };
 var $elm$time$Time$toMonth = F2(
 	function (zone, time) {
 		var _v0 = $elm$time$Time$toCivil(
-			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aO;
+			A2($elm$time$Time$toAdjustedMinutes, zone, time)).aQ;
 		switch (_v0) {
 			case 1:
 				return 0;

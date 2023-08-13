@@ -171,6 +171,44 @@ suite =
                         |> isPaymentsRemaining
                         |> Expect.equal True
             ]
+            , describe "Emergency Fund"
+            [ test "Should divide bonus" <|
+                \_ ->
+                    let
+                        minimumPayment = 20.0
+                        principal = 2000.0
+                        yearsToPayoff = 10
+                        apr = 20.0
+                        loan = Loan "Test Loan" apr minimumPayment principal
+                        actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
+                        emergencyFundPlan = EmergencyFundPlan 5000 "" 0.5 ""
+                        emergencyFund = Just <| EmergencyFundPayments emergencyFundPlan []
+                        paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] emergencyFund
+                        totalAmount = actualMinimumPayment + 10.0
+                        amountPaidToEmergencyFund x = case x of 
+                            PaymentsRemaining r -> 
+                                case r.savings of
+                                    Just ss -> 
+                                        case ss.payments of
+                                            [p] -> Just p
+                                            _ -> Nothing
+                                    _ -> Nothing
+                            _ -> Nothing
+
+                        amountPaidToLoans x = case x of
+                            PaymentsRemaining r ->
+                                case r.payments of
+                                    [p] -> case p.payments of
+                                        [pp] -> Just pp
+                                        _ -> Nothing
+                                    _ -> Nothing
+                            _ -> Nothing
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> (\pp -> (amountPaidToEmergencyFund pp, amountPaidToLoans pp))
+                        |> Expect.equal (Just 5.0, Just <| actualMinimumPayment + 5.0)
+            --, test "Should add emergency fund bonuses correctly" <|
+            ]
             , describe "getMinimumTotalAmount"
             [ test "Gets total amount" <|
                 \_ -> 
