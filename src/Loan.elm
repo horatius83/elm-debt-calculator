@@ -1,44 +1,6 @@
 module Loan exposing (..)
 
-
-type alias Loan =
-    { name : String
-    , apr : Float
-    , minimum : Float
-    , principal : Float
-    }
-
-
-type alias EmergencyFundPlan =
-    { maxAmount : Float
-    , maxAmountAsString : String
-    , percentageToApply : Float
-    , percentageToApplyAsString : String
-    }
-
-
-type alias EmergencyFundPayments =
-    { plan : EmergencyFundPlan
-    , payments : List Payment
-    }
-
-
-type alias Payment =
-    Float
-
-
-type alias PaymentSequence =
-    { loan : Loan
-    , actualMinimum : Float
-    , payments : List Payment
-    , isPaidOff : Bool
-    }
-
-
-type alias PaymentPlan =
-    { payments : List PaymentSequence
-    , savings : Maybe EmergencyFundPayments
-    }
+import State exposing (Loan, Msg(..), PaymentPlan, PaymentSequence)
 
 
 addPaymentToPaymentPlan : PaymentPlan -> PaymentSequence -> PaymentPlan
@@ -161,7 +123,15 @@ strategy sortFunction paymentPlan maximumAmount =
         bonusAmount =
             case paymentPlan.savings of
                 Just efp ->
-                    (maximumAmount - minimumTotalPayment) * inv efp.plan.percentageToApply
+                    let
+                        totalPaidIntoEmergencyFund =
+                            List.foldl (\acc x -> acc + x) 0 efp.payments
+                    in
+                    if totalPaidIntoEmergencyFund < efp.plan.maxAmount then
+                        (maximumAmount - minimumTotalPayment) * inv efp.plan.percentageToApply
+
+                    else
+                        maximumAmount - minimumTotalPayment
 
                 Nothing ->
                     maximumAmount - minimumTotalPayment
@@ -171,7 +141,15 @@ strategy sortFunction paymentPlan maximumAmount =
                 Just efp ->
                     let
                         savingsAmount =
-                            (maximumAmount - minimumTotalPayment) * efp.plan.percentageToApply
+                            let
+                                totalPaidIntoEmergencyFund =
+                                    List.foldl (\acc x -> acc + x) 0 efp.payments
+                            in
+                            if totalPaidIntoEmergencyFund < efp.plan.maxAmount then
+                                (maximumAmount - minimumTotalPayment) * inv efp.plan.percentageToApply
+
+                            else
+                                0
 
                         newEfpPlans =
                             { efp | payments = efp.payments ++ [ savingsAmount ] }

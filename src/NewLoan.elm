@@ -1,8 +1,7 @@
 module NewLoan exposing (..)
 
 import List exposing (minimum)
-import Loan exposing (Loan)
-import State exposing (Model, Msg(..), NewLoanForm)
+import State exposing (Loan, Model, Msg(..), NewLoanForm)
 
 
 emptyLoanForm : NewLoanForm

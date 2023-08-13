@@ -5,9 +5,8 @@ import Test exposing (..)
 
 import State exposing (Model, PaymentStrategy(..), StrategyForm)
 import Main exposing (generatePaymentPlan)
-import Loan exposing (Loan)
 import NewLoan exposing (emptyLoanForm)
-import State exposing (FormState(..))
+import State exposing (FormState(..), Loan)
 
 suite : Test
 suite = 

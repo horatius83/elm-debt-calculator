@@ -1,6 +1,7 @@
 module State exposing (..)
 
-import Loan exposing (EmergencyFundPlan, Loan, PaymentPlan)
+-- import Loan exposing (EmergencyFundPlan, Loan, PaymentPlan)
+
 import Time
 
 
@@ -23,11 +24,51 @@ type alias NewLoanForm =
     }
 
 
+type alias EmergencyFundPlan =
+    { maxAmount : Float
+    , maxAmountAsString : String
+    , percentageToApply : Float
+    , percentageToApplyAsString : String
+    }
+
+
+type alias Payment =
+    Float
+
+
+type alias EmergencyFundPayments =
+    { plan : EmergencyFundPlan
+    , payments : List Payment
+    }
+
+
 type alias StrategyForm =
     { maxNumberOfYears : String
     , maxTotalPayment : String
     , paymentStrategy : PaymentStrategy
     , emergencyFund : Maybe EmergencyFundPlan
+    }
+
+
+type alias Loan =
+    { name : String
+    , apr : Float
+    , minimum : Float
+    , principal : Float
+    }
+
+
+type alias PaymentSequence =
+    { loan : Loan
+    , actualMinimum : Float
+    , payments : List Payment
+    , isPaidOff : Bool
+    }
+
+
+type alias PaymentPlan =
+    { payments : List PaymentSequence
+    , savings : Maybe EmergencyFundPayments
     }
 
 
