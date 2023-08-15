@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "/**\r\n * Function to throw an exception of a value is less than 0\r\n * @param context {string} - context of value (for error message)\r\n * @param x {number} - value to check\r\n * @returns {number}\r\n */\r\nfunction mustBeGreaterThan0 (context, x) {\r\n    if (x < 0) {\r\n        throw new Error(`${context} value (${x}) must not be less than 0`);\r\n    }\r\n    return x;\r\n}\r\n\r\nclass Loan {\r\n    name = \"\";\r\n    principal = 0.0;\r\n    minimum = 0.0;\r\n    apr = 0.0;\r\n    /**\r\n     * Class representing a loan\r\n     * @param name {string} - name of the loan\r\n     * @param principal {number} - principal of the loand\r\n     * @param minimum {number} - minimum payment needed\r\n     * @param apr {number} - APR as a percent (50 = 50%)\r\n     */\r\n    constructor(name, principal, minimum, apr) {\r\n        this.name = name;\r\n        this.principal = mustBeGreaterThan0(\"Loan Principal\", principal);\r\n        this.minimum = mustBeGreaterThan0(\"Loan Minimum\", minimum);\r\n        this.apr = mustBeGreaterThan0(\"Loan APR\", apr);\r\n    }\r\n\r\n    getMinimumInterest() {\r\n        \r\n    }\r\n}\r\n"
+            ],
+            "outputs": []
+        }
+    ]
+}
