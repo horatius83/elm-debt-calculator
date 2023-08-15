@@ -5274,6 +5274,9 @@ var $author$project$NewLoan$addLoan = function (model) {
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	}
 };
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var $author$project$Loan$MaximumTotalAmountTooLow = function (a) {
 	return {$: 0, a: a};
 };
@@ -5455,7 +5458,7 @@ var $author$project$Loan$strategy = F3(
 	});
 var $author$project$Loan$avalanche = $author$project$Loan$strategy(
 	function (paymentSequence) {
-		return paymentSequence.ag.aA;
+		return (-1.0) * paymentSequence.ag.aA;
 	});
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$time$Time$Name = function (a) {
@@ -5673,11 +5676,8 @@ var $author$project$NewLoan$resetLoan = function (model) {
 var $author$project$PortPdfMake$showAsPdf = _Platform_outgoingPort('showAsPdf', $elm$json$Json$Encode$string);
 var $author$project$Loan$snowball = $author$project$Loan$strategy(
 	function (paymentSequence) {
-		return paymentSequence.ag.aq;
+		return (-1.0) * paymentSequence.ag.aq;
 	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $elm$core$Basics$pow = _Basics_pow;
 var $author$project$Loan$getMinimumPaymentAmount = F3(
 	function (principal, apr, maxNumberOfYears) {

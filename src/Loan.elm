@@ -177,12 +177,12 @@ strategy sortFunction paymentPlan maximumAmount =
 
 avalanche : PaymentPlan -> Float -> PaymentPlanResult
 avalanche =
-    strategy (\paymentSequence -> paymentSequence.loan.apr)
+    strategy (\paymentSequence -> -1.0 * paymentSequence.loan.apr)
 
 
 snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
-    strategy (\paymentSequence -> paymentSequence.loan.principal)
+    strategy (\paymentSequence -> -1.0 * paymentSequence.loan.principal)
 
 
 
