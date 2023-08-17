@@ -47,6 +47,11 @@ getMinimumPaymentAmount principal apr maxNumberOfYears =
     numerator / denominator
 
 
+getMinimumPaymentAmountForLoan : Loan -> Int -> Float
+getMinimumPaymentAmountForLoan loan maxNumberOfYears =
+    getMinimumPaymentAmount loan.principal loan.apr maxNumberOfYears
+
+
 toPaymentPlan : Int -> List Loan -> PaymentPlan
 toPaymentPlan maxNumberOfYears loans =
     let

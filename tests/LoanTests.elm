@@ -6,6 +6,25 @@ import Test exposing (..)
 import Loan exposing (..)
 import State exposing (Msg(..), Loan, PaymentSequence, PaymentPlan, EmergencyFundPlan, EmergencyFundPayments)
 
+isPaymentsRemaining : PaymentPlanResult -> Bool
+isPaymentsRemaining ppr = 
+    case ppr of
+        PaymentsRemaining _ -> True
+        _ -> False
+
+getPaymentRemaining : PaymentPlanResult -> Maybe PaymentPlan
+getPaymentRemaining ppr =
+    case ppr of
+        PaymentsRemaining pp -> Just pp
+        _ -> Nothing
+
+
+flatten : Maybe (Maybe a) -> Maybe a
+flatten x = 
+    case x of
+        Just (Just y) -> Just y
+        _ -> Nothing
+
 suite : Test
 suite = 
     describe "The Loan module"
@@ -163,15 +182,36 @@ suite =
                         actualMinimumPayment = getMinimumPaymentAmount principal apr yearsToPayoff
                         paymentPlan = PaymentPlan [PaymentSequence loan actualMinimumPayment [] False] Nothing
                         totalAmount = actualMinimumPayment + 10.0
-                        isPaymentsRemaining x = case x of
-                            PaymentsRemaining _ -> True
-                            _ -> False
                     in
                         avalanche paymentPlan totalAmount
                         |> isPaymentsRemaining
                         |> Expect.equal True
+            , test "PaymentsRemaining apply extra money to highest interest" <|
+                \_ ->
+                    let
+                        yearsToPayoff = 10
+                        loanA = Loan "Highest Interest" 30.0 30.0 300.0
+                        loanB = Loan "Highest Principal" 10.0 30.0 3000.0
+                        loanAMinimumPayment = getMinimumPaymentAmountForLoan loanA yearsToPayoff
+                        loanBMinimumPayment = getMinimumPaymentAmountForLoan loanB yearsToPayoff
+                        loanAPaymentSequence = PaymentSequence loanA loanAMinimumPayment [] False
+                        loanBPaymentSequence = PaymentSequence loanB loanBMinimumPayment [] False
+                        paymentPlan = PaymentPlan [ loanAPaymentSequence, loanBPaymentSequence] Nothing
+                        totalAmount = loanAMinimumPayment + loanBMinimumPayment + 10.0
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> getPaymentRemaining
+                        |> Maybe.map (\pp -> pp.payments)
+                        |> Maybe.map (\payments -> List.sortBy (\payment -> payment.loan.apr) payments)
+                        |> Maybe.map List.reverse
+                        |> Maybe.map List.head
+                        |> flatten
+                        |> Maybe.map (\p -> p.payments)
+                        |> Maybe.map List.head
+                        |> flatten
+                        |> Expect.equal (Just (loanAMinimumPayment + 10.0))
             ]
-            , describe "Emergency Fund"
+        , describe "Emergency Fund"
             [ test "Should divide bonus" <|
                 \_ ->
                     let
@@ -286,7 +326,7 @@ suite =
                         |> (\pp -> Maybe.map (\ppp -> (amountPaidToEmergencyFund ppp, amountPaidToLoans ppp)) pp)
                         |> Expect.equal (Just (Just 0, Just (actualMinimumPayment + 10.0)))
             ]
-            , describe "getMinimumTotalAmount"
+        , describe "getMinimumTotalAmount"
             [ test "Gets total amount" <|
                 \_ -> 
                     let
@@ -312,4 +352,4 @@ suite =
                     getMinimumTotalAmount paymentPlan
                     |> Expect.within (Absolute 0.001)  50.0
             ]
-        ]
+    ]
