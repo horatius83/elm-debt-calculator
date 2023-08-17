@@ -187,7 +187,7 @@ avalanche =
 
 snowball : PaymentPlan -> Float -> PaymentPlanResult
 snowball =
-    strategy (\paymentSequence -> -1.0 * paymentSequence.loan.principal)
+    strategy (\paymentSequence -> paymentSequence.loan.principal)
 
 
 

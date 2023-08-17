@@ -211,6 +211,31 @@ suite =
                         |> flatten
                         |> Expect.equal (Just (loanAMinimumPayment + 10.0))
             ]
+        , describe "Snowball"
+            [ test "Should pay lowest principal first" <|
+                \_ ->
+                    let
+                        yearsToPayoff = 10
+                        loanA = Loan "Highest Principal" 30.0 30.0 3000.0
+                        loanB = Loan "Lowest Principal" 10.0 30.0 300.0
+                        loanAMinimumPayment = getMinimumPaymentAmountForLoan loanA yearsToPayoff
+                        loanBMinimumPayment = getMinimumPaymentAmountForLoan loanB yearsToPayoff
+                        loanAPaymentSequence = PaymentSequence loanA loanAMinimumPayment [] False
+                        loanBPaymentSequence = PaymentSequence loanB loanBMinimumPayment [] False
+                        paymentPlan = PaymentPlan [ loanAPaymentSequence, loanBPaymentSequence] Nothing
+                        totalAmount = loanAMinimumPayment + loanBMinimumPayment + 10.0
+                    in
+                        avalanche paymentPlan totalAmount
+                        |> getPaymentRemaining
+                        |> Maybe.map (\pp -> pp.payments)
+                        |> Maybe.map (\payments -> List.sortBy (\payment -> payment.loan.principal) payments)
+                        |> Maybe.map List.head
+                        |> flatten
+                        |> Maybe.map (\p -> p.payments)
+                        |> Maybe.map List.head
+                        |> flatten
+                        |> Expect.equal (Just (loanBMinimumPayment + 10.0))
+            ]
         , describe "Emergency Fund"
             [ test "Should divide bonus" <|
                 \_ ->
