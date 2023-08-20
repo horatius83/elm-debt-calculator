@@ -225,10 +225,11 @@ suite =
                         paymentPlan = PaymentPlan [ loanAPaymentSequence, loanBPaymentSequence] Nothing
                         totalAmount = loanAMinimumPayment + loanBMinimumPayment + 10.0
                     in
-                        avalanche paymentPlan totalAmount
+                        snowball paymentPlan totalAmount
                         |> getPaymentRemaining
                         |> Maybe.map (\pp -> pp.payments)
-                        |> Maybe.map (\payments -> List.sortBy (\payment -> payment.loan.principal) payments)
+                        |> Maybe.map (\payments -> List.sortBy (\payment -> -payment.loan.principal) payments)
+                        |> Maybe.map List.reverse
                         |> Maybe.map List.head
                         |> flatten
                         |> Maybe.map (\p -> p.payments)
