@@ -2,17 +2,17 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (attribute, checked, class, disabled, href, value)
-import Html.Events exposing (onClick, onInput, onSubmit)
+import Html.Attributes exposing (class, href)
+import Html.Events exposing (onClick)
 import List.Extra exposing (removeAt)
 import Loan exposing (PaymentPlanResult(..), avalanche, getMinimumTotalAmount, snowball, toPaymentPlan)
 import NewLoan exposing (emptyLoanForm)
 import PortConsole exposing (logError)
 import PortPdfMake exposing (showAsPdf)
-import State exposing (EmergencyFundPlan, FormState(..), Loan, Model, Msg(..), PaymentSequence, PaymentStrategy(..))
+import Ports exposing (loadFile)
+import State exposing (EmergencyFundPlan, FormState(..), Model, Msg(..), PaymentStrategy(..))
 import Task
 import Time exposing (Month(..))
-import TimeUtil exposing (getNextMonth, getNextYear, monthToString)
 import View exposing (viewLoan, viewNewLoan, viewPaymentPlan, viewPaymentStrategy)
 
 
@@ -246,6 +246,9 @@ update msg model =
                             { model | strategyForm = { sf | emergencyFund = Maybe.map (\x -> { x | percentageToApplyAsString = amount }) ef } }
             in
             ( newModel, Cmd.none )
+
+        LoadFile ->
+            ( model, loadFile () )
 
 
 generatePaymentPlan : Model -> ( Model, Cmd Msg )

@@ -5473,6 +5473,12 @@ var $elm$time$Time$Zone = F2(
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$here = _Time_here(0);
+var $elm$json$Json$Encode$null = _Json_encodeNull;
+var $author$project$Ports$loadFile = _Platform_outgoingPort(
+	'loadFile',
+	function ($) {
+		return $elm$json$Json$Encode$null;
+	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$PortConsole$logError = _Platform_outgoingPort('logError', $elm$json$Json$Encode$string);
 var $elm$core$Maybe$map = F2(
@@ -6040,7 +6046,7 @@ var $author$project$Main$update = F2(
 					}
 				}();
 				return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
-			default:
+			case 19:
 				var amount = msg.a;
 				var sf = model.b;
 				var newEmergencyFundPlan = F2(
@@ -6084,6 +6090,10 @@ var $author$project$Main$update = F2(
 					}
 				}();
 				return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					model,
+					$author$project$Ports$loadFile(0));
 		}
 	});
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6392,6 +6402,7 @@ var $author$project$Main$viewMenu = function (formState) {
 };
 var $author$project$State$AddLoan = {$: 0};
 var $author$project$State$DoNothing = {$: 8};
+var $author$project$State$LoadFile = {$: 20};
 var $author$project$State$ResetNewLoan = {$: 1};
 var $author$project$State$UpdateLoanApr = function (a) {
 	return {$: 4, a: a};
@@ -6580,7 +6591,10 @@ var $author$project$View$viewNewLoan = function (model) {
 							])),
 						A2(
 						$elm$html$Html$button,
-						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$State$LoadFile)
+							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text('Load from File')

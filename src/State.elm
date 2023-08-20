@@ -1,7 +1,5 @@
 module State exposing (..)
 
--- import Loan exposing (EmergencyFundPlan, Loan, PaymentPlan)
-
 import Time
 
 
@@ -107,3 +105,4 @@ type Msg
     | ToggleHasEmergencyFund
     | UpdateEmergencyFundMaxAmount String
     | UpdateEmergencyFundPercentage String
+    | LoadFile

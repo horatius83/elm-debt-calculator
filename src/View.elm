@@ -1,9 +1,9 @@
 module View exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (attribute, checked, class, disabled, href, value)
+import Html.Attributes exposing (attribute, checked, class, disabled, value)
 import Html.Events exposing (onClick, onInput, onSubmit)
-import State exposing (EmergencyFundPlan, FormState(..), Loan, Model, Msg(..), PaymentSequence, PaymentStrategy(..))
+import State exposing (FormState(..), Loan, Model, Msg(..), PaymentSequence, PaymentStrategy(..))
 import Time exposing (Month(..))
 import TimeUtil exposing (getNextMonth, getNextYear, monthToString)
 
@@ -273,7 +273,7 @@ viewNewLoan model =
                 , disabled cannotAddNewLoan
                 ]
                 [ text "Add Loan" ]
-            , button [] [ text "Load from File" ]
+            , button [ onClick LoadFile ] [ text "Load from File" ]
             , button [] [ text "Save to File" ]
             , button [ onClick ResetNewLoan ] [ text "Reset" ]
             , button
